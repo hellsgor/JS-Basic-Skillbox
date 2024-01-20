@@ -18,3 +18,6 @@ export class GetDataApi {
     }
   }
 }
+
+const getDataApi = new GetDataApi();
+export default getDataApi;
