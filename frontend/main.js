@@ -1,3 +1,7 @@
 import '@styles/style.scss';
+import { GetDataApi } from './src/api/get-data-api';
 
-console.log('hello!');
+const getDataApi = new GetDataApi();
+
+const contacts = await getDataApi.getContacts();
+console.log(contacts);
