@@ -10,6 +10,7 @@ export default defineConfig({
       '@api': resolve(__dirname, 'src/api'),
       '@styles': resolve(__dirname, 'src/styles'),
       '@fonts': resolve(__dirname, 'public/fonts'),
+      '@components': resolve(__dirname, 'src/components'),
     },
   },
 });

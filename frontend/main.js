@@ -1,8 +1,3 @@
-import '@styles/style.scss';
-import { GetDataApi } from './src/api/get-data-api';
+import app from '@components/App';
 
-const getDataApi = new GetDataApi();
-import getDataApi from '@api';
-
-const contacts = await getDataApi.getContacts();
-console.log(contacts);
+app.render();

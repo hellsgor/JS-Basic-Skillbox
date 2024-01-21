@@ -1,0 +1,10 @@
+@import '../../../node_modules/normalize.css/normalize.css';
+@import '../../styles/null-styles';
+@import '../../styles/fonts';
+@import '../../styles/variables';
+@import '../../styles/mixins';
+@import '../../styles/typography';
+
+.app[id='app'] {
+  background-color: $app-background;
+}
