@@ -26,5 +26,6 @@ module.exports = {
     'func-style': 0,
     'import/no-unresolved': 'off',
     'import/prefer-default-export': ['off', { target: 'single' }],
+    'class-methods-use-this': 'off',
   },
 };
