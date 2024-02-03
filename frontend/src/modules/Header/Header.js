@@ -1,26 +1,38 @@
 import { createElement } from '@/src/helpers/create-element.js';
 import classes from './Header.module.scss';
+import { Logo } from '@/src/ui/Logo/Logo.js';
 
 class Header {
   createHeader() {
-    const header = createElement({
+    this.createBasicHeaderElements();
+
+    const logo = new Logo();
+    this.wrapper.appendChild(logo.createLogo());
+
+    this.insertBasicHeaderElements();
+    document.querySelector('body').appendChild(this.header);
+  }
+
+  createBasicHeaderElements() {
+    this.header = createElement({
       tag: 'header',
       classes: classes.header,
     });
+
     this.container = createElement({
       tag: 'div',
       classes: classes.header__container,
     });
 
-    this.container.appendChild(
-      createElement({
-        tag: 'div',
-        classes: classes.header__wrapper,
-      }),
-    );
+    this.wrapper = createElement({
+      tag: 'div',
+      classes: classes.header__wrapper,
+    });
+  }
 
-    header.appendChild(this.container);
-    document.querySelector('body').appendChild(header);
+  insertBasicHeaderElements() {
+    this.container.appendChild(this.wrapper);
+    this.header.appendChild(this.container);
   }
 }
 
