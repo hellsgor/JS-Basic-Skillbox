@@ -6,7 +6,6 @@ module.exports = {
   },
   extends: [
     'prettier',
-    'eslint:recommended',
     'airbnb-base',
     'plugin:import/recommended',
   ],
@@ -27,5 +26,10 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/prefer-default-export': ['off', { target: 'single' }],
     'class-methods-use-this': 'off',
+    'import/extensions': ['error', 'ignorePackages', {
+      js: 'always',
+      cjs: 'always',
+    }],
+    'lines-between-class-members': 'off',
   },
 };
