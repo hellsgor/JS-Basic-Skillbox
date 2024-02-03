@@ -30,5 +30,6 @@ module.exports = {
       js: 'always',
       cjs: 'always',
     }],
+    'lines-between-class-members': 'off',
   },
 };
