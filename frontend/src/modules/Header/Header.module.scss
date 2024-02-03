@@ -1,0 +1,17 @@
+@import '@styles/index.scss';
+
+.header {
+  background-color: $white;
+  @include shadow($header-shadow);
+
+  &__container {
+    width: 100%;
+    max-width: 1366px;
+    margin: 0 auto;
+  }
+
+  &__wrapper {
+    width: 100%;
+    padding: 20px;
+  }
+}
