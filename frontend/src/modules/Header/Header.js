@@ -1,13 +1,19 @@
 import { createElement } from '@/src/helpers/create-element.js';
 import classes from './Header.module.scss';
 import { Logo } from '@/src/ui/Logo/Logo.js';
+import { TextControl } from '@/src/ui/controls/TextControl/TextControl.js';
 
 class Header {
   createHeader() {
     this.createBasicHeaderElements();
 
-    const logo = new Logo();
-    this.wrapper.appendChild(logo.createLogo());
+    this.initLogo();
+    this.initSearchControl({
+      type: 'text',
+      placeholder: 'Введите запрос',
+      name: 'header-search-control',
+      id: 'header-search-control',
+    });
 
     this.insertBasicHeaderElements();
     document.querySelector('body').appendChild(this.header);
@@ -33,6 +39,18 @@ class Header {
   insertBasicHeaderElements() {
     this.container.appendChild(this.wrapper);
     this.header.appendChild(this.container);
+  }
+
+  initLogo() {
+    const logo = new Logo();
+    this.wrapper.appendChild(logo.createLogo());
+  }
+
+  initSearchControl(props) {
+    const searchControl = new TextControl(props);
+    this.searchControl = searchControl.initControl();
+    this.searchControl.classList.add(classes.header__search);
+    this.wrapper.appendChild(this.searchControl);
   }
 }
 

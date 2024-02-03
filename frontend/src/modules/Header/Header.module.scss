@@ -13,7 +13,14 @@
   }
 
   &__wrapper {
+    display: flex;
     width: 100%;
     padding: 20px;
+    align-items: center;
+    column-gap: 53px;
+  }
+
+  &__search {
+    flex: 0 0 581px;
   }
 }
