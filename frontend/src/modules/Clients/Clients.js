@@ -1,11 +1,12 @@
 import { createElement } from '@/src/helpers/create-element.js';
 import classes from './Clients.module.scss';
 
-class Clients {
-  createClients() {
+export class Clients {
+  initClients() {
     this.createBasicClientsElements();
 
     this.insertBasicClientsElements();
+
     return this.clients;
   }
 
@@ -30,9 +31,4 @@ class Clients {
     this.container.appendChild(this.wrapper);
     this.clients.appendChild(this.container);
   }
-}
-
-export function initClients() {
-  const clients = new Clients();
-  return clients.createClients();
 }
