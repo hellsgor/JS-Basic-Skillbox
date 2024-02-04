@@ -5,8 +5,15 @@ export class Clients {
   initClients() {
     this.createBasicClientsElements();
 
-    this.insertBasicClientsElements();
+    this.wrapper.appendChild(
+      createElement({
+        tag: 'h2',
+        classes: classes.clients__title,
+        text: 'Клиенты',
+      }),
+    );
 
+    this.insertBasicClientsElements();
     return this.clients;
   }
 
