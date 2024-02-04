@@ -1,0 +1,15 @@
+@import '@styles/colors';
+
+.clients {
+  width: 100%;
+
+  &__container {
+    width: 100%;
+    max-width: 1186px;
+    margin: 0 auto;
+  }
+
+  &__wrapper {
+    width: 100%;
+  }
+}
