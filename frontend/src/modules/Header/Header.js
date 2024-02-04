@@ -3,8 +3,8 @@ import classes from './Header.module.scss';
 import { Logo } from '@/src/ui/Logo/Logo.js';
 import { TextControl } from '@/src/ui/controls/TextControl/TextControl.js';
 
-class Header {
-  createHeader() {
+export class Header {
+  initHeader() {
     this.createBasicHeaderElements();
 
     this.initLogo();
@@ -16,7 +16,8 @@ class Header {
     });
 
     this.insertBasicHeaderElements();
-    document.querySelector('body').appendChild(this.header);
+
+    return this.header;
   }
 
   createBasicHeaderElements() {
@@ -52,10 +53,4 @@ class Header {
     this.searchControl.classList.add(classes.header__search);
     this.wrapper.appendChild(this.searchControl);
   }
-}
-
-export function initHeader() {
-  const header = new Header();
-  header.createHeader();
-  return header;
 }

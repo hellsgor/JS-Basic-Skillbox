@@ -3,8 +3,9 @@
 @import '@styles/mixins';
 
 .header {
-  background-color: $white;
+  margin-bottom: 40px;
   @include shadow($header-shadow);
+  background-color: $white;
 
   &__container {
     width: 100%;

@@ -1,4 +1,4 @@
-import '@styles/index.scss';
-import { initHeader } from '@/src/modules/Header/Header.js';
+import { App } from '@/src/App.js';
 
-initHeader();
+const app = new App();
+app.render();
