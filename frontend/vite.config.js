@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import handlebars from 'vite-plugin-handlebars';
 
 export default defineConfig({
   css: {
@@ -14,4 +15,9 @@ export default defineConfig({
       '@components': resolve(__dirname, 'src/components'),
     },
   },
+  plugins: [
+    handlebars({
+      partialDirectory: resolve(__dirname, 'src/components'),
+    }),
+  ],
 });
