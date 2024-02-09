@@ -1,0 +1,29 @@
+@mixin media($width) {
+  @media (max-width: $width) {
+    @content;
+  }
+}
+
+@mixin min-media($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+@mixin tablet-media {
+  @include media($mediaTablet) {
+    @content;
+  }
+}
+
+@mixin mobile-media {
+  @include media($mediaMobile) {
+    @content;
+  }
+}
+
+@mixin xs-media {
+  @include media($mediaXS) {
+    @content;
+  }
+}
