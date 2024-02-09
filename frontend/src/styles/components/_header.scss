@@ -18,4 +18,16 @@
     max-width: 581px;
     margin-left: 53px;
   }
+  
+  @include xs-media {
+    &__wrapper {
+      $vertical-paddings: 8px;
+      padding-top: $vertical-paddings;
+      padding-bottom: $vertical-paddings;
+      justify-content: center;
+    }
+    &__search {
+      display: none;
+    }
+  }
 }
