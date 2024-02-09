@@ -1,4 +1,5 @@
 .header {
+  background-color: $white;
   @include shadow($header-shadow);
   
   &__container {
