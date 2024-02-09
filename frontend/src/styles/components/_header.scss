@@ -1,0 +1,20 @@
+.header {
+  @include shadow($header-shadow);
+  
+  &__container {
+    width: 100%;
+    max-width: 1366px;
+    margin: 0 auto;
+  }
+  
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    align-items: center;
+  }
+  
+  &__search {
+    margin-left: 53px;
+  }
+}
