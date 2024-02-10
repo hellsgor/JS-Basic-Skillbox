@@ -1,6 +1,7 @@
 .header {
-  background-color: $white;
+  margin-bottom: 40px;
   @include shadow($header-shadow);
+  background-color: $white;
   
   &__container {
     width: 100%;
@@ -21,11 +22,13 @@
   }
   
   @include xs-media {
+    margin-bottom: 30px;
+    
     &__wrapper {
-      $vertical-paddings: 8px;
-      padding-top: $vertical-paddings;
-      padding-bottom: $vertical-paddings;
+      padding-top: 8px;
+      padding-bottom: 8px;
       justify-content: center;
+      
     }
     &__search {
       display: none;
