@@ -1,0 +1,15 @@
+<section class="clients section">
+  <div class="clients__wrapper section__container">
+    <h2 class="clients__title section__title">Клиенты</h2>
+    <table class="clients__table">
+      <thead>
+      <tr>
+        {{#each this.tableHeadRowItems}}
+          {{> elements/head-cell this}}
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>

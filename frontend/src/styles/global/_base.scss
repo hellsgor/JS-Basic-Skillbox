@@ -1,3 +1,16 @@
 body {
   background-color: $app-background;
 }
+
+.section {
+  &__container {
+    width: 100%;
+    max-width: 1186px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  
+  &__title {
+    margin-bottom: 18px;
+  }
+}

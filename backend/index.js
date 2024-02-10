@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 // импорт стандартных библиотек Node.js
-const { existsSync, readFileSync, writeFileSync } = require('fs');
-const { createServer } = require('http');
+const {existsSync, readFileSync, writeFileSync} = require('fs');
+const {createServer} = require('http');
 
 // файл для базы данных
 const DB_FILE = process.env.DB_FILE || './db.json';
 // номер порта, на котором будет запущен сервер
 const PORT = process.env.PORT || 3000;
 // префикс URI для всех методов приложения
-const URI_PREFIX = '/api/clients';
+const URI_PREFIX = '/api/store';
 
 /**
  * Класс ошибки, используется для отправки ответа с определённым кодом и описанием ошибки
@@ -64,13 +64,19 @@ function makeClientFromData(data) {
   };
 
   // проверяем, все ли данные корректные и заполняем объект ошибок, которые нужно отдать клиенту
-  if (!client.name) errors.push({ field: 'name', message: 'Не указано имя' });
-  if (!client.surname) errors.push({ field: 'surname', message: 'Не указана фамилия' });
+  if (!client.name) errors.push({field: 'name', message: 'Не указано имя'});
+  if (!client.surname) errors.push({
+    field: 'surname',
+    message: 'Не указана фамилия'
+  });
   if (client.contacts.some(contact => !contact.type || !contact.value))
-    errors.push({ field: 'contacts', message: 'Не все добавленные контакты полностью заполнены' });
+    errors.push({
+      field: 'contacts',
+      message: 'Не все добавленные контакты полностью заполнены'
+    });
 
   // если есть ошибки, то бросаем объект ошибки с их списком и 422 статусом
-  if (errors.length) throw new ApiError(422, { errors });
+  if (errors.length) throw new ApiError(422, {errors});
 
   return client;
 }
@@ -88,7 +94,7 @@ function getClientList(params = {}) {
         client.name,
         client.surname,
         client.lastName,
-        ...client.contacts.map(({ value }) => value)
+        ...client.contacts.map(({value}) => value)
       ]
         .some(str => str.toLowerCase().includes(search))
     );
@@ -106,7 +112,7 @@ function createClient(data) {
   const newItem = makeClientFromData(data);
   newItem.id = Date.now().toString();
   newItem.createdAt = newItem.updatedAt = new Date().toISOString();
-  writeFileSync(DB_FILE, JSON.stringify([...getClientList(), newItem]), { encoding: 'utf8' });
+  writeFileSync(DB_FILE, JSON.stringify([...getClientList(), newItem]), {encoding: 'utf8'});
   return newItem;
 }
 
@@ -117,8 +123,8 @@ function createClient(data) {
  * @returns {{ id: string, name: string, surname: string, lastName: string, contacts: object[], createdAt: string, updatedAt: string }} Объект клиента
  */
 function getClient(itemId) {
-  const client = getClientList().find(({ id }) => id === itemId);
-  if (!client) throw new ApiError(404, { message: 'Client Not Found' });
+  const client = getClientList().find(({id}) => id === itemId);
+  if (!client) throw new ApiError(404, {message: 'Client Not Found'});
   return client;
 }
 
@@ -132,11 +138,11 @@ function getClient(itemId) {
  */
 function updateClient(itemId, data) {
   const clients = getClientList();
-  const itemIndex = clients.findIndex(({ id }) => id === itemId);
-  if (itemIndex === -1) throw new ApiError(404, { message: 'Client Not Found' });
-  Object.assign(clients[itemIndex], makeClientFromData({ ...clients[itemIndex], ...data }));
+  const itemIndex = clients.findIndex(({id}) => id === itemId);
+  if (itemIndex === -1) throw new ApiError(404, {message: 'Client Not Found'});
+  Object.assign(clients[itemIndex], makeClientFromData({...clients[itemIndex], ...data}));
   clients[itemIndex].updatedAt = new Date().toISOString();
-  writeFileSync(DB_FILE, JSON.stringify(clients), { encoding: 'utf8' });
+  writeFileSync(DB_FILE, JSON.stringify(clients), {encoding: 'utf8'});
   return clients[itemIndex];
 }
 
@@ -147,15 +153,15 @@ function updateClient(itemId, data) {
  */
 function deleteClient(itemId) {
   const clients = getClientList();
-  const itemIndex = clients.findIndex(({ id }) => id === itemId);
-  if (itemIndex === -1) throw new ApiError(404, { message: 'Client Not Found' });
+  const itemIndex = clients.findIndex(({id}) => id === itemId);
+  if (itemIndex === -1) throw new ApiError(404, {message: 'Client Not Found'});
   clients.splice(itemIndex, 1);
-  writeFileSync(DB_FILE, JSON.stringify(clients), { encoding: 'utf8' });
+  writeFileSync(DB_FILE, JSON.stringify(clients), {encoding: 'utf8'});
   return {};
 }
 
 // создаём новый файл с базой данных, если он не существует
-if (!existsSync(DB_FILE)) writeFileSync(DB_FILE, '[]', { encoding: 'utf8' });
+if (!existsSync(DB_FILE)) writeFileSync(DB_FILE, '[]', {encoding: 'utf8'});
 
 // создаём HTTP сервер, переданная функция будет реагировать на все запросы к нему
 module.exports = createServer(async (req, res) => {
@@ -180,7 +186,7 @@ module.exports = createServer(async (req, res) => {
   // если URI не начинается с нужного префикса - можем сразу отдать 404
   if (!req.url || !req.url.startsWith(URI_PREFIX)) {
     res.statusCode = 404;
-    res.end(JSON.stringify({ message: 'Not Found' }));
+    res.end(JSON.stringify({message: 'Not Found'}));
     return;
   }
 
@@ -201,7 +207,7 @@ module.exports = createServer(async (req, res) => {
     // обрабатываем запрос и формируем тело ответа
     const body = await (async () => {
       if (uri === '' || uri === '/') {
-        // /api/clients
+        // /api/store
         if (req.method === 'GET') return getClientList(queryParams);
         if (req.method === 'POST') {
           const createdItem = createClient(await drainJson(req));
@@ -211,7 +217,7 @@ module.exports = createServer(async (req, res) => {
           return createdItem;
         }
       } else {
-        // /api/clients/{id}
+        // /api/store/{id}
         // параметр {id} из URI запроса
         const itemId = uri.substr(1);
         if (req.method === 'GET') return getClient(itemId);
@@ -229,7 +235,7 @@ module.exports = createServer(async (req, res) => {
     } else {
       // если что-то пошло не так - пишем об этом в консоль и возвращаем 500 ошибку сервера
       res.statusCode = 500;
-      res.end(JSON.stringify({ message: 'Server Error' }));
+      res.end(JSON.stringify({message: 'Server Error'}));
       console.error(err);
     }
   }
