@@ -1,0 +1,37 @@
+.header {
+  margin-bottom: 40px;
+  @include shadow($header-shadow);
+  background-color: $white;
+  
+  &__container {
+    width: 100%;
+    max-width: 1366px;
+    margin: 0 auto;
+  }
+  
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    align-items: center;
+  }
+  
+  &__search {
+    max-width: 581px;
+    margin-left: 53px;
+  }
+  
+  @include xs-media {
+    margin-bottom: 30px;
+    
+    &__wrapper {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      justify-content: center;
+      
+    }
+    &__search {
+      display: none;
+    }
+  }
+}

@@ -1,7 +1,12 @@
 @import 'normalize.css';
-@import 'null-styles';
-@import 'fonts';
-@import 'colors';
-@import 'mixins';
-@import 'shadows';
-@import 'typography';
+@import 'global/null-styles';
+@import 'global/fonts';
+@import 'global/colors';
+@import 'global/mixins/index';
+@import 'global/shadows';
+@import 'global/typography';
+
+@import 'global/base';
+
+@import 'elements/index';
+@import 'components/index';
