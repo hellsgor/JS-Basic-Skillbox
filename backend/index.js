@@ -8,7 +8,7 @@ const DB_FILE = process.env.DB_FILE || './db.json';
 // номер порта, на котором будет запущен сервер
 const PORT = process.env.PORT || 3000;
 // префикс URI для всех методов приложения
-const URI_PREFIX = '/api/store';
+const URI_PREFIX = '/api/clients';
 
 /**
  * Класс ошибки, используется для отправки ответа с определённым кодом и описанием ошибки
@@ -207,7 +207,7 @@ module.exports = createServer(async (req, res) => {
     // обрабатываем запрос и формируем тело ответа
     const body = await (async () => {
       if (uri === '' || uri === '/') {
-        // /api/store
+        // /api/clients
         if (req.method === 'GET') return getClientList(queryParams);
         if (req.method === 'POST') {
           const createdItem = createClient(await drainJson(req));
@@ -217,7 +217,7 @@ module.exports = createServer(async (req, res) => {
           return createdItem;
         }
       } else {
-        // /api/store/{id}
+        // /api/clients/{id}
         // параметр {id} из URI запроса
         const itemId = uri.substr(1);
         if (req.method === 'GET') return getClient(itemId);
