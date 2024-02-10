@@ -25,7 +25,6 @@ export default defineConfig({
     handlebars({
       partialDirectory: resolve(__dirname, 'src/components'),
       context(pagePath) {
-        console.log(pageData);
         return pageData[pagePath];
       },
     }),
