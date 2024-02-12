@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import handlebars from 'vite-plugin-handlebars'
 
-import { store } from '/src/store/store.js'
+import { store } from './src/store/store.js'
 
 const pageData = {
   '/index.html': store,
