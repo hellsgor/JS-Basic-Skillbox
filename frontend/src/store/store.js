@@ -31,4 +31,4 @@ export const store = {
       idLastPart: 'actions',
     },
   ],
-};
+}
