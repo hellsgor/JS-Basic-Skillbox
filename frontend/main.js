@@ -1,9 +1,5 @@
-import '@styles/index.scss';
-import getDataApi from '@api/get-data-api.js';
+import '@styles/index.scss'
+import { ClientsTable } from '@/js/ClientsTable.js'
 
-async function renderClients() {
-  const clients = await getDataApi.getContacts();
-  console.log(clients);
-}
-
-renderClients();
+const clientsTable = new ClientsTable(document.getElementById('table-body'))
+await clientsTable.renderClients()
