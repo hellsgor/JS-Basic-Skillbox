@@ -6,6 +6,21 @@ export class Client {
 
   clientRow = null;
 
+  clientButtons = [
+    {
+      text: 'Изменить',
+      classes: ['button', 'button_action', 'button_change'],
+      callback: this.changeClient.bind(this),
+      event: 'click',
+    },
+    {
+      text: 'Удалить',
+      classes: ['button', 'button_action', 'button_delete'],
+      callback: this.deleteClient.bind(this),
+      event: 'click',
+    },
+  ];
+
   constructor(data) {
     this.data = data;
   }
@@ -38,6 +53,7 @@ export class Client {
     this.clientRow.appendChild(this.createDateCell(this.data.createdAt));
     this.clientRow.appendChild(this.createDateCell(this.data.updatedAt));
     this.clientRow.appendChild(this.createContacts(this.data.contacts));
+    this.clientRow.appendChild(this.createActions());
   }
 
   createDateCell(str) {
@@ -90,5 +106,37 @@ export class Client {
     });
 
     return contactCell;
+  }
+
+  createActions() {
+    const actionsCell = createElement({
+      tag: 'td',
+    });
+
+    this.clientButtons.forEach((btnProps) => {
+      actionsCell.appendChild(
+        createElement({
+          tag: 'button',
+          classes: btnProps.classes,
+          text: btnProps.text,
+          attributes: [
+            {
+              name: 'data-client-id',
+              value: this.data.id,
+            },
+          ],
+          callback: btnProps.callback,
+        }),
+      );
+    });
+    return actionsCell;
+  }
+
+  changeClient() {
+    console.log('change', this.data.id);
+  }
+
+  deleteClient() {
+    console.log('delete', this.data.id);
   }
 }

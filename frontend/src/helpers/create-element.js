@@ -21,8 +21,15 @@ export function createElement(props) {
 
   if (props.attributes && Array.isArray(props.attributes)) {
     props.attributes.forEach((attr) => {
-      element.setAttribute(attr[0], attr[1]);
+      element.setAttribute(attr.name, attr.value);
     });
+  }
+
+  if (props.callback) {
+    element.addEventListener(
+      props.event ? props.event : 'click',
+      props.callback,
+    );
   }
 
   return element;
