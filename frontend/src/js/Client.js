@@ -1,5 +1,7 @@
 import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
+import { extractPathWithoutExtension } from '@/helpers/extract-path-without-extension.js';
+import { formatPhoneNumber } from '@/helpers/formatPhoneNumber.js';
 
 export class Client {
   data = null;
@@ -33,6 +35,7 @@ export class Client {
   initClient() {
     this.clientRow = createElement({
       tag: 'tr',
+      classes: 'client',
     });
 
     this.clientRow.appendChild(
@@ -40,6 +43,7 @@ export class Client {
         tag: 'th',
         text: this.data.id.slice(-6),
         attributes: [['scope', 'row']],
+        classes: 'client__id',
       }),
     );
 
@@ -47,6 +51,7 @@ export class Client {
       createElement({
         tag: 'td',
         text: `${this.data.surname} ${this.data.name} ${this.data.lastName}`,
+        classes: 'client__full-name',
       }),
     );
 
@@ -66,9 +71,10 @@ export class Client {
 
     return createElement({
       tag: 'td',
+      classes: 'client__date-cell',
       html: `
-      <span>${date}.${month}.${newDate.getFullYear()}</span>
-      <span>${newDate.getHours()}:${minutes}</span>
+      <span class="client__date">${date}.${month}.${newDate.getFullYear()}</span>
+      <time class="client__time" datetime="${str}">${newDate.getHours()}:${minutes}</time>
     `,
     });
   }
@@ -76,33 +82,73 @@ export class Client {
   createContacts(contacts) {
     const contactCell = createElement({
       tag: 'td',
+      classes: 'client__contacts',
     });
+
     contacts.forEach((contact) => {
-      let iconModifier = null;
+      let modifier = null;
+      let hrefPrefix = null;
+      let processedValue = null;
       switch (contact.type) {
         case 'Телефон':
-          iconModifier = 'phone';
+          modifier = 'phone';
+          hrefPrefix = 'tel:';
+          processedValue = formatPhoneNumber(contact.value);
           break;
         case 'Email':
-          iconModifier = 'email';
+          modifier = 'email';
+          hrefPrefix = 'mailto:';
           break;
         case 'Facebook':
-          iconModifier = 'facebook';
+          modifier = 'facebook';
+          processedValue = extractPathWithoutExtension(contact.value);
           break;
         case 'VK':
-          iconModifier = 'vk';
+          modifier = 'vk';
+          processedValue = extractPathWithoutExtension(contact.value);
           break;
         default:
-          iconModifier = 'default';
+          modifier = 'default';
           break;
       }
 
-      contactCell.appendChild(
+      const contactElement = createElement({
+        tag: 'div',
+        classes: ['client__contact', `client__contact_${modifier}`],
+      });
+
+      contactElement.appendChild(
         createElement({
           tag: 'div',
-          classes: ['contact__icon', `contact__icon_${iconModifier}`],
+          classes: ['client__contact-icon', `client__contact-icon_${modifier}`],
         }),
       );
+
+      const tooltip = createElement({
+        tag: 'div',
+        classes: ['client__contact-tooltip', 'contact-tooltip'],
+      });
+
+      tooltip.appendChild(
+        createElement({
+          tag: 'a',
+          text: processedValue ? processedValue : contact.value,
+          attributes: [
+            {
+              name: 'href',
+              value: `${hrefPrefix ? hrefPrefix : ''}${contact.value}`,
+            },
+            {
+              name: 'target',
+              value: '_blank',
+            },
+          ],
+        }),
+      );
+
+      contactElement.appendChild(tooltip);
+
+      contactCell.appendChild(contactElement);
     });
 
     return contactCell;
@@ -111,6 +157,7 @@ export class Client {
   createActions() {
     const actionsCell = createElement({
       tag: 'td',
+      classes: 'contact__action-buttons',
     });
 
     this.clientButtons.forEach((btnProps) => {
