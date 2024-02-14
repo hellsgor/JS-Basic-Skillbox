@@ -1,0 +1,65 @@
+.contact-icon {
+  display: block;
+  opacity: .7;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: $firm;
+  background-image: url("/icons/contacts/other.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 10px;
+  transition: opacity .3s ease-in-out;
+  
+  &_vk {
+    background-image: url("/icons/contacts/vk.svg");
+    background-size: 12px;
+  }
+  
+  &_phone {
+    background-image: url("/icons/contacts/phone.svg");
+    background-size: 8px;
+  }
+  
+  &_email {
+    background-image: url("/icons/contacts/email.svg");
+    background-size: 8px 6px;
+  }
+  
+  &_facebook {
+    background-image: url("/icons/contacts/facebook.svg");
+    background-position: center bottom;
+    background-size: 12px;
+  }
+  
+  &_hidden {
+    display: none;
+  }
+  
+  &_more {
+    display: flex;
+    border: 1px solid $firm;
+    align-items: center;
+    justify-content: center;
+    order: 11;
+    background-color: transparent;
+    background-image: none;
+    cursor: pointer;
+    
+    span {
+      font-size: 8px;
+      font-weight: 600;
+      line-height: 11;
+      
+      &:before {
+        content: '+';
+      }
+    }
+  }
+  
+  @media (hover: hover) {
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

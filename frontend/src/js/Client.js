@@ -1,7 +1,6 @@
 import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
-import { extractPathWithoutExtension } from '@/helpers/extract-path-without-extension.js';
-import { formatPhoneNumber } from '@/helpers/formatPhoneNumber.js';
+import { Contact } from '@/js/Contact.js';
 
 export class Client {
   data = null;
@@ -42,7 +41,7 @@ export class Client {
       createElement({
         tag: 'th',
         text: this.data.id.slice(-6),
-        attributes: [['scope', 'row']],
+        attributes: [{ name: 'scope', value: 'row' }],
         classes: 'client__id',
       }),
     );
@@ -80,78 +79,38 @@ export class Client {
   }
 
   createContacts(contacts) {
-    const contactCell = createElement({
+    const contactsCell = createElement({
       tag: 'td',
       classes: 'client__contacts',
     });
 
-    contacts.forEach((contact) => {
-      let modifier = null;
-      let hrefPrefix = null;
-      let processedValue = null;
-      switch (contact.type) {
-        case 'Телефон':
-          modifier = 'phone';
-          hrefPrefix = 'tel:';
-          processedValue = formatPhoneNumber(contact.value);
-          break;
-        case 'Email':
-          modifier = 'email';
-          hrefPrefix = 'mailto:';
-          break;
-        case 'Facebook':
-          modifier = 'facebook';
-          processedValue = extractPathWithoutExtension(contact.value);
-          break;
-        case 'VK':
-          modifier = 'vk';
-          processedValue = extractPathWithoutExtension(contact.value);
-          break;
-        default:
-          modifier = 'default';
-          break;
-      }
-
-      const contactElement = createElement({
-        tag: 'div',
-        classes: ['client__contact', `client__contact_${modifier}`],
+    contacts.forEach((contact, idx) => {
+      const newContact = new Contact({
+        contact,
+        contactIndex: idx,
+        contactsLength: contacts.length,
+        contactsCell,
       });
-
-      contactElement.appendChild(
-        createElement({
-          tag: 'div',
-          classes: ['client__contact-icon', `client__contact-icon_${modifier}`],
-        }),
-      );
-
-      const tooltip = createElement({
-        tag: 'div',
-        classes: ['client__contact-tooltip', 'contact-tooltip'],
-      });
-
-      tooltip.appendChild(
-        createElement({
-          tag: 'a',
-          text: processedValue ? processedValue : contact.value,
-          attributes: [
-            {
-              name: 'href',
-              value: `${hrefPrefix ? hrefPrefix : ''}${contact.value}`,
-            },
-            {
-              name: 'target',
-              value: '_blank',
-            },
-          ],
-        }),
-      );
-
-      contactElement.appendChild(tooltip);
-
-      contactCell.appendChild(contactElement);
+      contactsCell.appendChild(newContact.initContact());
     });
 
-    return contactCell;
+    if (contacts.length > 5) {
+      const moreContactIcon = createElement({
+        tag: 'div',
+        classes: ['contact-icon', 'contact-icon_more'],
+      });
+
+      moreContactIcon.appendChild(
+        createElement({
+          tag: 'span',
+          text: `${contacts.length - 4}`,
+        }),
+      );
+
+      contactsCell.appendChild(moreContactIcon);
+    }
+
+    return contactsCell;
   }
 
   createActions() {

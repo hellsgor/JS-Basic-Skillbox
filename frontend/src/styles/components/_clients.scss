@@ -2,35 +2,30 @@
   
   &__table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 40px;
+    border-collapse: collapse;
     
-    th {
-      text-align: left;
-      
-      //&[id="head-row-id"] {
-      //  width: 42px;
-      //}
-      //
-      //&[id="head-row-full-name"] {
-      //  width: 329px;
-      //}
-      //
-      //&[id="head-row-create"] {
-      //  width: 135px;
-      //}
-      //
-      //&[id="head-row-change"] {
-      //  width: 133px;
-      //}
-      //
-      //&[id="head-row-contacts"] {
-      //  width: 118px;
-      //}
-      //
-      //&[id="head-row-actions"] {
-      //  width: 189px;
-      //}
-    }
+    //&[id="head-row-id"] {
+    //  width: 42px;
+    //}
+    //
+    //&[id="head-row-full-name"] {
+    //  width: 329px;
+    //}
+    //
+    //&[id="head-row-create"] {
+    //  width: 135px;
+    //}
+    //
+    //&[id="head-row-change"] {
+    //  width: 133px;
+    //}
+    //
+    //&[id="head-row-contacts"] {
+    //  width: 118px;
+    //}
+    //
+    //&[id="head-row-actions"] {
+    //  width: 189px;
+    //}
   }
 }

@@ -1,5 +1,14 @@
 .head-cell {
-  padding: 8px 0;
+  padding: 8px 40px 8px 0;
+  text-align: left;
+  
+  &:first-child {
+    padding-left: 20px;
+  }
+  
+  &:last-child {
+    padding-right: 20px;
+  }
   
   span {
     position: relative;
