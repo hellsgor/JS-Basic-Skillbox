@@ -1,6 +1,6 @@
 .client {
   font-size: 14px;
-  line-height: 19px;
+  line-height: 1;
   background-color: $white;
   color: $black;
   
@@ -8,6 +8,7 @@
   td {
     width: fit-content;
     padding: 20px 40px 20px 0;
+    vertical-align: center;
     
     &:first-child {
       padding-left: 20px;
@@ -32,9 +33,9 @@
     color: $txt-gray;
   }
   
-  &__contacts {
+  &__contacts-cell {
     display: flex;
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
     align-items: center;
     gap: 7px;
   }

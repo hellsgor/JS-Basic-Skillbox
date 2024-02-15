@@ -81,7 +81,7 @@ export class Client {
   createContacts(contacts) {
     const contactsCell = createElement({
       tag: 'td',
-      classes: 'client__contacts',
+      classes: 'client__contacts-cell',
     });
 
     contacts.forEach((contact, idx) => {
@@ -116,7 +116,7 @@ export class Client {
   createActions() {
     const actionsCell = createElement({
       tag: 'td',
-      classes: 'contact__action-buttons',
+      classes: 'client__buttons-cell',
     });
 
     this.clientButtons.forEach((btnProps) => {

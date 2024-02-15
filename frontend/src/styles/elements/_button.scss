@@ -1,0 +1,46 @@
+.button {
+  cursor: pointer;
+  
+  &_action {
+    display: inline-flex;
+    height: 100%;
+    max-height: 20px;
+    padding: 0;
+    border: none;
+    align-items: center;
+    background-color: transparent;
+    
+    &::before {
+      opacity: .7;
+      width: 16px;
+      height: 16px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      content: '';
+      transition: opacity .3s ease-in-out;
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        &:before {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  
+  &_change {
+    margin-right: 30px;
+    
+    &::before {
+      background-image: url("/icons/change.svg");
+    }
+  }
+  
+  &_delete {
+    &::before {
+      background-image: url("/icons/delete.svg");
+    }
+  }
+}
