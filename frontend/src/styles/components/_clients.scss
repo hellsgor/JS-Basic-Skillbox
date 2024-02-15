@@ -4,28 +4,26 @@
     width: 100%;
     border-collapse: collapse;
     
-    //&[id="head-row-id"] {
-    //  width: 42px;
-    //}
-    //
-    //&[id="head-row-full-name"] {
-    //  width: 329px;
-    //}
-    //
-    //&[id="head-row-create"] {
-    //  width: 135px;
-    //}
-    //
-    //&[id="head-row-change"] {
-    //  width: 133px;
-    //}
-    //
-    //&[id="head-row-contacts"] {
-    //  width: 118px;
-    //}
-    //
-    //&[id="head-row-actions"] {
-    //  width: 189px;
-    //}
+    th {
+      &[id="head-row-id"] {
+        width: 62px;
+      }
+      
+      &[id="head-row-create"] {
+        width: 175px;
+      }
+      
+      &[id="head-row-change"] {
+        width: 173px;
+      }
+      
+      &[id="head-row-contacts"] {
+        width: 148px;
+      }
+      
+      &[id="head-row-actions"] {
+        width: 207px;
+      }
+    }
   }
 }
