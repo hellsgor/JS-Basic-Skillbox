@@ -134,8 +134,7 @@ export class Contact {
   }
 
   hideAllTooltips() {
-    this.contactElement
-      .closest('.client__contacts-cell')
+    this.contactsCell
       .querySelectorAll('.contact-tooltip')
       .forEach((tooltip) => {
         tooltip.classList.add('contact-tooltip_hidden');
