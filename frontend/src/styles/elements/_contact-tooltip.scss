@@ -2,10 +2,10 @@
   position: absolute;
   top: -41px;
   left: 50%;
-  z-index: 10;
+  z-index: -10000;
   display: inline-flex;
-  visibility: visible;
-  opacity: 1;
+  visibility: hidden;
+  opacity: 0;
   width: fit-content;
   padding: 8px 18px;
   background-color: $black;
@@ -36,13 +36,11 @@
   }
   
   a {
-    text-decoration: underline;
+    font-weight: 700;
     white-space: nowrap;
   }
   
   &_hidden {
-    z-index: -10000;
-    visibility: hidden;
-    opacity: 0;
+  
   }
 }

@@ -35,13 +35,13 @@ export class Contact {
     this.createContactIcon();
     this.createTooltip();
 
-    if (this.contactsLength > 5 && this.contactIndex > 3) {
-      this.contactElement.classList.add('client__contact_hidden');
-    }
-
     let contactModifier = 'client__contact_';
     this.modifier ? (contactModifier += 'white') : (contactModifier += 'firm');
     this.contactElement.classList.add(contactModifier);
+
+    if (this.contactsLength > 5 && this.contactIndex > 3) {
+      this.contactElement.classList.add('client__contact_hidden');
+    }
   }
 
   createContactIcon() {
@@ -52,14 +52,7 @@ export class Contact {
         : 'contact-icon',
     });
 
-    contactIcon.addEventListener('mouseenter', () => {
-      this.hideAllTooltips();
-      this.showContactTooltip();
-    });
-
     this.contactElement.appendChild(contactIcon);
-
-    // TODO: добавить события на иконки контактов для показа и скрытия тултипов
   }
 
   createTooltip() {
@@ -125,19 +118,5 @@ export class Contact {
       default:
         break;
     }
-  }
-
-  showContactTooltip() {
-    this.contactElement
-      .querySelector('.contact-tooltip')
-      .classList.remove('contact-tooltip_hidden');
-  }
-
-  hideAllTooltips() {
-    this.contactsCell
-      .querySelectorAll('.contact-tooltip')
-      .forEach((tooltip) => {
-        tooltip.classList.add('contact-tooltip_hidden');
-      });
   }
 }

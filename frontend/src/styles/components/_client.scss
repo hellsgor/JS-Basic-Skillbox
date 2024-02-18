@@ -67,5 +67,13 @@
         color: $firm;
       }
     }
+    
+    &:hover {
+      .contact-tooltip {
+        z-index: 10;
+        visibility: visible;
+        opacity: 1;
+      }
+    }
   }
 }
