@@ -1,0 +1,79 @@
+.client {
+  height: 60px;
+  border-bottom: 1px solid $table-row-border;
+  font-size: 14px;
+  line-height: 1;
+  background-color: $white;
+  color: $black;
+  
+  th,
+  td {
+    width: fit-content;
+    padding: 20px 40px 20px 0;
+    vertical-align: center;
+    
+    &:first-child {
+      padding-left: 20px;
+    }
+    
+    &:last-child {
+      padding-right: 20px;
+    }
+  }
+  
+  th {
+    text-align: left;
+  }
+  
+  &__id {
+    font-size: 12px;
+    font-weight: 400;
+    color: $txt-gray;
+  }
+  
+  &__time {
+    color: $txt-gray;
+  }
+  
+  &__contacts-cell {
+    display: flex;
+    height: 60px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    
+    &_full {
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+    }
+  }
+  
+  &__contact {
+    position: relative;
+    
+    &_hidden {
+      display: none;
+    }
+    
+    &_white {
+      .contact-tooltip a {
+        color: $white;
+      }
+    }
+    
+    &_firm {
+      .contact-tooltip a {
+        text-decoration: underline;
+        color: $firm;
+      }
+    }
+    
+    &:hover {
+      .contact-tooltip {
+        z-index: 10;
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+}

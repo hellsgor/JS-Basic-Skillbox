@@ -1,35 +1,51 @@
 module.exports = {
-  root: true,
-  env: {
-    browser: true,
-    es2021: true,
+  'env': {
+    'browser': true,
+    'es2021': true,
   },
-  extends: [
-    'prettier',
-    'airbnb-base',
-    'plugin:import/recommended',
+  'globals': {
+    __dirname: true,
+  },
+  'extends': ['eslint:recommended', 'plugin:prettier/recommended'],
+  'overrides': [
+    {
+      'env': {
+        'node': true,
+      },
+      'files': [
+        '.eslintrc.{js,cjs}',
+      ],
+      'parserOptions': {
+        'sourceType': 'script',
+      },
+    },
   ],
-  overrides: [],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+  'parserOptions': {
+    'ecmaVersion': 'latest',
+    'sourceType': 'module',
   },
-  rules: {
-    'import/no-extraneous-dependencies': ['error', { 'devDependencies': true }],
+  'rules': {
+    // 'indent': [
+    //   'error',
+    //   2,
+    // ],
+    'linebreak-style': [
+      'error',
+      'unix',
+    ],
+    'quotes': [
+      'error',
+      'single',
+    ],
+    'semi': [
+      'error',
+      'always',
+    ],
+    'no-var': 'error',
     'no-console': 'warn',
-    'no-alert': 0,
-    'no-param-reassign': [2, { props: false }],
-    'no-plusplus': 0,
-    'no-iterator': 0,
-    'no-restricted-syntax': [2, 'WithStatement'],
-    'func-style': 0,
-    'import/no-unresolved': 'off',
-    'import/prefer-default-export': ['off', { target: 'single' }],
-    'class-methods-use-this': 'off',
-    'import/extensions': ['error', 'ignorePackages', {
-      js: 'always',
-      cjs: 'always',
-    }],
-    'lines-between-class-members': 'off',
+    'no-alert': 'warn',
+    'prettier/prettier': [
+      'warn', { endOfLine: 'auto' },
+    ],
   },
 };

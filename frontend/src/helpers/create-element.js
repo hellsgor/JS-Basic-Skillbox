@@ -19,5 +19,18 @@ export function createElement(props) {
     element.innerHTML = props.html;
   }
 
+  if (props.attributes && Array.isArray(props.attributes)) {
+    props.attributes.forEach((attr) => {
+      element.setAttribute(attr.name, attr.value);
+    });
+  }
+
+  if (props.callback) {
+    element.addEventListener(
+      props.event ? props.event : 'click',
+      props.callback,
+    );
+  }
+
   return element;
 }
