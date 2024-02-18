@@ -147,6 +147,7 @@ export class Client {
       .forEach((hiddenContact) =>
         hiddenContact.classList.remove('client__contact_hidden'),
       );
+    contactsCell.classList.add('client__contacts-cell_full');
     moreIcon.classList.add('client__contact_hidden');
   }
 
