@@ -107,6 +107,9 @@ export class Client {
         }),
       );
 
+      moreContactIcon.addEventListener('click', () => {
+        this.showAllContacts(contactsCell, moreContactIcon);
+      });
       contactsCell.appendChild(moreContactIcon);
     }
 
@@ -136,6 +139,15 @@ export class Client {
       );
     });
     return actionsCell;
+  }
+
+  showAllContacts(contactsCell, moreIcon) {
+    contactsCell
+      .querySelectorAll('.client__contact_hidden')
+      .forEach((hiddenContact) =>
+        hiddenContact.classList.remove('client__contact_hidden'),
+      );
+    moreIcon.classList.add('client__contact_hidden');
   }
 
   changeClient() {
