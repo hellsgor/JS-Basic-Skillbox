@@ -1,0 +1,15 @@
+<button
+  class="button{{#if this.modifier}} button_{{this.modifier}}{{/if}}{{#if this.iconMod}} button_big{{/if}}"
+    {{#if this.disabled}}disabled{{/if}}
+>
+  <div class="button__wrapper">
+    {{#if this.iconID}}
+      <div class="button__icon{{#if this.iconMod}} button__icon_{{this.iconMod}}{{/if}}">
+        <svg>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#{{this.iconID}}" />
+        </svg>
+      </div>
+    {{/if}}
+    <span class="button__text">{{this.text}}</span>
+  </div>
+</button>
