@@ -6,8 +6,22 @@
   width: 100%;
   max-width: 450px;
   padding: 24px 30px;
+  border: none;
   background-color: $white;
   transform: translate(-50%, -50%);
+  
+  &_hidden {
+    z-index: -10000;
+    opacity: 0;
+  }
+  
+  &_fade-in {
+    animation: .3s ease-in-out fade;
+  }
+  
+  &_fade-out {
+    animation: .3s ease-in-out reverse fade;
+  }
   
   &__close-btn {
     position: absolute;

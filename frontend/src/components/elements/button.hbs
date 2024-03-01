@@ -1,6 +1,8 @@
 <button
-  class="button{{#if this.modifier}} button_{{this.modifier}}{{/if}}{{#if this.iconMod}} button_big{{/if}}"
-    {{#if this.disabled}}disabled{{/if}}
+  class="{{#if this.class}}{{this.class}}{{/if}} button{{#if this.modifier}} button_{{this.modifier}}{{/if}}{{#if this.iconMod}} button_big{{/if}}"
+  {{#if this.disabled}}disabled{{/if}}
+  {{#if this.id}}id="{{this.id}}"{{/if}}
+  {{#if this.target}}{{{this.target}}}{{/if}}
 >
   <div class="button__wrapper">
     {{#if this.iconID}}

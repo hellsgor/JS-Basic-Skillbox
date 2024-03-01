@@ -11,8 +11,13 @@
       </thead>
       <tbody id="table-body"></tbody>
     </table>
-    <div class="clients__add-button">
-      {{> elements/button text='Добавить клиента' modifier='secondary' iconMod='big' iconID='add-client'}}
-    </div>
+    {{> elements/button
+      text='Добавить клиента'
+      modifier='secondary'
+      iconMod='big'
+      iconID='add-client'
+      class="clients__add-button"
+      id="add-client-button"
+    }}
   </div>
 </section>
