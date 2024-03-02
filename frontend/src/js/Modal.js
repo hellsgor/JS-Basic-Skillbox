@@ -1,15 +1,23 @@
 import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-to-milliseconds.js';
+import { createElement } from '@/helpers/create-element.js';
 
 class Modal {
   modalClassName = 'modal';
 
   classNames = {
-    closeBtn: '__close-btn',
+    closeBtn: `${this.modalClassName}__close-btn`,
+    title: `${this.modalClassName}__title`,
+    body: `${this.modalClassName}__body`,
     backdrop: 'backdrop',
   };
 
   attributes = {
-    modalName: 'data-modal-template',
+    modalTemplate: 'data-modal-template',
+  };
+
+  modalTemplatesList = {
+    client: 'client',
+    delete: 'delete',
   };
 
   modifiers = {
@@ -18,18 +26,43 @@ class Modal {
     hidden: '_hidden',
   };
 
+  templatesIDs = {
+    inputs: 'modal-inputs-template',
+  };
+
+  strings = {
+    title: {
+      new: 'Новый клиент',
+      edit: 'Изменить данные',
+      delete: 'Удалить клиента',
+    },
+  };
+
   modal = null;
-  modalName = null;
+  modalTemplate = null;
   closeBtn = null;
   backdrop = null;
+  title = null;
+  body = null;
 
   constructor(props) {
-    this.modal = props.modal;
+    this.modal = props?.modal;
 
     this.getModalElements();
     this.addEvents();
 
     return this;
+  }
+
+  getModalElements() {
+    this.modalTemplate = this.modal?.getAttribute(
+      this.attributes.modalTemplate,
+    );
+
+    this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
+    this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
+    this.title = this.modal.querySelector(`.${this.classNames.title}`);
+    this.body = this.modal.querySelector(`.${this.classNames.body}`);
   }
 
   addEvents() {
@@ -42,7 +75,9 @@ class Modal {
     });
   }
 
-  showModal() {
+  showModal(client = null) {
+    this.fillModal(client);
+
     this.modal.classList.remove(
       `${this.modalClassName}${this.modifiers.hidden}`,
     );
@@ -88,6 +123,8 @@ class Modal {
         this.backdrop.classList.remove(
           `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
         );
+
+        this.clearModal();
       },
       convertTimeStringToMilliseconds(
         window.getComputedStyle(this.modal).animationDuration,
@@ -95,13 +132,56 @@ class Modal {
     );
   }
 
-  getModalElements() {
-    this.modalName = this.modal?.getAttribute(this.attributes.modalName);
+  fillModal(client = null) {
+    this.setTitle(client);
 
-    this.closeBtn = this.modal?.querySelector(
-      `.${this.modalClassName}${this.classNames.closeBtn}`,
-    );
-    this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
+    if (this.modalTemplate !== this.modalTemplatesList.delete) {
+      const form = this.createForm(client);
+
+      form.appendChild(
+        document
+          .getElementById(this.templatesIDs.inputs)
+          .content.cloneNode(true),
+      );
+
+      this.body.appendChild(form);
+    }
+  }
+
+  clearModal() {
+    this.clearTitle();
+    this.clearBody();
+  }
+
+  setTitle(client) {
+    if (this.modalTemplate === this.modalTemplatesList.delete) {
+      this.title.innerText = this.strings.title.delete;
+      return;
+    }
+
+    if (this.modalTemplate === this.modalTemplatesList.client) {
+      this.title.innerText = client
+        ? this.strings.title.edit
+        : this.strings.title.new;
+    }
+  }
+
+  clearTitle() {
+    this.title.innerText = '';
+  }
+
+  createForm(client) {
+    return createElement({
+      tag: 'form',
+      attributes: [
+        { name: 'name', value: client ? 'edit-client' : 'new-client' },
+        { name: 'autocomplete', value: 'off' },
+      ],
+    });
+  }
+
+  clearBody() {
+    this.body.innerHTML = '';
   }
 }
 
@@ -109,7 +189,7 @@ export function initModals() {
   const modals = {};
   document.querySelectorAll('.modal').forEach((modal) => {
     const newModal = new Modal({ modal });
-    modals[newModal.modalName] = newModal;
+    modals[newModal.modalTemplate] = newModal;
   });
   return modals;
 }
