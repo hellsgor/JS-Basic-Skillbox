@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export class GetDataApi {
+class ClientsApi {
   URL = 'http://localhost:3000/api/';
 
   RESOURCES = {
@@ -8,7 +8,7 @@ export class GetDataApi {
     CLIENTS: 'clients',
   };
 
-  async getContacts() {
+  async getClients() {
     try {
       const response = await axios.get(`${this.URL}${this.RESOURCES.CLIENTS}`);
       return response.data;
@@ -19,5 +19,5 @@ export class GetDataApi {
   }
 }
 
-const getDataApi = new GetDataApi();
-export default getDataApi;
+const clientsApi = new ClientsApi();
+export default clientsApi;

@@ -1,4 +1,4 @@
-import getDataApi from '@api/get-data-api.js';
+import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
 
 export class ClientsTable {
@@ -19,6 +19,6 @@ export class ClientsTable {
   }
 
   async initClients() {
-    this.clients = await getDataApi.getContacts();
+    this.clients = await clientsApi.getClients();
   }
 }
