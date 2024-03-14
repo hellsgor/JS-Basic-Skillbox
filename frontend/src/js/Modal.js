@@ -28,6 +28,7 @@ class Modal {
 
   templatesIDs = {
     inputs: 'modal-inputs-template',
+    contacts: 'modal-contacts-template',
   };
 
   strings = {
@@ -66,10 +67,6 @@ class Modal {
   }
 
   addEvents() {
-    this.modal.addEventListener('click', (event) => {
-      event.target === this.modal && this.closeModal();
-    });
-
     this.closeBtn.addEventListener('click', () => {
       this.closeModal();
     });
@@ -138,11 +135,13 @@ class Modal {
     if (this.modalTemplate !== this.modalTemplatesList.delete) {
       const form = this.createForm(client);
 
-      form.appendChild(
-        document
-          .getElementById(this.templatesIDs.inputs)
-          .content.cloneNode(true),
-      );
+      Object.keys(this.templatesIDs).forEach((templateID) => {
+        form.appendChild(
+          document
+            .getElementById(this.templatesIDs[templateID])
+            .content.cloneNode(true),
+        );
+      });
 
       this.body.appendChild(form);
     }

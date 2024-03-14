@@ -7,23 +7,27 @@
   align-items: center;
   background-color: transparent;
   cursor: pointer;
+  transition: color .2s ease-in-out;
   
-  &::before {
-    opacity: .7;
+  &::before,
+  &::after {
     width: 16px;
     height: 16px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: 16px;
-    content: '';
-    transition: opacity .3s ease-in-out;
+    
   }
   
-  @media(hover: hover) {
-    &:hover {
-      &:before {
-        opacity: 1;
-      }
+  &_change,
+  &_delete {
+    &::before,
+    &::after {
+      opacity: .7;
+    }
+    
+    &::before {
+      content: '';
     }
   }
   
@@ -33,11 +37,63 @@
     &::before {
       background-image: url("/icons/change.svg");
     }
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $firm;
+      }
+    }
   }
   
   &_delete {
     &::before {
       background-image: url("/icons/delete.svg");
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $red;
+      }
+    }
+  }
+  
+  &_add {
+    position: relative;
+    column-gap: 4px;
+    font-weight: 600;
+    line-height: normal;
+    
+    &:before,
+    &::after {
+      content: '';
+      transition: opacity .3s ease-in-out;
+      
+    }
+    
+    &::before {
+      background-image: url("/icons/add.svg");
+    }
+    
+    &::after {
+      position: absolute;
+      top: 2px;
+      left: 0;
+      opacity: 0;
+      background-image: url("/icons/add_hover.svg");
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $firm;
+        
+        &::before {
+          opacity: 0;
+        }
+        
+        &::after {
+          opacity: 1
+        }
+      }
     }
   }
 }

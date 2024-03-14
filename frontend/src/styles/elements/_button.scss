@@ -1,7 +1,8 @@
-.button {
+$root: '.button';
+
+#{$root} {
   display: flex;
   min-width: 124px;
-  //min-height: 44px;
   padding: 12.5px 26.5px;
   outline: none;
   border: 1px solid $firm;
@@ -9,7 +10,7 @@
   justify-content: center;
   font-size: 14px;
   font-weight: 600;
-  line-height: 17px;
+  line-height: normal;
   background-color: $firm;
   color: $white;
   cursor: pointer;
@@ -101,5 +102,4 @@
       }
     }
   }
-  
 }
