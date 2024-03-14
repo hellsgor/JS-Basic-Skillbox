@@ -71,4 +71,19 @@
     align-items: center;
     background-color: $modal-contacts-background;
   }
+  
+  &__errors {
+    display: flex;
+    padding: 8px 30px;
+    justify-content: center;
+    
+    span {
+      max-width: 255px;
+      font-size: 10px;
+      font-weight: 400;
+      text-align: center;
+      line-height: normal;
+      color: $red;
+    }
+  }
 }

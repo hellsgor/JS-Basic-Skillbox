@@ -26,9 +26,24 @@ class Modal {
     hidden: '_hidden',
   };
 
+  locations = {
+    body: 'body',
+    form: 'form',
+  };
+
   templatesIDs = {
-    inputs: 'modal-inputs-template',
-    contacts: 'modal-contacts-template',
+    inputs: {
+      name: 'modal-inputs-template',
+      location: this.locations.form,
+    },
+    contacts: {
+      name: 'modal-contacts-template',
+      location: this.locations.form,
+    },
+    errors: {
+      name: 'modal-errors-template',
+      location: this.locations.body,
+    },
   };
 
   strings = {
@@ -133,17 +148,20 @@ class Modal {
     this.setTitle(client);
 
     if (this.modalTemplate !== this.modalTemplatesList.delete) {
-      const form = this.createForm(client);
+      this.body.appendChild(this.createForm(client));
+      const form = this.body.querySelector('form');
 
       Object.keys(this.templatesIDs).forEach((templateID) => {
-        form.appendChild(
-          document
-            .getElementById(this.templatesIDs[templateID])
-            .content.cloneNode(true),
-        );
-      });
+        const newElement = document
+          .getElementById(this.templatesIDs[templateID].name)
+          .content.cloneNode(true);
 
-      this.body.appendChild(form);
+        this.templatesIDs[templateID].location === this.locations.body &&
+          this.body.appendChild(newElement);
+
+        this.templatesIDs[templateID].location === this.locations.form &&
+          form.appendChild(newElement);
+      });
     }
   }
 
