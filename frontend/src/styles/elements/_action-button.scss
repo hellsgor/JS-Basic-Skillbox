@@ -31,6 +31,19 @@
     }
   }
   
+  &_default {
+    font-size: 12px;
+    text-decoration: underline;
+    line-height: normal;
+    color: $black;
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $firm;
+      }
+    }
+  }
+  
   &_change {
     margin-right: 30px;
     

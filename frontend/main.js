@@ -10,7 +10,7 @@ const modals = initModals();
 await clientsTable.renderClients();
 
 addClientButton.addEventListener('click', () => {
-  modals['client'].showModal();
+  modals['new-client'].showModal();
 });
 
 backdrop.addEventListener('click', () => {

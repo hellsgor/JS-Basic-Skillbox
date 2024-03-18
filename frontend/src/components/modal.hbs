@@ -43,3 +43,14 @@
 <template id="modal-errors-template">
   <div class="modal__errors"></div>
 </template>
+
+<template id="modal-buttons-template">
+  <div class="modal__buttons">
+    {{> elements/button
+      text='some text'
+      modifier='primary'
+      class="modal__action-button"
+    }}
+    <button class="modal__cancel-button action-button action-button_default" type=button>Some text</button>
+  </div>
+</template>

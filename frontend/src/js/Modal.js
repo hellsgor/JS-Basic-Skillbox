@@ -8,6 +8,8 @@ class Modal {
     closeBtn: `${this.modalClassName}__close-btn`,
     title: `${this.modalClassName}__title`,
     body: `${this.modalClassName}__body`,
+    actionButton: `${this.modalClassName}__action-button`,
+    cancelButton: `${this.modalClassName}__cancel-button`,
     backdrop: 'backdrop',
   };
 
@@ -16,7 +18,8 @@ class Modal {
   };
 
   modalTemplatesList = {
-    client: 'client',
+    newClient: 'new-client',
+    editClient: 'edit-client',
     delete: 'delete',
   };
 
@@ -44,6 +47,10 @@ class Modal {
       name: 'modal-errors-template',
       location: this.locations.body,
     },
+    buttons: {
+      name: 'modal-buttons-template',
+      location: this.locations.body,
+    },
   };
 
   strings = {
@@ -51,6 +58,12 @@ class Modal {
       new: 'Новый клиент',
       edit: 'Изменить данные',
       delete: 'Удалить клиента',
+    },
+    buttons: {
+      cancel: 'Отменить',
+      delete: 'Удалить клиента',
+      deleteSmall: 'Удалить',
+      save: 'Сохранить',
     },
   };
 
@@ -152,9 +165,13 @@ class Modal {
       const form = this.body.querySelector('form');
 
       Object.keys(this.templatesIDs).forEach((templateID) => {
-        const newElement = document
+        let newElement = document
           .getElementById(this.templatesIDs[templateID].name)
           .content.cloneNode(true);
+
+        if (templateID === 'buttons') {
+          newElement = this.setButtons(newElement);
+        }
 
         this.templatesIDs[templateID].location === this.locations.body &&
           this.body.appendChild(newElement);
@@ -176,7 +193,7 @@ class Modal {
       return;
     }
 
-    if (this.modalTemplate === this.modalTemplatesList.client) {
+    if (this.modalTemplate === this.modalTemplatesList.newClient) {
       this.title.innerText = client
         ? this.strings.title.edit
         : this.strings.title.new;
@@ -199,6 +216,26 @@ class Modal {
 
   clearBody() {
     this.body.innerHTML = '';
+  }
+
+  setButtons(buttonsContainer) {
+    const cancelButton = buttonsContainer.querySelector(
+      `.${this.classNames.cancelButton}`,
+    );
+    const actionButton = buttonsContainer.querySelector(
+      `.${this.classNames.actionButton}`,
+    );
+
+    if (this.modalTemplate === this.modalTemplatesList.newClient) {
+      actionButton.innerText = this.strings.buttons.save;
+      cancelButton.innerText = this.strings.buttons.cancel;
+
+      cancelButton.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+
+    return buttonsContainer;
   }
 }
 
