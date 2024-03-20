@@ -3,9 +3,18 @@ import { createElement } from '@/helpers/create-element.js';
 import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
 
+/**
+ * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
+ * */
 class Modal {
+  /**
+   * @param modalClassName - класс любого модального окна
+   * */
   modalClassName = 'modal';
 
+  /**
+   * @param classNames - классы элементов модального окна
+   * */
   classNames = {
     closeBtn: `${this.modalClassName}__close-btn`,
     title: `${this.modalClassName}__title`,
@@ -17,28 +26,43 @@ class Modal {
     backdrop: 'backdrop',
   };
 
+  /**
+   * @param modalTemplate - data-атрибут для хранения идентификатора шаблона модельного окна
+   */
   attributes = {
     modalTemplate: 'data-modal-template',
   };
 
+  /**
+   * @param modalTemplatesList - идентификаторы шаблонов модальных окон
+   * */
   modalTemplatesList = {
     newClient: 'new-client',
     editClient: 'edit-client',
     delete: 'delete',
   };
 
+  /**
+   * @param modifiers - модификаторы css-селекторов. Для анимаций
+   * */
   modifiers = {
     fadeIn: '_fade-in',
     fadeOut: '_fade-out',
     hidden: '_hidden',
   };
 
+  /**
+   * @param locations - список родителей элементов модального окна. Нужны для более простой идентификации родителя добавляемого элемента
+   * */
   locations = {
     body: 'body',
     form: 'form',
     contacts: 'contacts',
   };
 
+  /**
+   * @param templatesIDs - HTML-шаблоны элементов модального окна. Обязательные и опциональные
+   * */
   templatesIDs = {
     required: {
       inputs: {
@@ -71,6 +95,9 @@ class Modal {
     },
   };
 
+  /**
+   * @param strings - объект для строковых значений, например, текста кнопок или текста заголовков модальных окон
+   * */
   strings = {
     title: {
       new: 'Новый клиент',
@@ -85,6 +112,14 @@ class Modal {
     },
   };
 
+  /**
+   * @param modal - текущее модальное окно
+   * @param modalTemplate - шаблон наполнения модального окна
+   * @param closeBtn - кнопка закрытия модального окна
+   * @param backdrop - backdrop. Общий для всех модальных окон
+   * @param title - заголовок модального окна
+   * @param body - условное "тело" модального окна
+   * */
   modal = null;
   modalTemplate = null;
   closeBtn = null;
@@ -95,29 +130,38 @@ class Modal {
   constructor(props) {
     this.modal = props?.modal;
 
+    this.modalTemplate = this.modal?.getAttribute(
+      this.attributes.modalTemplate,
+    );
+
     this.getModalElements();
     this.addEvents();
 
     return this;
   }
 
+  /**
+   * Определяет элементы модального окна
+   * */
   getModalElements() {
-    this.modalTemplate = this.modal?.getAttribute(
-      this.attributes.modalTemplate,
-    );
-
     this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
     this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
-    this.title = this.modal.querySelector(`.${this.classNames.title}`);
-    this.body = this.modal.querySelector(`.${this.classNames.body}`);
+    this.title = this.modal?.querySelector(`.${this.classNames.title}`);
+    this.body = this.modal?.querySelector(`.${this.classNames.body}`);
   }
 
+  /**
+   * Добавляет базовые события элементам модального окна
+   * */
   addEvents() {
     this.closeBtn.addEventListener('click', () => {
       this.closeModal();
     });
   }
 
+  /**
+   * Показывает модальное окно
+   * */
   showModal(client = null) {
     this.fillModal(client);
 
@@ -146,6 +190,9 @@ class Modal {
     );
   }
 
+  /**
+   * Скрывает модальное окно
+   * */
   closeModal() {
     this.modal.classList.add(`${this.modalClassName}${this.modifiers.fadeOut}`);
     this.backdrop.classList.add(
@@ -175,6 +222,9 @@ class Modal {
     );
   }
 
+  /**
+   * Наполняет модальное окно в соответствии с шаблоном наполнения
+   * */
   fillModal(client = null) {
     this.setTitle(client);
 
@@ -215,11 +265,17 @@ class Modal {
     }
   }
 
+  /**
+   * Очищает модальное окно
+   * */
   clearModal() {
     this.clearTitle();
     this.clearBody();
   }
 
+  /**
+   * Устанавливает заголовок модального окна
+   * */
   setTitle(client) {
     if (this.modalTemplate === this.modalTemplatesList.delete) {
       this.title.innerText = this.strings.title.delete;
@@ -233,10 +289,16 @@ class Modal {
     }
   }
 
+  /**
+   * Очищает заголовок модального окна
+   * */
   clearTitle() {
     this.title.innerText = '';
   }
 
+  /**
+   * Создаёт форму в модальном окне в соответствии с шаблоном наполнения
+   * */
   createForm(client) {
     return createElement({
       tag: 'form',
@@ -247,10 +309,16 @@ class Modal {
     });
   }
 
+  /**
+   * Очищает "тело" модального окна
+   * */
   clearBody() {
     this.body.innerHTML = '';
   }
 
+  /**
+   * Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
+   * */
   setButtons(buttonsContainer) {
     const cancelButton = buttonsContainer.querySelector(
       `.${this.classNames.cancelButton}`,
@@ -286,6 +354,9 @@ class Modal {
     return buttonsContainer;
   }
 
+  /**
+   * Добавляет новый контакт в форму модального окна
+   * */
   addNewContactControl() {
     this.body
       .querySelector(`.${this.classNames.contacts}`)
@@ -296,6 +367,9 @@ class Modal {
   }
 }
 
+/**
+ * Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы
+ * */
 export function initModals() {
   const modals = {};
   document.querySelectorAll('.modal').forEach((modal) => {
