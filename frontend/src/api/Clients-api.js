@@ -17,6 +17,19 @@ class ClientsApi {
       throw e;
     }
   }
+
+  async addClient(data) {
+    try {
+      const response = await axios.post(
+        `${this.URL}${this.RESOURCES.CLIENTS}`,
+        data,
+      );
+      return response.data;
+    } catch (e) {
+      console.error(`Невозможно отправить данные из-за ошибки: ${e}`);
+      throw e;
+    }
+  }
 }
 
 const clientsApi = new ClientsApi();
