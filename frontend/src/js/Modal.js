@@ -1,5 +1,6 @@
 import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-to-milliseconds.js';
 import { createElement } from '@/helpers/create-element.js';
+import clientsApi from '@api/clients-api.js';
 
 class Modal {
   modalClassName = 'modal';
@@ -232,6 +233,21 @@ class Modal {
 
       cancelButton.addEventListener('click', () => {
         this.closeModal();
+      });
+
+      actionButton.addEventListener('click', () => {
+        // TODO: сделать валидацию и отправку форм. Скорее всего через отдельный класс Form
+        console.log('submit form');
+        clientsApi
+          .addClient({
+            name: 'Захар',
+            lastName: 'Александрович',
+            surname: 'Камчатский',
+          })
+          .then((response) => {
+            console.log(response);
+            this.closeModal();
+          });
       });
     }
 
