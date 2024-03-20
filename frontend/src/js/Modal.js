@@ -1,6 +1,7 @@
 import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-to-milliseconds.js';
 import { createElement } from '@/helpers/create-element.js';
 import clientsApi from '@api/clients-api.js';
+import { cloneTemplate } from '@/helpers/clone-template.js';
 
 class Modal {
   modalClassName = 'modal';
@@ -9,6 +10,8 @@ class Modal {
     closeBtn: `${this.modalClassName}__close-btn`,
     title: `${this.modalClassName}__title`,
     body: `${this.modalClassName}__body`,
+    contacts: `${this.modalClassName}__contacts`,
+    addContactButton: `${this.modalClassName}__add-contact-button`,
     actionButton: `${this.modalClassName}__action-button`,
     cancelButton: `${this.modalClassName}__cancel-button`,
     backdrop: 'backdrop',
@@ -33,24 +36,38 @@ class Modal {
   locations = {
     body: 'body',
     form: 'form',
+    contacts: 'contacts',
   };
 
   templatesIDs = {
-    inputs: {
-      name: 'modal-inputs-template',
-      location: this.locations.form,
+    required: {
+      inputs: {
+        name: 'inputs',
+        id: 'modal-inputs-template',
+        location: this.locations.form,
+      },
+      contacts: {
+        name: 'contacts',
+        id: 'modal-contacts-template',
+        location: this.locations.form,
+      },
+      errors: {
+        name: 'errors',
+        id: 'modal-errors-template',
+        location: this.locations.body,
+      },
+      buttons: {
+        name: 'buttons',
+        id: 'modal-buttons-template',
+        location: this.locations.body,
+      },
     },
-    contacts: {
-      name: 'modal-contacts-template',
-      location: this.locations.form,
-    },
-    errors: {
-      name: 'modal-errors-template',
-      location: this.locations.body,
-    },
-    buttons: {
-      name: 'modal-buttons-template',
-      location: this.locations.body,
+    optional: {
+      newContact: {
+        name: 'newContact',
+        id: 'modal-contact-template',
+        location: this.locations.contacts,
+      },
     },
   };
 
@@ -165,20 +182,35 @@ class Modal {
       this.body.appendChild(this.createForm(client));
       const form = this.body.querySelector('form');
 
-      Object.keys(this.templatesIDs).forEach((templateID) => {
-        let newElement = document
-          .getElementById(this.templatesIDs[templateID].name)
-          .content.cloneNode(true);
+      Object.keys(this.templatesIDs.required).forEach((templateID) => {
+        let newElement = cloneTemplate(
+          this.templatesIDs.required[templateID].id,
+        );
 
-        if (templateID === 'buttons') {
+        if (templateID === this.templatesIDs.required.buttons.name) {
           newElement = this.setButtons(newElement);
         }
 
-        this.templatesIDs[templateID].location === this.locations.body &&
-          this.body.appendChild(newElement);
+        if (templateID === this.templatesIDs.required.contacts.name) {
+          newElement
+            .querySelector(`.${this.classNames.addContactButton}`)
+            .addEventListener('click', () => {
+              this.addNewContactControl();
+            });
+        }
 
-        this.templatesIDs[templateID].location === this.locations.form &&
-          form.appendChild(newElement);
+        switch (this.templatesIDs.required[templateID].location) {
+          case this.locations.body:
+            this.body.appendChild(newElement);
+            break;
+
+          case this.locations.form:
+            form.appendChild(newElement);
+            break;
+
+          default:
+            break;
+        }
       });
     }
   }
@@ -252,6 +284,15 @@ class Modal {
     }
 
     return buttonsContainer;
+  }
+
+  addNewContactControl() {
+    this.body
+      .querySelector(`.${this.classNames.contacts}`)
+      .insertBefore(
+        cloneTemplate(this.templatesIDs.optional.newContact.id),
+        this.body.querySelector(`.${this.classNames.addContactButton}`),
+      );
   }
 }
 
