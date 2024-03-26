@@ -56,5 +56,11 @@
 </template>
 
 <template id="modal-contact-template">
-  <span>I am new contact</span>
+  <div class="modal__contact">
+    {{> elements/select
+      this.contactSelect
+      classes='modal__contact-type'
+    }}
+  </div>
+
 </template>

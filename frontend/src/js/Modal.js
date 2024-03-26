@@ -2,6 +2,7 @@ import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-t
 import { createElement } from '@/helpers/create-element.js';
 import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
+import { Select } from '@/js/Select.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -245,7 +246,7 @@ class Modal {
           newElement
             .querySelector(`.${this.classNames.addContactButton}`)
             .addEventListener('click', () => {
-              this.addNewContactControl();
+              this.createContactControl();
             });
         }
 
@@ -357,11 +358,16 @@ class Modal {
   /**
    * Добавляет новый контакт в форму модального окна
    * */
-  addNewContactControl() {
+  createContactControl() {
+    const newContact = cloneTemplate(this.templatesIDs.optional.newContact.id);
+    const newSelect = new Select({
+      select: newContact.querySelector('.select'),
+    });
+
     this.body
       .querySelector(`.${this.classNames.contacts}`)
       .insertBefore(
-        cloneTemplate(this.templatesIDs.optional.newContact.id),
+        newContact,
         this.body.querySelector(`.${this.classNames.addContactButton}`),
       );
   }

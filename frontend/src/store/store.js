@@ -31,4 +31,13 @@ export const store = {
       idLastPart: 'actions',
     },
   ],
+  contactSelect: {
+    options: [
+      { text: 'Телефон', value: 'phone-number', defaultSelected: true },
+      { text: 'Доп. телефон', value: 'additional-phone-number' },
+      { text: 'Email', value: 'email' },
+      { text: 'Vk', value: 'vk' },
+      { text: 'Facebook', value: 'facebook' },
+    ],
+  },
 };
