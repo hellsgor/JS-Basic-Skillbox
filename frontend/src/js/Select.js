@@ -1,0 +1,80 @@
+export class Select {
+  select = null;
+  button = null;
+  buttonText = null;
+  buttonArrow = null;
+  dropdown = null;
+  options = null;
+
+  callback = null;
+
+  selectClassName = 'select';
+  classNames = {
+    button: `${this.selectClassName}__item`,
+    buttonText: `${this.selectClassName}__item-text`,
+    buttonArrow: `${this.selectClassName}__item-arrow`,
+    dropdown: `${this.selectClassName}__dropdown`,
+    option: `${this.selectClassName}__option`,
+  };
+
+  modifiers = {
+    opened: 'opened',
+    selected: 'selected',
+    visible: 'visible',
+  };
+
+  constructor(props) {
+    this.select = props.select || null;
+    this.callback = props.callback || null;
+
+    this.getElements();
+    this.addEventsListeners();
+    this.doSelected(this.options[0]);
+  }
+
+  getElements() {
+    if (this.select) {
+      this.button = this.select.querySelector(`.${this.classNames.button}`);
+      this.buttonText = this.select.querySelector(
+        `.${this.classNames.buttonText}`,
+      );
+      this.buttonArrow = this.select.querySelector(
+        `.${this.classNames.buttonArrow}`,
+      );
+      this.dropdown = this.select.querySelector(`.${this.classNames.dropdown}`);
+      this.options = this.select.querySelectorAll(`.${this.classNames.option}`);
+    }
+  }
+
+  addEventsListeners() {
+    this.button.addEventListener('click', () => {
+      this.toggleDropdown();
+    });
+
+    this.options.forEach((option) => {
+      option.addEventListener('click', (event) => {
+        this.doSelected(event.target);
+      });
+    });
+  }
+
+  toggleDropdown(action) {
+    this.select.classList[action ? action : 'toggle'](
+      `${this.selectClassName}_${this.modifiers.opened}`,
+    );
+  }
+
+  doSelected(target) {
+    this.toggleDropdown('remove');
+    this.options.forEach((option) => {
+      option.classList.remove(
+        `${this.classNames.option}_${this.modifiers.selected}`,
+      );
+    });
+    target.classList.add(
+      `${this.classNames.option}_${this.modifiers.selected}`,
+    );
+    this.button.setAttribute('data-selected-value', target.dataset.optionValue);
+    this.buttonText.innerText = target.textContent;
+  }
+}
