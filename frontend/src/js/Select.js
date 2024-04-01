@@ -62,6 +62,38 @@ export class Select {
     this.select.classList[action ? action : 'toggle'](
       `${this.selectClassName}_${this.modifiers.opened}`,
     );
+
+    /**
+     * добавление слушателя события click вне select для закрытия dropdown
+     * */
+    if (
+      action === 'add' ||
+      this.select.classList.contains(
+        `${this.selectClassName}_${this.modifiers.opened}`,
+      )
+    ) {
+      document.addEventListener('click', this.hideDropdown.bind(this));
+    }
+
+    /**
+     * удаление слушателя события click с документа при закрытии dropdown
+     * */
+    if (
+      action === 'remove' ||
+      !this.select.classList.contains(
+        `${this.selectClassName}_${this.modifiers.opened}`,
+      )
+    ) {
+      this.select.removeEventListener('click', this.hideDropdown);
+    }
+  }
+
+  hideDropdown(event) {
+    if (event.composedPath().includes(this.select) === false) {
+      this.select.classList.remove(
+        `${this.selectClassName}_${this.modifiers.opened}`,
+      );
+    }
   }
 
   doSelected(target) {
