@@ -1,3 +1,5 @@
+import { contactTypes } from '@/constants/contact-types.js';
+
 export const store = {
   tableHeadRowItems: [
     {
@@ -33,11 +35,15 @@ export const store = {
   ],
   contactSelect: {
     options: [
-      { text: 'Телефон', value: 'phone-number', defaultSelected: true },
-      { text: 'Доп. телефон', value: 'additional-phone-number' },
-      { text: 'Email', value: 'email' },
-      { text: 'Vk', value: 'vk' },
-      { text: 'Facebook', value: 'facebook' },
+      {
+        text: 'Телефон',
+        value: contactTypes.PHONE_NUMBER,
+        defaultSelected: true,
+      },
+      { text: 'Доп. телефон', value: contactTypes.ADDITIONAL_PHONE_NUMBER },
+      { text: 'Email', value: contactTypes.EMAIL },
+      { text: 'Vk', value: contactTypes.VK },
+      { text: 'Facebook', value: contactTypes.FACEBOOK },
     ],
   },
 };

@@ -2,9 +2,9 @@
   <button
     type="button"
     class="select__item"
-    {{#if this.default}}{{this.default.value}} data-selected-value="{{this.default.value}}"{{/if}}
+    data-selected-value=""
   >
-    <span class="select__item-text">{{#if this.default.text}}{{this.default.text}}{{/if}}</span>
+    <span class="select__item-text"></span>
     <div class="select__item-arrow">
       <svg>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#select-arrow" />
@@ -13,7 +13,7 @@
   </button>
   <ul class="select__dropdown">
     {{#each this.options}}
-      <li class="select__option{{#if this.defaultSelected}} select__option_selected{{/if}}" data-option-value="{{this.value}}"{{#if this.defaultSelected}} data-selected="true"{{/if}}>{{this.text}}</li>
+      <li class="select__option" data-option-value="{{this.value}}">{{this.text}}</li>
     {{/each}}
   </ul>
 </div>

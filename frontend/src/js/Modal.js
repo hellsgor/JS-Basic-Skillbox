@@ -3,6 +3,7 @@ import { createElement } from '@/helpers/create-element.js';
 import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
 import { Select } from '@/js/Select.js';
+import { contactTypes } from '@/constants/contact-types.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -362,6 +363,19 @@ class Modal {
     const newContact = cloneTemplate(this.templatesIDs.optional.newContact.id);
     const newSelect = new Select({
       select: newContact.querySelector('.select'),
+      callback: function () {
+        // TODO: написать класс маски для телефонов
+        if (
+          this.button.getAttribute('data-selected-value') ===
+            contactTypes.PHONE_NUMBER ||
+          this.button.getAttribute('data-selected-value') ===
+            contactTypes.ADDITIONAL_PHONE_NUMBER
+        ) {
+          console.log('mask needed');
+        } else {
+          console.log('no mask needed');
+        }
+      },
     });
 
     this.body
