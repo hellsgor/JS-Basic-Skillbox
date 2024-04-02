@@ -1,3 +1,5 @@
+@import "@styles/global/_colors.scss";
+
 .modal {
   position: absolute;
   top: 50%;
@@ -65,11 +67,35 @@
   
   &__contacts {
     display: flex;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding: 8px 30px;
     flex-direction: column;
     align-items: center;
     background-color: $modal-contacts-background;
+  }
+  
+  &__contact {
+    display: flex;
+    width: 100%;
+    border: 1px solid $gray;
+    
+    &:first-child {
+      margin-top: 15px;
+    }
+    
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+    
+    &:nth-last-child(2) {
+      margin-bottom: 25px;
+    }
+  }
+  
+  &__add-contact-button {
+    
+    &:not(:first-child) {
+      margin-bottom: 17px;
+    }
   }
   
   &__errors {
