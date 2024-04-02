@@ -9,7 +9,9 @@
     display: flex;
     width: 100%;
     padding: 10px 8px 10px 12px;
-    border: 1px solid $gray;
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    border-color: $gray;
     align-items: center;
     justify-content: space-between;
     font-size: 12px;
