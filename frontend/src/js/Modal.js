@@ -4,6 +4,7 @@ import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
 import { Select } from '@/js/Select.js';
 import { contactTypes } from '@/constants/contact-types.js';
+import { PhoneMask } from '@/js/PhoneMask.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -25,6 +26,8 @@ class Modal {
     addContactButton: `${this.modalClassName}__add-contact-button`,
     actionButton: `${this.modalClassName}__action-button`,
     cancelButton: `${this.modalClassName}__cancel-button`,
+    contactControl: `${this.modalClassName}__contact-control`,
+    contactControlInput: 'contact-control__input',
     backdrop: 'backdrop',
   };
 
@@ -361,19 +364,45 @@ class Modal {
    * */
   createContactControl() {
     const newContact = cloneTemplate(this.templatesIDs.optional.newContact.id);
+    const contactControlInput = newContact.querySelector(
+      `.${this.classNames.contactControlInput}`,
+    );
+    let phoneMask = null;
     const newSelect = new Select({
       select: newContact.querySelector('.select'),
       callback: function () {
-        // TODO: написать класс маски для телефонов
+        contactControlInput.value = '';
         if (
           this.button.getAttribute('data-selected-value') ===
             contactTypes.PHONE_NUMBER ||
           this.button.getAttribute('data-selected-value') ===
             contactTypes.ADDITIONAL_PHONE_NUMBER
         ) {
-          console.log('mask needed');
+          contactControlInput.type = 'tel';
+          phoneMask = new PhoneMask({
+            control: contactControlInput,
+          });
         } else {
-          console.log('no mask needed');
+          if (phoneMask) {
+            phoneMask.removeEventListeners();
+            phoneMask = null;
+          }
+
+          if (
+            this.button.getAttribute('data-selected-value') ===
+            contactTypes.EMAIL
+          ) {
+            contactControlInput.type = 'email';
+          }
+
+          if (
+            this.button.getAttribute('data-selected-value') ===
+              contactTypes.VK ||
+            this.button.getAttribute('data-selected-value') ===
+              contactTypes.FACEBOOK
+          ) {
+            contactControlInput.type = 'url';
+          }
         }
       },
     });
