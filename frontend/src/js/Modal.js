@@ -12,6 +12,7 @@ class Modal {
    * @param modalClassName - класс любого модального окна
    * */
   modalClassName = 'modal';
+  maxContactsNumber = 10;
 
   /**
    * @param classNames - классы элементов модального окна
@@ -24,7 +25,7 @@ class Modal {
     addContactButton: `${this.modalClassName}__add-contact-button`,
     actionButton: `${this.modalClassName}__action-button`,
     cancelButton: `${this.modalClassName}__cancel-button`,
-    // contact: `${this.modalClassName}__contact`,
+    contact: `${this.modalClassName}__contact`,
     backdrop: 'backdrop',
   };
 
@@ -240,10 +241,8 @@ class Modal {
           newElement
             .querySelector(`.${this.classNames.addContactButton}`)
             .addEventListener('click', () => {
-              // if (this.body.querySelectorAll(`.${this.classNames.contact}`).length < this.maxContactsNumber) {
-              //
-              // }
               this.addContactControl();
+              this.disabledAddContactButton();
             });
         }
 
@@ -362,6 +361,17 @@ class Modal {
         new ModalContactControl(),
         this.body.querySelector(`.${this.classNames.addContactButton}`),
       );
+  }
+
+  disabledAddContactButton() {
+    if (
+      this.body.querySelectorAll(`.${this.classNames.contact}`).length >=
+      this.maxContactsNumber
+    ) {
+      this.body
+        .querySelector(`.${this.classNames.addContactButton}`)
+        .setAttribute('disabled', true);
+    }
   }
 }
 

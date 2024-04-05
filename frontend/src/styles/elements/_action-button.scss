@@ -78,12 +78,13 @@
     
     &:before,
     &::after {
+      background-size: cover;
       content: '';
       transition: opacity .3s ease-in-out;
-      
     }
     
     &::before {
+      margin-top: 2px;
       background-image: url("/icons/add.svg");
     }
     
@@ -105,6 +106,25 @@
         
         &::after {
           opacity: 1
+        }
+      }
+    }
+    
+    &:disabled {
+      color: $txt-gray;
+      cursor: not-allowed;
+      
+      &::before,
+      &::after {
+        filter: grayscale(100%);
+      }
+      
+      @media(hover: hover) {
+        &::before {
+          opacity: 1;
+        }
+        &::after {
+          opacity: 0;
         }
       }
     }
