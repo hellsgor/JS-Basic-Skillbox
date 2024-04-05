@@ -3,6 +3,7 @@ import { createElement } from '@/helpers/create-element.js';
 import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
+import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeholder.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -27,6 +28,7 @@ class Modal {
     cancelButton: `${this.modalClassName}__cancel-button`,
     contact: `${this.modalClassName}__contact`,
     backdrop: 'backdrop',
+    formControlInput: 'form-control__input',
   };
 
   /**
@@ -226,7 +228,7 @@ class Modal {
 
     if (this.modalTemplate !== this.modalTemplatesList.delete) {
       this.body.appendChild(this.createForm(client));
-      const form = this.body.querySelector('form');
+      this.form = this.body.querySelector('form');
 
       Object.keys(this.templatesIDs.required).forEach((templateID) => {
         let newElement = cloneTemplate(
@@ -252,13 +254,19 @@ class Modal {
             break;
 
           case this.locations.form:
-            form.appendChild(newElement);
+            this.form.appendChild(newElement);
             break;
 
           default:
             break;
         }
       });
+
+      this.form
+        .querySelectorAll(`.${this.classNames.formControlInput}`)
+        .forEach((control) => {
+          movedFormControlPlaceholder(control);
+        });
     }
   }
 

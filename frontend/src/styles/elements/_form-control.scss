@@ -10,6 +10,11 @@
     line-height: 1;
     color: $txt-gray;
     transition: top .2s ease-in-out, font-size .2s ease-in-out;
+    
+    &_filled {
+      top: 0;
+      font-size: 10px;
+    }
   }
   
   &__input {
@@ -22,6 +27,7 @@
     font-weight: 600;
     line-height: normal;
     color: $black;
+    transition: border-bottom-color .1s ease-in-out;
     
     &:required {
       ~ span::after {

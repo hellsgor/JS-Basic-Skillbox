@@ -1,5 +1,12 @@
-<div class="form-control{{#if this.classes}} {{this.classes}}">
-  <input type="text" class="form-control__input"{{/if}}{{#if this.required}} required{{/if}}{{#if this.disabled}} disabled{{/if}}{{#if this.name}} name="{{this.name}}"{{/if}}>
+<div class="form-control{{#if this.classes}} {{this.classes}}{{/if}}">
+  <input
+    type="text"
+    class="form-control__input"
+    {{#if this.required}} required{{/if}}
+    {{#if this.disabled}} disabled{{/if}}
+    {{#if this.name}} name="{{this.name}}"{{/if}}
+    {{#if forErrorsName}} data-for-errors-control-name="{{this.placeholder}}"{{/if}}
+  >
   {{#if this.placeholder}}
     <span class="form-control__placeholder">{{this.placeholder}}</span>
   {{/if}}
