@@ -2,9 +2,7 @@ import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-t
 import { createElement } from '@/helpers/create-element.js';
 import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
-import { Select } from '@/js/Select.js';
-import { contactTypes } from '@/constants/contact-types.js';
-import { PhoneMask } from '@/js/PhoneMask.js';
+import { ModalContactControl } from '@/js/ModalContactControl.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -26,8 +24,7 @@ class Modal {
     addContactButton: `${this.modalClassName}__add-contact-button`,
     actionButton: `${this.modalClassName}__action-button`,
     cancelButton: `${this.modalClassName}__cancel-button`,
-    contactControl: `${this.modalClassName}__contact-control`,
-    contactControlInput: 'contact-control__input',
+    // contact: `${this.modalClassName}__contact`,
     backdrop: 'backdrop',
   };
 
@@ -66,7 +63,7 @@ class Modal {
   };
 
   /**
-   * @param templatesIDs - HTML-шаблоны элементов модального окна. Обязательные и опциональные
+   * @param templatesIDs - HTML-шаблоны элементов модального окна.
    * */
   templatesIDs = {
     required: {
@@ -89,13 +86,6 @@ class Modal {
         name: 'buttons',
         id: 'modal-buttons-template',
         location: this.locations.body,
-      },
-    },
-    optional: {
-      newContact: {
-        name: 'newContact',
-        id: 'modal-contact-template',
-        location: this.locations.contacts,
       },
     },
   };
@@ -250,7 +240,10 @@ class Modal {
           newElement
             .querySelector(`.${this.classNames.addContactButton}`)
             .addEventListener('click', () => {
-              this.createContactControl();
+              // if (this.body.querySelectorAll(`.${this.classNames.contact}`).length < this.maxContactsNumber) {
+              //
+              // }
+              this.addContactControl();
             });
         }
 
@@ -362,55 +355,11 @@ class Modal {
   /**
    * Добавляет новый контакт в форму модального окна
    * */
-  createContactControl() {
-    const newContact = cloneTemplate(this.templatesIDs.optional.newContact.id);
-    const contactControlInput = newContact.querySelector(
-      `.${this.classNames.contactControlInput}`,
-    );
-    let phoneMask = null;
-    const newSelect = new Select({
-      select: newContact.querySelector('.select'),
-      callback: function () {
-        contactControlInput.value = '';
-        if (
-          this.button.getAttribute('data-selected-value') ===
-            contactTypes.PHONE_NUMBER ||
-          this.button.getAttribute('data-selected-value') ===
-            contactTypes.ADDITIONAL_PHONE_NUMBER
-        ) {
-          contactControlInput.type = 'tel';
-          phoneMask = new PhoneMask({
-            control: contactControlInput,
-          });
-        } else {
-          if (phoneMask) {
-            phoneMask.removeEventListeners();
-            phoneMask = null;
-          }
-
-          if (
-            this.button.getAttribute('data-selected-value') ===
-            contactTypes.EMAIL
-          ) {
-            contactControlInput.type = 'email';
-          }
-
-          if (
-            this.button.getAttribute('data-selected-value') ===
-              contactTypes.VK ||
-            this.button.getAttribute('data-selected-value') ===
-              contactTypes.FACEBOOK
-          ) {
-            contactControlInput.type = 'url';
-          }
-        }
-      },
-    });
-
+  addContactControl() {
     this.body
       .querySelector(`.${this.classNames.contacts}`)
       .insertBefore(
-        newContact,
+        new ModalContactControl(),
         this.body.querySelector(`.${this.classNames.addContactButton}`),
       );
   }

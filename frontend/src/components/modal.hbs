@@ -47,22 +47,23 @@
 <template id="modal-buttons-template">
   <div class="modal__buttons">
     {{> elements/button
-      text='some text'
+      text=''
       modifier='primary'
       class="modal__action-button"
     }}
-    <button class="modal__cancel-button action-button action-button_default" type=button>Some text</button>
+    <button class="modal__cancel-button action-button action-button_default" type=button></button>
   </div>
 </template>
 
 <template id="modal-contact-template">
   <div class="modal__contact">
     {{> elements/select
-      this.contactSelect
+      selectConstants=this.contactSelect
       classes='modal__contact-type'
     }}
 
     {{> elements/contact-control
+      controlConstants=this.contactInput
       classes='modal__contact-control'
       placeholder='Введите данные контакта'
       required='true'

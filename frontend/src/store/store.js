@@ -1,4 +1,4 @@
-import { contactTypes } from '@/constants/contact-types.js';
+import { contacts } from '../constants/contacts.js';
 
 export const store = {
   tableHeadRowItems: [
@@ -33,17 +33,24 @@ export const store = {
       idLastPart: 'actions',
     },
   ],
+  contactInput: {
+    classes: {
+      input: contacts.classNames.input,
+    },
+  },
   contactSelect: {
+    classes: {
+      button: contacts.classNames.selectButton,
+    },
     options: [
       {
         text: 'Телефон',
-        value: contactTypes.PHONE_NUMBER,
-        defaultSelected: true,
+        value: contacts.types.PHONE_NUMBER,
       },
-      { text: 'Доп. телефон', value: contactTypes.ADDITIONAL_PHONE_NUMBER },
-      { text: 'Email', value: contactTypes.EMAIL },
-      { text: 'Vk', value: contactTypes.VK },
-      { text: 'Facebook', value: contactTypes.FACEBOOK },
+      { text: 'Доп. телефон', value: contacts.types.ADDITIONAL_PHONE_NUMBER },
+      { text: 'Email', value: contacts.types.EMAIL },
+      { text: 'Vk', value: contacts.types.VK },
+      { text: 'Facebook', value: contacts.types.FACEBOOK },
     ],
   },
 };

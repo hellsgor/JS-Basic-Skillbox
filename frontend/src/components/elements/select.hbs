@@ -1,7 +1,7 @@
 <div class="select{{#if classes}} {{classes}}{{/if}}">
   <button
     type="button"
-    class="select__item"
+    class="{{selectConstants.classes.button}}"
     data-selected-value=""
   >
     <span class="select__item-text"></span>
@@ -12,7 +12,7 @@
     </div>
   </button>
   <ul class="select__dropdown">
-    {{#each this.options}}
+    {{#each selectConstants.options}}
       <li class="select__option" data-option-value="{{this.value}}">{{this.text}}</li>
     {{/each}}
   </ul>
