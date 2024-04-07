@@ -65,37 +65,45 @@ export class Form {
   }
 
   /**
-   * @description - Добавляет стиль контрола с ошибкой контролу
+   * @description - Добавляет стиль контрола с ошибкой и data-атрибут с "индексом" ошибки контролу (input'у или его обёртке)
    * @param {HTMLInputElement} control - контрол которому следует добавить стиль контрола с ошибкой
    */
   addErrorStyle = (control) => {
     let elementFlaggedWithError = null;
+    let input = null;
 
-    // Для контролов формы
-    if (control.closest(`.${this.classNames.modalContact}`)) {
-      elementFlaggedWithError = control.closest(
-        `.${this.classNames.modalContact}`,
-      );
-      elementFlaggedWithError.classList.add(
-        this.classNames.modalContactWithError,
-      );
-    }
+    const addErrorClass = (control) => {
+      // Для контролов контактов формы
+      if (control.closest(`.${this.classNames.modalContact}`)) {
+        input = control;
+        elementFlaggedWithError = control.closest(
+          `.${this.classNames.modalContact}`,
+        );
+        elementFlaggedWithError.classList.add(
+          this.classNames.modalContactWithError,
+        );
+      }
 
-    // Для контролов контактов
-    if (control.classList.contains(this.classNames.formControlInput)) {
-      elementFlaggedWithError = control;
-      elementFlaggedWithError.classList.add(
-        this.classNames.formControlInputInvalid,
-      );
-    }
+      // Для контролов формы
+      if (control.classList.contains(this.classNames.formControlInput)) {
+        elementFlaggedWithError = control;
+        elementFlaggedWithError.classList.add(
+          this.classNames.formControlInputInvalid,
+        );
+      }
+    };
 
-    if (elementFlaggedWithError) {
-      elementFlaggedWithError.setAttribute(
-        FORMS.ATTRS.ERROR_INDEX,
-        this.errorsCounter,
-      );
-      elementFlaggedWithError.addEventListener('input', this.removeError);
-    }
+    addErrorClass(control);
+
+    // добавление "индекса" ошибки контролу
+    (input ? input : elementFlaggedWithError).setAttribute(
+      FORMS.ATTRS.ERROR_INDEX,
+      this.errorsCounter,
+    );
+    (input ? input : elementFlaggedWithError).addEventListener(
+      'input',
+      this.removeError,
+    );
   };
 
   /**
@@ -114,7 +122,11 @@ export class Form {
    */
   removeErrorStyle(controlInput) {
     controlInput.removeAttribute(FORMS.ATTRS.ERROR_INDEX);
-    controlInput.classList.remove(
+
+    (controlInput.closest(`.${this.classNames.modalContact}`)
+      ? controlInput.closest(`.${this.classNames.modalContact}`)
+      : controlInput
+    ).classList.remove(
       `${this.classNames.modalContactWithError}`,
       this.classNames.formControlInputInvalid,
     );
