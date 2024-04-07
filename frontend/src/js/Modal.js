@@ -1,8 +1,8 @@
 import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-to-milliseconds.js';
 import { createElement } from '@/helpers/create-element.js';
-import clientsApi from '@api/clients-api.js';
 import { cloneTemplate } from '@/helpers/clone-template.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
+import { Form } from '@/js/Form.js';
 import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeholder.js';
 
 /**
@@ -11,9 +11,25 @@ import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeh
 class Modal {
   /**
    * @param modalClassName - класс любого модального окна
+   * @param modal - текущее модальное окно
+   * @param modalTemplate - шаблон наполнения модального окна
+   * @param closeBtn - кнопка закрытия модального окна
+   * @param backdrop - backdrop. Общий для всех модальных окон
+   * @param title - заголовок модального окна
+   * @param body - условное "тело" модального окна
+   * @param maxContactsNumber - максимальное количество контролов
+   * @param formInstance - экземпляр класса Form для Modal
    * */
+
   modalClassName = 'modal';
+  modal = null;
+  modalTemplate = null;
+  closeBtn = null;
+  backdrop = null;
+  title = null;
+  body = null;
   maxContactsNumber = 10;
+  formInstance = null;
 
   /**
    * @param classNames - классы элементов модального окна
@@ -27,6 +43,7 @@ class Modal {
     actionButton: `${this.modalClassName}__action-button`,
     cancelButton: `${this.modalClassName}__cancel-button`,
     contact: `${this.modalClassName}__contact`,
+    errorsWrapper: `${this.modalClassName}__errors`,
     backdrop: 'backdrop',
     formControlInput: 'form-control__input',
   };
@@ -109,21 +126,6 @@ class Modal {
       save: 'Сохранить',
     },
   };
-
-  /**
-   * @param modal - текущее модальное окно
-   * @param modalTemplate - шаблон наполнения модального окна
-   * @param closeBtn - кнопка закрытия модального окна
-   * @param backdrop - backdrop. Общий для всех модальных окон
-   * @param title - заголовок модального окна
-   * @param body - условное "тело" модального окна
-   * */
-  modal = null;
-  modalTemplate = null;
-  closeBtn = null;
-  backdrop = null;
-  title = null;
-  body = null;
 
   constructor(props) {
     this.modal = props?.modal;
@@ -342,17 +344,31 @@ class Modal {
 
       actionButton.addEventListener('click', () => {
         // TODO: сделать валидацию и отправку форм. Скорее всего через отдельный класс Form
-        console.log('submit form');
-        clientsApi
-          .addClient({
-            name: 'Захар',
-            lastName: 'Александрович',
-            surname: 'Камчатский',
-          })
-          .then((response) => {
-            console.log(response);
-            this.closeModal();
+        if (this.formInstance) {
+          this.formInstance.doFormJob();
+        } else {
+          this.formInstance = new Form({
+            form: this.form,
+            submitButton: actionButton,
+            errorsWrapper: this.modal.querySelector(
+              `.${this.classNames.errorsWrapper}`,
+            ),
           });
+        }
+
+        console.log('formInstance', this.formInstance);
+
+        // console.log('submit form');
+        // clientsApi
+        //   .addClient({
+        //     name: 'Захар',
+        //     lastName: 'Александрович',
+        //     surname: 'Камчатский',
+        //   })
+        //   .then((response) => {
+        //     console.log(response);
+        //     this.closeModal();
+        //   });
       });
     }
 

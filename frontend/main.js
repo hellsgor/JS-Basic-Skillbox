@@ -1,6 +1,7 @@
 import '@styles/index.scss';
 import { ClientsTable } from '@/js/ClientsTable.js';
 import { initModals } from '@/js/Modal.js';
+import { autoInitForms } from '@/js/Form.js';
 
 const clientsTable = new ClientsTable(document.getElementById('table-body'));
 const addClientButton = document.getElementById('add-client-button');
@@ -21,3 +22,5 @@ backdrop.addEventListener('click', () => {
     modals[modalName].closeModal();
   });
 });
+
+autoInitForms();
