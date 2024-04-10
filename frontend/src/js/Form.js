@@ -2,6 +2,7 @@ import { ERRORS } from '@/constants/errors.js';
 import { FORMS } from '@/constants/forms';
 import { createElement } from '@/helpers/create-element.js';
 import { regexps } from '@/constants/regexps.js';
+import { clearPhoneNumber } from '@/helpers/clearPhoneNumber.js';
 
 export class Form {
   form = null;
@@ -18,7 +19,16 @@ export class Form {
     modalError: FORMS.CLASS_NAMES.MODAL_ERROR,
   };
 
-  validatedFormControlsTypes = [{ type: 'email', regexp: regexps.EMAIL }];
+  validatedFormControlsTypes = [
+    {
+      type: 'email',
+      regexp: regexps.EMAIL,
+    },
+    {
+      type: 'tel',
+      regexp: regexps.PHONE_NUMBER,
+    },
+  ];
 
   /**
    * @description - Создаёт экземпляр класса Form
@@ -73,7 +83,9 @@ export class Form {
       if (control.value) {
         this.validatedFormControlsTypes.forEach((item) => {
           if (control.type === item.type) {
-            if (!control.value.trim().match(item.regexp)) {
+            let convertedValue = this.convertControlValue(control);
+
+            if (!convertedValue.trim().match(item.regexp)) {
               validationFlag = false;
               this.invalidate(control, 'EF002');
             }
@@ -87,7 +99,7 @@ export class Form {
 
   /**
    * @description - Добавляет стиль контрола с ошибкой и data-атрибут с "индексом" ошибки контролу (input'у или его обёртке)
-   * @param {HTMLInputElement} control - контрол которому следует добавить стиль контрола с ошибкой
+   * @param {HTMLInputElement} control - контрол, которому следует добавить стиль контрола с ошибкой
    */
   addErrorStyle = (control) => {
     let elementFlaggedWithError = null;
@@ -205,10 +217,29 @@ export class Form {
     console.log('submitForm');
   }
 
+  /**
+   * @description - метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
+   * @param {HTMLInputElement} control - обрабатываемый контрол
+   * @param {string} errorCode - код ошибки
+   * */
   invalidate(control, errorCode) {
     this.errorsCounter += 1;
     this.addErrorStyle(control);
     this.showError(ERRORS[errorCode](control));
+  }
+
+  /**
+   * @description - Преобразует значение контрола контакта
+   * @param {HTMLInputElement} control - инпут контрола значение которого следует преобразовать
+   * @return {string} - преобразованное значение
+   * */
+  convertControlValue(control) {
+    switch (control.type) {
+      case 'tel':
+        return clearPhoneNumber(control.value);
+      default:
+        return control.value;
+    }
   }
 }
 
