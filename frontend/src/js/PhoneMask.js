@@ -124,4 +124,12 @@ export class PhoneMask {
     this.onPhoneInputHandler = this.onPhoneInput.bind(this);
     this.onPhonePasteHandler = this.onPhonePaste.bind(this);
   }
+
+  /**
+   * @description Уничтожает экземпляр PhoneMask и удаляет все обработчики событий.
+   */
+  destroy() {
+    this.removeEventListeners();
+    this.control = null;
+  }
 }

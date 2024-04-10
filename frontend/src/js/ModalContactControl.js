@@ -56,7 +56,7 @@ export class ModalContactControl {
 
   removePhoneMask() {
     if (this.phoneMask) {
-      this.phoneMask.removeEventListeners();
+      this.phoneMask.destroy();
       this.phoneMask = null;
     }
   }
