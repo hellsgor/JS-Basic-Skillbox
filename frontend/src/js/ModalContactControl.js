@@ -36,38 +36,27 @@ export class ModalContactControl {
   }
 
   toggleContactType() {
-    this.contactControlInput.value = '';
-    if (
-      this.selectButton.getAttribute(this.attrs.selectedTypeValue) ===
-        contacts.types.PHONE_NUMBER ||
-      this.selectButton.getAttribute(this.attrs.selectedTypeValue) ===
-        contacts.types.ADDITIONAL_PHONE_NUMBER
-    ) {
-      this.contactControlInput.type = 'tel';
-      this.phoneMask = new PhoneMask({
-        control: this.contactControlInput,
-      });
-    } else {
-      if (this.phoneMask) {
-        this.phoneMask.removeEventListeners();
-        this.phoneMask = null;
-      }
+    const currentType = Object.values(contacts.types).find(
+      (type) =>
+        type.value ===
+        this.selectButton.getAttribute(this.attrs.selectedTypeValue),
+    );
+    this.contactControlInput.type = currentType.inputType;
+    currentType.inputType === 'tel'
+      ? this.addPhoneMask()
+      : this.removePhoneMask();
+  }
 
-      if (
-        this.selectButton.getAttribute(this.attrs.selectedTypeValue) ===
-        contacts.types.EMAIL
-      ) {
-        this.contactControlInput.type = 'email';
-      }
+  addPhoneMask() {
+    this.phoneMask = new PhoneMask({
+      control: this.contactControlInput,
+    });
+  }
 
-      if (
-        this.selectButton.getAttribute(this.attrs.selectedTypeValue) ===
-          contacts.types.VK ||
-        this.selectButton.getAttribute(this.attrs.selectedTypeValue) ===
-          contacts.types.FACEBOOK
-      ) {
-        this.contactControlInput.type = 'url';
-      }
+  removePhoneMask() {
+    if (this.phoneMask) {
+      this.phoneMask.removeEventListeners();
+      this.phoneMask = null;
     }
   }
 

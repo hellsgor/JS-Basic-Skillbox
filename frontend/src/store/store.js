@@ -42,15 +42,26 @@ export const store = {
     classes: {
       button: contacts.classNames.selectButton,
     },
-    options: [
-      {
-        text: 'Телефон',
-        value: contacts.types.PHONE_NUMBER,
-      },
-      { text: 'Доп. телефон', value: contacts.types.ADDITIONAL_PHONE_NUMBER },
-      { text: 'Email', value: contacts.types.EMAIL },
-      { text: 'Vk', value: contacts.types.VK },
-      { text: 'Facebook', value: contacts.types.FACEBOOK },
-    ],
+    // options: [
+    //   {
+    //     text: contacts.types.PHONE_NUMBER.text,
+    //     value: contacts.types.PHONE_NUMBER.value,
+    //   },
+    //   {
+    //     text: contacts.types.ADDITIONAL_PHONE_NUMBER.text,
+    //     value: contacts.types.ADDITIONAL_PHONE_NUMBER.value,
+    //   },
+    //   { text: contacts.types.EMAIL.text, value: contacts.types.EMAIL.value },
+    //   { text: contacts.types.VK.text, value: contacts.types.VK.value },
+    //   {
+    //     text: contacts.types.FACEBOOK.text,
+    //     value: contacts.types.FACEBOOK.value,
+    //   },
+    //   {
+    //     text: contacts.types.TWITTER.text,
+    //     value: contacts.types.TWITTER.value,
+    //   },
+    // ],
+    options: Object.values(contacts.types),
   },
 };
