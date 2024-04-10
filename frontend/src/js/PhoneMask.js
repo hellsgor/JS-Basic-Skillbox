@@ -1,6 +1,15 @@
+/**
+ * Класс, представляющий маску для ввода телефонного номера.
+ */
+
 export class PhoneMask {
   control = null;
 
+  /**
+   * Создает экземпляр PhoneMask.
+   * @param {Object} props - Объект с параметрами для инициализации.
+   * @param {HTMLElement} props.control - Элемент управления, к которому применяется маска.
+   */
   constructor(props) {
     this.control = props.control;
     this.setEventsHandlers();
@@ -8,26 +17,40 @@ export class PhoneMask {
     return this;
   }
 
+  /**
+   * @description Добавляет обработчики событий контролу.
+   */
   addEventListeners() {
     this.control.addEventListener('keydown', this.onPhoneKeyDownHandler);
     this.control.addEventListener('input', this.onPhoneInputHandler, false);
     this.control.addEventListener('paste', this.onPhonePasteHandler, false);
   }
 
+  /**
+   * @description Удаляет обработчики событий с контрола.
+   */
   removeEventListeners() {
     this.control.removeEventListener('keydown', this.onPhoneKeyDownHandler);
     this.control.removeEventListener('input', this.onPhoneInputHandler, false);
     this.control.removeEventListener('paste', this.onPhonePasteHandler, false);
   }
 
+  /**
+   * @description Получает числовое значение введенных символов.
+   * @returns {string} - Числовое значение введенных символов.
+   */
   getInputNumbersValue() {
     return this.control.value.replace(/\D/g, '');
   }
 
-  onPhonePaste(e) {
-    const input = e.target;
+  /**
+   * @description Обработчик события вставки текста в поле ввода.
+   * @param {Event} event - Объект события.
+   */
+  onPhonePaste(event) {
+    const input = event.target;
     const inputNumbersValue = this.getInputNumbersValue();
-    const pasted = e.clipboardData || window.clipboardData;
+    const pasted = event.clipboardData || window.clipboardData;
     if (pasted) {
       const pastedText = pasted.getData('Text');
       if (/\D/g.test(pastedText)) {
@@ -36,8 +59,12 @@ export class PhoneMask {
     }
   }
 
-  onPhoneInput(e) {
-    const input = e.target;
+  /**
+   * @description Обработчик события ввода текста в поле ввода.
+   * @param {Event} event - Объект события.
+   */
+  onPhoneInput(event) {
+    const input = event.target;
     let inputNumbersValue = this.getInputNumbersValue();
     const { selectionStart } = input;
     let formattedInputValue = '';
@@ -48,7 +75,7 @@ export class PhoneMask {
     }
 
     if (input.value.length !== selectionStart) {
-      if (e.data && /\D/g.test(e.data)) {
+      if (event.data && /\D/g.test(event.data)) {
         input.value = inputNumbersValue;
       }
       return;
@@ -78,13 +105,20 @@ export class PhoneMask {
     input.value = formattedInputValue;
   }
 
-  onPhoneKeyDown(e) {
-    const inputValue = e.target.value.replace(/\D/g, '');
-    if (e.keyCode === 8 && inputValue.length === 1) {
-      e.target.value = '';
+  /**
+   * @description Обработчик события нажатия клавиши в поле ввода.
+   * @param {Event} event - Объект события.
+   */
+  onPhoneKeyDown(event) {
+    const inputValue = event.target.value.replace(/\D/g, '');
+    if (event.keyCode === 8 && inputValue.length === 1) {
+      event.target.value = '';
     }
   }
 
+  /**
+   * @description Устанавливает обработчики событий для методов класса.
+   */
   setEventsHandlers() {
     this.onPhoneKeyDownHandler = this.onPhoneKeyDown.bind(this);
     this.onPhoneInputHandler = this.onPhoneInput.bind(this);
