@@ -42,6 +42,7 @@ export class ModalContactControl {
         this.selectButton.getAttribute(this.attrs.selectedTypeValue),
     );
     this.contactControlInput.type = currentType.inputType;
+    this.contactControlInput.value = '';
     currentType.inputType === 'tel'
       ? this.addPhoneMask()
       : this.removePhoneMask();
