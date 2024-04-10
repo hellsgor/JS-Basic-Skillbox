@@ -220,6 +220,8 @@ class Modal {
         window.getComputedStyle(this.modal).animationDuration,
       ),
     );
+
+    this.destroyForm();
   }
 
   /**
@@ -395,6 +397,16 @@ class Modal {
       this.body
         .querySelector(`.${this.classNames.addContactButton}`)
         .setAttribute('disabled', true);
+    }
+  }
+
+  /**
+   * @description - Уничтожает класс Form если он уже был создан
+   * */
+  destroyForm() {
+    if (this.formInstance) {
+      this.formInstance.destroy();
+      this.formInstance = null;
     }
   }
 }

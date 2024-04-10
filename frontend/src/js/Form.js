@@ -249,6 +249,23 @@ export class Form {
         return control.value.trim();
     }
   }
+
+  /**
+   * @description - Освобождает ресурсы, связанные с экземпляром класса Form и удаляет обработчики событий.
+   * @memberof Form
+   */
+  destroy() {
+    this.controls.forEach((control) => {
+      control.removeEventListener('input', this.removeError);
+    });
+
+    this.controls = [];
+
+    this.resetErrors();
+    this.form = null;
+    this.submitButton = null;
+    this.errorsWrapper = null;
+  }
 }
 
 export function autoInitForms() {
