@@ -409,6 +409,8 @@ class Modal {
       this.formInstance = null;
     }
   }
+
+  // TODO: написать метод destroy для класса Modal
 }
 
 /**

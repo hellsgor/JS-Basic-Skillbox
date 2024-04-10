@@ -69,4 +69,7 @@ export class ModalContactControl {
       `.${this.classNames.contactTypeSelectButton}`,
     );
   }
+
+  // TODO: написать документацию в ModalContactControl
+  // TODO: добавить метод destroy в ModalContactControl
 }

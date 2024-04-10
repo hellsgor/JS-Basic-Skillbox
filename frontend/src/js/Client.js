@@ -158,4 +158,8 @@ export class Client {
   deleteClient() {
     console.log('delete', this.data.id);
   }
+
+  // TODO: вынести строки в Client
+  // TODO: добавить  метода destroy в Client
+  // TODO: написать документацию destroy в Client
 }

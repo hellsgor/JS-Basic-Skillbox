@@ -119,4 +119,7 @@ export class Select {
       this.callback && this.callback(this.button);
     }
   }
+
+  // TODO: написать документацию в Select
+  // TODO: вынести строки в Select
 }

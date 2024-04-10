@@ -91,6 +91,7 @@ export class Contact {
   }
 
   setAdditionalContactProperties() {
+    // TODO: вынести строки в константу в Contact
     switch (this.contact.type) {
       case 'Телефон':
         this.modifier = 'phone';
@@ -119,4 +120,7 @@ export class Contact {
         break;
     }
   }
+
+  // TODO: добавить метод destroy в Contact
+  // TODO: написать документацию в Contact
 }

@@ -223,6 +223,7 @@ export class Form {
    * */
   submitForm() {
     console.log('submitForm');
+    // TODO: написать отправку данных в Form
   }
 
   /**

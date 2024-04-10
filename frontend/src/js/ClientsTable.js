@@ -21,4 +21,7 @@ export class ClientsTable {
   async initClients() {
     this.clients = await clientsApi.getClients();
   }
+
+  // TODO: добавить destroy в ClientsTable
+  // TODO: написать документацию в ClientsTable
 }
