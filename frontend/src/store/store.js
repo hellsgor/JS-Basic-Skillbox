@@ -33,6 +33,26 @@ export const store = {
       idLastPart: 'actions',
     },
   ],
+  clientControls: [
+    {
+      name: 'surname',
+      placeholder: 'Фамилия',
+      required: true,
+      validationRegexpName: 'SURNAME',
+    },
+    {
+      name: 'name',
+      placeholder: 'Имя',
+      required: true,
+      validationRegexpName: 'NAME_OR_PATRONYMIC',
+    },
+    {
+      name: 'lastName',
+      placeholder: 'Отчество',
+      required: false,
+      validationRegexpName: 'NAME_OR_PATRONYMIC',
+    },
+  ],
   contactInput: {
     classes: {
       input: contacts.classNames.input,
@@ -42,26 +62,6 @@ export const store = {
     classes: {
       button: contacts.classNames.selectButton,
     },
-    // options: [
-    //   {
-    //     text: contacts.types.PHONE_NUMBER.text,
-    //     value: contacts.types.PHONE_NUMBER.value,
-    //   },
-    //   {
-    //     text: contacts.types.ADDITIONAL_PHONE_NUMBER.text,
-    //     value: contacts.types.ADDITIONAL_PHONE_NUMBER.value,
-    //   },
-    //   { text: contacts.types.EMAIL.text, value: contacts.types.EMAIL.value },
-    //   { text: contacts.types.VK.text, value: contacts.types.VK.value },
-    //   {
-    //     text: contacts.types.FACEBOOK.text,
-    //     value: contacts.types.FACEBOOK.value,
-    //   },
-    //   {
-    //     text: contacts.types.TWITTER.text,
-    //     value: contacts.types.TWITTER.value,
-    //   },
-    // ],
     options: Object.values(contacts.types),
   },
 };

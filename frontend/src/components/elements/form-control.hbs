@@ -6,6 +6,7 @@
     {{#if this.disabled}} disabled{{/if}}
     {{#if this.name}} name="{{this.name}}"{{/if}}
     {{#if forErrorsName}} data-for-errors-control-name="{{this.placeholder}}"{{/if}}
+    {{#if validationRegexpName}} data-validation-regexp-name="{{this.validationRegexpName}}"{{/if}}
   >
   {{#if this.placeholder}}
     <span class="form-control__placeholder">{{this.placeholder}}</span>

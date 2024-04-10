@@ -13,27 +13,17 @@
 
 <template id="modal-inputs-template">
   <div class="modal__form-controls">
-    {{> elements/form-control
-      classes='modal__form-control'
-      name='surname'
-      required=true
-      placeholder='Фамилия'
-      forErrorsName=true
-    }}
-    {{> elements/form-control
-      classes='modal__form-control'
-      name='name'
-      required=true
-      placeholder='Имя'
-      forErrorsName=true
-    }}
-    {{> elements/form-control
-      classes='modal__form-control'
-      name='lastName'
-      required=false
-      placeholder='Отчество'
-      forErrorsName=true
-    }}
+    {{#each this.clientControls}}
+      {{> elements/form-control
+        classes='modal__form-control'
+        name=this.name
+        placeholder=this.placeholder
+        forErrorsName=true
+        required=this.required
+        validationRegexpName=this.validationRegexpName
+
+      }}
+    {{/each}}
   </div>
 </template>
 

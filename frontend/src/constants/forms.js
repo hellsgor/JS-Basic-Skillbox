@@ -3,6 +3,7 @@ export const FORMS = {
     FORM_AUTO_INIT_DATA_ATTR: 'data-form-auto-init',
     SUBMIT_BUTTON_AUTO_INIT_DATA_ATTR: 'data-submit-button-auto-init',
     ERROR_INDEX: 'data-error-index',
+    VALIDATION_REGEXP_NAME: 'data-validation-regexp-name',
   },
 
   CLASS_NAMES: {

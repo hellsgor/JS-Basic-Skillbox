@@ -28,6 +28,10 @@ export class Form {
       type: 'tel',
       regexp: regexps.PHONE_NUMBER,
     },
+    {
+      type: 'text',
+      regexp: null,
+    },
   ];
 
   /**
@@ -81,16 +85,20 @@ export class Form {
       }
 
       if (control.value) {
-        this.validatedFormControlsTypes.forEach((item) => {
-          if (control.type === item.type) {
-            let convertedValue = this.convertControlValue(control);
-
-            if (!convertedValue.trim().match(item.regexp)) {
-              validationFlag = false;
-              this.invalidate(control, 'EF002');
-            }
-          }
-        });
+        if (
+          !this.convertControlValue(control).match(
+            control.hasAttribute(FORMS.ATTRS.VALIDATION_REGEXP_NAME)
+              ? regexps[
+                  `${control.getAttribute(FORMS.ATTRS.VALIDATION_REGEXP_NAME).toUpperCase()}`
+                ]
+              : this.validatedFormControlsTypes.find(
+                  (validatedType) => validatedType.type === control.type,
+                ),
+          )
+        ) {
+          validationFlag = false;
+          this.invalidate(control, 'EF002');
+        }
       }
     });
 
@@ -238,7 +246,7 @@ export class Form {
       case 'tel':
         return clearPhoneNumber(control.value);
       default:
-        return control.value;
+        return control.value.trim();
     }
   }
 }
