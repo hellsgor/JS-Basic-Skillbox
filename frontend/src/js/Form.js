@@ -1,6 +1,7 @@
 import { ERRORS } from '@/constants/errors.js';
 import { FORMS } from '@/constants/forms';
 import { createElement } from '@/helpers/create-element.js';
+import { regexps } from '@/constants/regexps.js';
 
 export class Form {
   form = null;
@@ -16,6 +17,8 @@ export class Form {
     formControlInputInvalid: FORMS.CLASS_NAMES.FORM_CONTROL_INPUT_INVALID,
     modalError: FORMS.CLASS_NAMES.MODAL_ERROR,
   };
+
+  validatedFormControlsTypes = [{ type: 'email', regexp: regexps.EMAIL }];
 
   /**
    * @description - Создаёт экземпляр класса Form
@@ -41,7 +44,10 @@ export class Form {
   doFormJob() {
     this.resetErrors();
     this.getControls();
-    this.validation();
+
+    if (this.validation()) {
+      this.submitForm();
+    }
   }
 
   /**
@@ -53,15 +59,30 @@ export class Form {
 
   /**
    * @description - Валидирует поля формы
+   * @return {boolean} - флаг успешной валидации
    */
   validation() {
+    let validationFlag = true;
+
     this.controls.forEach((control) => {
-      if (control.required && !control.value) {
-        this.errorsCounter += 1;
-        this.addErrorStyle(control);
-        this.showError(ERRORS.EF001(control));
+      if (control.required && !control.value.trim()) {
+        validationFlag = false;
+        this.invalidate(control, 'EF001');
+      }
+
+      if (control.value) {
+        this.validatedFormControlsTypes.forEach((item) => {
+          if (control.type === item.type) {
+            if (!control.value.trim().match(item.regexp)) {
+              validationFlag = false;
+              this.invalidate(control, 'EF002');
+            }
+          }
+        });
       }
     });
+
+    return validationFlag;
   }
 
   /**
@@ -175,6 +196,19 @@ export class Form {
     this.controls.forEach((control) => {
       this.removeErrorStyle(control);
     });
+  }
+
+  /**
+   * @description - Отправляет данные формы
+   * */
+  submitForm() {
+    console.log('submitForm');
+  }
+
+  invalidate(control, errorCode) {
+    this.errorsCounter += 1;
+    this.addErrorStyle(control);
+    this.showError(ERRORS[errorCode](control));
   }
 }
 
