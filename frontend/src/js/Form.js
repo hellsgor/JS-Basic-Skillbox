@@ -32,6 +32,10 @@ export class Form {
       type: 'text',
       regexp: null,
     },
+    {
+      type: 'url',
+      regexp: null,
+    },
   ];
 
   /**
@@ -85,16 +89,19 @@ export class Form {
       }
 
       if (control.value) {
+        const actualRegexp = control.hasAttribute(
+          FORMS.ATTRS.VALIDATION_REGEXP_NAME,
+        )
+          ? regexps[
+              `${control.getAttribute(FORMS.ATTRS.VALIDATION_REGEXP_NAME).toUpperCase()}`
+            ]
+          : this.validatedFormControlsTypes.find(
+              (validatedType) => validatedType.type === control.type,
+            ).regexp;
+
         if (
-          !this.convertControlValue(control).match(
-            control.hasAttribute(FORMS.ATTRS.VALIDATION_REGEXP_NAME)
-              ? regexps[
-                  `${control.getAttribute(FORMS.ATTRS.VALIDATION_REGEXP_NAME).toUpperCase()}`
-                ]
-              : this.validatedFormControlsTypes.find(
-                  (validatedType) => validatedType.type === control.type,
-                ),
-          )
+          actualRegexp &&
+          !this.convertControlValue(control).match(actualRegexp)
         ) {
           validationFlag = false;
           this.invalidate(control, 'EF002');
