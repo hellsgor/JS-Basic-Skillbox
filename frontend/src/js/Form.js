@@ -231,6 +231,20 @@ export class Form {
   submitForm() {
     console.log('submitForm');
     // TODO: написать отправку данных в Form
+
+    this.serializeForm();
+
+    // console.log('submit form');
+    // clientsApi
+    //   .addClient({
+    //     name: 'Захар',
+    //     lastName: 'Александрович',
+    //     surname: 'Камчатский',
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     this.closeModal();
+    //   });
   }
 
   /**
@@ -273,6 +287,38 @@ export class Form {
     this.form = null;
     this.submitButton = null;
     this.errorsWrapper = null;
+  }
+
+  /**
+   * @description - Собирает значения полей в объект для отправки.
+   * @returns {Object} Объект со следующими свойствами:
+   * - name {string}: Имя.
+   * - surname {string}: Фамилия.
+   * - lastname {string}: Отчество.
+   * - contacts {Object[]} Массив объектов контактов, каждый объект имеет следующие свойства:
+   *   - type {string}: Тип контакта.
+   *   - value {string}: Значение контакта.
+   */
+  serializeForm() {
+    const data = {
+      contacts: [],
+    };
+    Array.from(this.controls).map((control) => {
+      if (control.name) {
+        data[control.name] = this.convertControlValue(control);
+      }
+
+      if (!control.name) {
+        data.contacts.push({
+          type: control
+            .closest(`.${this.classNames.modalContact}`)
+            .querySelector('button span').textContent,
+          value: this.convertControlValue(control),
+        });
+      }
+    });
+
+    return data;
   }
 }
 
