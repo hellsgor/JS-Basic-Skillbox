@@ -4,6 +4,7 @@ import { cloneTemplate } from '@/helpers/clone-template.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
 import { Form } from '@/js/Form.js';
 import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeholder.js';
+import { MODALS } from '@/constants/modals.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -30,6 +31,7 @@ class Modal {
   body = null;
   maxContactsNumber = 10;
   formInstance = null;
+  client = null;
 
   /**
    * @param classNames - классы элементов модального окна
@@ -59,9 +61,9 @@ class Modal {
    * @param modalTemplatesList - идентификаторы шаблонов модальных окон
    * */
   modalTemplatesList = {
-    newClient: 'new-client',
-    editClient: 'edit-client',
-    delete: 'delete',
+    newClient: MODALS.TEMPLATES.NEW_CLIENT,
+    editClient: MODALS.TEMPLATES.EDIT_CLIENT,
+    delete: MODALS.TEMPLATES.DELETE,
   };
 
   /**
@@ -163,7 +165,11 @@ class Modal {
    * Показывает модальное окно
    * */
   showModal(client = null) {
-    this.fillModal(client);
+    if (client) {
+      this.client = client;
+    }
+
+    this.fillModal(this.client);
 
     this.modal.classList.remove(
       `${this.modalClassName}${this.modifiers.hidden}`,
@@ -240,7 +246,7 @@ class Modal {
         );
 
         if (templateID === this.templatesIDs.required.buttons.name) {
-          newElement = this.setButtons(newElement);
+          newElement = this.setButtons(newElement, client);
         }
 
         if (templateID === this.templatesIDs.required.contacts.name) {
@@ -328,7 +334,7 @@ class Modal {
   /**
    * Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
    * */
-  setButtons(buttonsContainer) {
+  setButtons(buttonsContainer, client) {
     const cancelButton = buttonsContainer.querySelector(
       `.${this.classNames.cancelButton}`,
     );
@@ -355,22 +361,12 @@ class Modal {
             errorsWrapper: this.modal.querySelector(
               `.${this.classNames.errorsWrapper}`,
             ),
+            client: client ? client : null,
+            modalTemplate: this.modalTemplate,
           });
         }
 
         console.log('formInstance', this.formInstance);
-
-        // console.log('submit form');
-        // clientsApi
-        //   .addClient({
-        //     name: 'Захар',
-        //     lastName: 'Александрович',
-        //     surname: 'Камчатский',
-        //   })
-        //   .then((response) => {
-        //     console.log(response);
-        //     this.closeModal();
-        //   });
       });
     }
 

@@ -3,6 +3,9 @@ import { FORMS } from '@/constants/forms';
 import { createElement } from '@/helpers/create-element.js';
 import { regexps } from '@/constants/regexps.js';
 import { clearPhoneNumber } from '@/helpers/clearPhoneNumber.js';
+import { MODALS } from '@/constants/modals.js';
+import { API } from '@/constants/api.js';
+import clientsApi from '@api/Clients-api.js';
 
 export class Form {
   form = null;
@@ -10,6 +13,8 @@ export class Form {
   controls = [];
   errorsWrapper = null;
   errorsCounter = 0;
+  clientID = null;
+  modalTemplate = null;
 
   classNames = {
     modalContact: FORMS.CLASS_NAMES.MODAL_CONTACT,
@@ -44,12 +49,16 @@ export class Form {
    * @param {HTMLFormElement} props.form - элемент формы
    * @param {HTMLElement} props.submitButton - элемент отправляющий форму
    * @param {HTMLDivElement} props.errorsWrapper - элемент в котором будут выведены ошибки при валидации
+   * @param {string} props.clientID - id клиента
+   * @param {string} props.modalTemplate - шаблон модального окна для идентификации метода API
    * @returns {Form} экземпляр класса Form
    */
   constructor(props) {
     this.form = props?.form || null;
     this.submitButton = props.submitButton || null;
     this.errorsWrapper = props.errorsWrapper || null;
+    this.clientID = props.client ? props.client.id : null;
+    this.modalTemplate = props.modalTemplate || null;
 
     this.doFormJob();
 
@@ -232,19 +241,23 @@ export class Form {
     console.log('submitForm');
     // TODO: написать отправку данных в Form
 
-    this.serializeForm();
+    let method = '';
+
+    switch (this.modalTemplate) {
+      case MODALS.TEMPLATES.NEW_CLIENT:
+        method = API.METHODS.ADD_CLIENT;
+        break;
+
+      default:
+        break;
+    }
+
+    clientsApi[method](this.serializeForm()).then((response) => {
+      console.log(response);
+      // this.closeModal();
+    });
 
     // console.log('submit form');
-    // clientsApi
-    //   .addClient({
-    //     name: 'Захар',
-    //     lastName: 'Александрович',
-    //     surname: 'Камчатский',
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //     this.closeModal();
-    //   });
   }
 
   /**
