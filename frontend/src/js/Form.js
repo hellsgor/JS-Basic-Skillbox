@@ -47,12 +47,12 @@ export class Form {
 
   /**
    * @description - Создаёт экземпляр класса Form
-   * @param {Object} props - объект передаваемых в конструктор свойств
-   * @param {HTMLFormElement} props.form - элемент формы
-   * @param {HTMLElement} props.submitButton - элемент отправляющий форму
-   * @param {HTMLDivElement} props.errorsWrapper - элемент в котором будут выведены ошибки при валидации
-   * @param {string} props.clientID - id клиента
-   * @param {string} props.modalTemplate - шаблон модального окна для идентификации метода API
+   * @param {Object || null} props - объект передаваемых в конструктор свойств
+   * @param {HTMLFormElement || null} props.form - элемент формы
+   * @param {HTMLElement || null} props.submitButton - элемент отправляющий форму
+   * @param {HTMLDivElement || null} props.errorsWrapper - элемент в котором будут выведены ошибки при валидации
+   * @param {string || null} props.clientID - id клиента
+   * @param {string || null} props.modalTemplate - шаблон модального окна для идентификации метода API
    * @returns {Form} экземпляр класса Form
    */
   constructor(props) {
@@ -75,10 +75,9 @@ export class Form {
     this.resetErrors();
     this.getControls();
 
-    this.submitForm();
-    // if (this.validation()) {
-    //  this.submitForm();
-    // }
+    if (this.validation()) {
+      this.submitForm();
+    }
   }
 
   /**
@@ -98,7 +97,7 @@ export class Form {
     this.controls.forEach((control) => {
       if (control.required && !control.value.trim()) {
         validationFlag = false;
-        this.invalidate(control, { errorCode: 'EF001' });
+        this.invalidate(control, { code: 'EF001', text: null });
       }
 
       if (control.value) {
@@ -117,7 +116,7 @@ export class Form {
           !this.convertControlValue(control).match(actualRegexp)
         ) {
           validationFlag = false;
-          this.invalidate(control, { errorCode: 'EF002' });
+          this.invalidate(control, { code: 'EF002', text: null });
         }
       }
     });
@@ -252,9 +251,6 @@ export class Form {
    * @description - Отправляет данные формы
    * */
   submitForm() {
-    console.log('submitForm');
-    // TODO: написать отправку данных в Form
-
     let method = '';
 
     switch (this.modalTemplate) {
@@ -268,10 +264,7 @@ export class Form {
 
     clientsApi[method](this.serializeForm()).then((response) => {
       this.processingResponse(response);
-      // this.closeModal();
     });
-
-    // console.log('submit form');
   }
 
   /**
@@ -359,8 +352,8 @@ export class Form {
    * @param response - объект ответа сервера (Axios)
    * */
   processingResponse(response) {
-    console.log('Статус ответа сервера:', response.status);
-    console.log('Ответ', response);
+    // console.log('Статус ответа сервера:', response.status);
+    // console.log('Ответ', response);
 
     if (response.error) {
       this.processingResponseErrors(response);
