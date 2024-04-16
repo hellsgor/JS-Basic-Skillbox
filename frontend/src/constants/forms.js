@@ -13,4 +13,6 @@ export const FORMS = {
     FORM_CONTROL_INPUT: 'form-control__input',
     FORM_CONTROL_INPUT_INVALID: 'form-control__input_invalid',
   },
+
+  CLIENT_OBJECT_CONTACTS_PROPERTY_NAME: 'contacts',
 };

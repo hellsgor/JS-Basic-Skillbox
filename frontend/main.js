@@ -1,14 +1,13 @@
 import '@styles/index.scss';
-import { ClientsTable } from '@/js/ClientsTable.js';
 import { initModals } from '@/js/Modal.js';
 import { autoInitForms } from '@/js/Form.js';
+import { clientsTable } from '@/js/ClientsTable.js';
 
-const clientsTable = new ClientsTable(document.getElementById('table-body'));
+await clientsTable.renderClients();
+
 const addClientButton = document.getElementById('add-client-button');
 const backdrop = document.getElementById('backdrop');
 const modals = initModals();
-
-await clientsTable.renderClients();
 
 addClientButton.addEventListener('click', () => {
   modals['new-client'].showModal();

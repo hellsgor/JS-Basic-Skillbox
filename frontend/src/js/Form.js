@@ -6,6 +6,7 @@ import { clearPhoneNumber } from '@/helpers/clearPhoneNumber.js';
 import { MODALS } from '@/constants/modals.js';
 import { API } from '@/constants/api.js';
 import clientsApi from '@api/Clients-api.js';
+import { clientsTable } from '@/js/ClientsTable.js';
 
 export class Form {
   form = null;
@@ -15,6 +16,7 @@ export class Form {
   errorsCounter = 0;
   clientID = null;
   modalTemplate = null;
+  callback = null;
 
   classNames = {
     modalContact: FORMS.CLASS_NAMES.MODAL_CONTACT,
@@ -59,6 +61,7 @@ export class Form {
     this.errorsWrapper = props.errorsWrapper || null;
     this.clientID = props.client ? props.client.id : null;
     this.modalTemplate = props.modalTemplate || null;
+    this.callback = props.callback || null;
 
     this.doFormJob();
 
@@ -72,9 +75,10 @@ export class Form {
     this.resetErrors();
     this.getControls();
 
-    if (this.validation()) {
-      this.submitForm();
-    }
+    this.submitForm();
+    // if (this.validation()) {
+    //  this.submitForm();
+    // }
   }
 
   /**
@@ -94,7 +98,7 @@ export class Form {
     this.controls.forEach((control) => {
       if (control.required && !control.value.trim()) {
         validationFlag = false;
-        this.invalidate(control, 'EF001');
+        this.invalidate(control, { errorCode: 'EF001' });
       }
 
       if (control.value) {
@@ -113,7 +117,7 @@ export class Form {
           !this.convertControlValue(control).match(actualRegexp)
         ) {
           validationFlag = false;
-          this.invalidate(control, 'EF002');
+          this.invalidate(control, { errorCode: 'EF002' });
         }
       }
     });
@@ -124,8 +128,9 @@ export class Form {
   /**
    * @description - Добавляет стиль контрола с ошибкой и data-атрибут с "индексом" ошибки контролу (input'у или его обёртке)
    * @param {HTMLInputElement} control - контрол, которому следует добавить стиль контрола с ошибкой
+   * @param {boolean} isNeededErrorIndex - необязательный параметр для проверки необходимости присвоения индекса ошибки контролу
    */
-  addErrorStyle = (control) => {
+  addErrorStyle = (control, isNeededErrorIndex = true) => {
     let elementFlaggedWithError = null;
     let input = null;
 
@@ -152,23 +157,26 @@ export class Form {
 
     addErrorClass(control);
 
-    // добавление "индекса" ошибки контролу
-    (input ? input : elementFlaggedWithError).setAttribute(
-      FORMS.ATTRS.ERROR_INDEX,
-      this.errorsCounter,
-    );
-    (input ? input : elementFlaggedWithError).addEventListener(
-      'input',
-      this.removeError,
-    );
+    if (isNeededErrorIndex) {
+      // добавление "индекса" ошибки контролу
+      (input ? input : elementFlaggedWithError).setAttribute(
+        FORMS.ATTRS.ERROR_INDEX,
+        this.errorsCounter,
+      );
+      (input ? input : elementFlaggedWithError).addEventListener(
+        'input',
+        this.removeError,
+      );
+    }
   };
 
   /**
    * @description - Метод-обёртка для удаления стилей ошибки с контрола и удаления элемента с текстом ошибки
    * @param {InputEvent} event - событие ввода на контроле
+   * @param {boolean} isNeedRemoveElement - необязательный параметр для вызова метода удаления элемента с текстом ошибки
    * */
-  removeError = (event) => {
-    this.removeErrorTextElement(event.target);
+  removeError = (event, isNeedRemoveElement = true) => {
+    isNeedRemoveElement && this.removeErrorTextElement(event.target);
     this.removeErrorStyle(event.target);
     event.target.removeEventListener('input', this.removeError);
   };
@@ -178,7 +186,9 @@ export class Form {
    * @param {HTMLInputElement} controlInput - контрол текст ошибки которого нужно удалить из this. errorsWrapper
    */
   removeErrorStyle(controlInput) {
-    controlInput.removeAttribute(FORMS.ATTRS.ERROR_INDEX);
+    if (controlInput.hasAttribute(FORMS.ATTRS.ERROR_INDEX)) {
+      controlInput.removeAttribute(FORMS.ATTRS.ERROR_INDEX);
+    }
 
     (controlInput.closest(`.${this.classNames.modalContact}`)
       ? controlInput.closest(`.${this.classNames.modalContact}`)
@@ -205,9 +215,13 @@ export class Form {
 
   /**
    * @description - Добавляет элемент с текстом ошибки в this.errorsWrapper
-   * @param {string} errorText - текст ошибки
+   * @param {string | null} errorText - текст ошибки
    * */
   showError(errorText) {
+    if (!errorText) {
+      return;
+    }
+
     this.errorsWrapper.appendChild(
       createElement({
         tag: 'span',
@@ -253,7 +267,7 @@ export class Form {
     }
 
     clientsApi[method](this.serializeForm()).then((response) => {
-      console.log(response);
+      this.processingResponse(response);
       // this.closeModal();
     });
 
@@ -263,12 +277,18 @@ export class Form {
   /**
    * @description - метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
    * @param {HTMLInputElement} control - обрабатываемый контрол
-   * @param {string} errorCode - код ошибки
+   * @param {Object || null} errorProps - объект с кодом или текстом ошибки
+   * @param {string || null} errorProps.code - код ошибки
+   * @param {string || null} errorProps.text - текст ошибки
    * */
-  invalidate(control, errorCode) {
+  invalidate(control, errorProps) {
     this.errorsCounter += 1;
     this.addErrorStyle(control);
-    this.showError(ERRORS[errorCode](control));
+    if (errorProps) {
+      this.showError(
+        errorProps.code ? ERRORS[errorProps.code](control) : errorProps.text,
+      );
+    }
   }
 
   /**
@@ -332,6 +352,93 @@ export class Form {
     });
 
     return data;
+  }
+
+  /**
+   * @description - Обрабатывает ответ сервера
+   * @param response - объект ответа сервера (Axios)
+   * */
+  processingResponse(response) {
+    console.log('Статус ответа сервера:', response.status);
+    console.log('Ответ', response);
+
+    if (response.error) {
+      this.processingResponseErrors(response);
+    }
+
+    if (response.status === 200 || response.status === 201) {
+      clientsTable.renderNewClient(response.data);
+      this.callback && this.callback();
+    }
+  }
+
+  /**
+   * @description - Обрабатывает ошибки из ответа сервера
+   * @param response - объект ответа сервера (Axios)
+   * */
+  processingResponseErrors(response) {
+    if (
+      response.error.code === 'ERR_NETWORK' ||
+      response.error.response.status === 404 ||
+      response.error.response.status >= 500
+    ) {
+      this.showError(ERRORS.EF003());
+      return;
+    }
+
+    if (response.error.response.status === 422) {
+      response.error.response.data.errors.forEach((error) => {
+        if (error.field !== FORMS.CLIENT_OBJECT_CONTACTS_PROPERTY_NAME) {
+          this.invalidate(
+            Array.from(this.controls).find(
+              (control) => control.name === error.field,
+            ),
+            { text: error.message, code: null },
+          );
+        } else {
+          this.controls.forEach((control) => {
+            if (
+              control.closest(`.${this.classNames.modalContact}`) &&
+              !control.value.trim()
+            ) {
+              ++this.errorsCounter;
+              this.addErrorStyle(control, false);
+              control.addEventListener('input', (event) => {
+                const errorText = error.message;
+                let isSomeContactsWithError = false;
+
+                this.removeError(event, false);
+
+                this.controls.forEach((control) => {
+                  if (
+                    control.closest(`.${this.classNames.modalContact}`) &&
+                    control
+                      .closest(`.${this.classNames.modalContact}`)
+                      .classList.contains(
+                        `${this.classNames.modalContactWithError}`,
+                      )
+                  ) {
+                    isSomeContactsWithError = true;
+                  }
+                });
+                if (!isSomeContactsWithError) {
+                  const contactsErrorElement = Array.from(
+                    this.errorsWrapper.querySelectorAll(
+                      `.${this.classNames.modalError}`,
+                    ),
+                  ).find(
+                    (errorElement) => errorElement.textContent === errorText,
+                  );
+
+                  contactsErrorElement && contactsErrorElement.remove();
+                }
+              });
+            }
+          });
+          this.showError(error.message);
+        }
+      });
+    }
   }
 }
 

@@ -12,22 +12,20 @@ class ClientsApi {
     try {
       const response = await axios.get(`${this.URL}${this.RESOURCES.CLIENTS}`);
       return response.data;
-    } catch (e) {
-      console.error(`Невозможно получить данные из-за ошибки: ${e}`);
-      throw e;
+    } catch (error) {
+      console.error(`Невозможно получить данные из-за ошибки: ${error}`);
+      throw error;
     }
   }
 
   async addClient(data) {
+    let response;
     try {
-      const response = await axios.post(
-        `${this.URL}${this.RESOURCES.CLIENTS}`,
-        data,
-      );
-      return response.data;
-    } catch (e) {
-      console.error(`Невозможно отправить данные из-за ошибки: ${e}`);
-      throw e;
+      response = await axios.post(`${this.URL}${this.RESOURCES.CLIENTS}`, data);
+      return response;
+    } catch (error) {
+      console.error(`Невозможно отправить данные из-за ошибки: ${error}`);
+      return { error };
     }
   }
 }

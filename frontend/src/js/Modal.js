@@ -363,6 +363,7 @@ class Modal {
             ),
             client: client ? client : null,
             modalTemplate: this.modalTemplate,
+            callback: () => this.closeModal(),
           });
         }
 

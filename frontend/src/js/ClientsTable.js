@@ -13,9 +13,17 @@ export class ClientsTable {
     await this.initClients();
 
     this.clients.forEach((client) => {
-      const clientInstance = new Client(client);
-      this.tBody.appendChild(clientInstance.getClientRow());
+      this.addNewClient(client);
     });
+  }
+
+  renderNewClient(client) {
+    this.addNewClient(client);
+  }
+
+  addNewClient(client) {
+    const clientInstance = new Client(client);
+    this.tBody.appendChild(clientInstance.getClientRow());
   }
 
   async initClients() {
@@ -25,3 +33,7 @@ export class ClientsTable {
   // TODO: добавить destroy в ClientsTable
   // TODO: написать документацию в ClientsTable
 }
+
+export const clientsTable = new ClientsTable(
+  document.getElementById('table-body'),
+);
