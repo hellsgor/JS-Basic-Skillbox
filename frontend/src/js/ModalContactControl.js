@@ -3,6 +3,21 @@ import { Select } from '@/js/Select.js';
 import { contacts } from '@/constants/contacts.js';
 import { PhoneMask } from '@/js/PhoneMask.js';
 
+/**
+ * @description - Класс для управления контактом в модальном окне.
+ * @class
+ * @param {string} templateID Идентификатор шаблона элемента контакта модального окна.
+ * @param {HTMLElement || null} controlTemplate Шаблон контактного элемента модального окна.
+ * @param {HTMLInputElement || null} contactControlInput Элемент ввода контактной информации.
+ * @param {PhoneMask || null} phoneMask Экземпляр маски для номера телефона.
+ * @param {HTMLButtonElement || null} selectButton Кнопка селекта типа контакта.
+ * @param {HTMLButtonElement || null} deleteButton Кнопка удаления элемента контакта.
+ * @param {number || null} controlID  Идентификатор элемента контакта.
+ * @param {Object} classNames CSS-классы для элементов контрола.
+ * @param {Object} attrs data-атрибуты для элементов контрола.
+ * @param {string} selectedTypeValue - data-атрибут селекта для хранения выбранного из списка значения.
+ * @param {string} contactControlId - data-атрибут контрола для хранения его id.
+ */
 export class ModalContactControl {
   templateID = 'modal-contact-template';
 
@@ -25,6 +40,10 @@ export class ModalContactControl {
     contactControlId: contacts.attrs.dataContactControlId,
   };
 
+  /**
+   * @description - Создает экземпляр ModalContactControl.
+   * @constructor
+   */
   constructor() {
     this.controlTemplate = cloneTemplate(this.templateID);
     this.getElements();
@@ -35,6 +54,9 @@ export class ModalContactControl {
     return this.controlTemplate;
   }
 
+  /**
+   * @description Создает выпадающий список типов контакта.
+   */
   createContactSelect() {
     new Select({
       select: this.controlTemplate.querySelector('.select'),
@@ -42,6 +64,9 @@ export class ModalContactControl {
     });
   }
 
+  /**
+   * @description Переключает тип контакта в зависимости от выбранного значения в выпадающем списке.
+   */
   toggleContactType() {
     this.contactControlInput.type = Object.values(contacts.types).find(
       (type) =>
@@ -54,12 +79,18 @@ export class ModalContactControl {
       : this.removePhoneMask();
   }
 
+  /**
+   * @description Добавляет маску для ввода номера телефона.
+   */
   addPhoneMask() {
     this.phoneMask = new PhoneMask({
       control: this.contactControlInput,
     });
   }
 
+  /**
+   * @description Удаляет маску для ввода номера телефона.
+   */
   removePhoneMask() {
     if (this.phoneMask) {
       this.phoneMask.destroy();
@@ -67,6 +98,9 @@ export class ModalContactControl {
     }
   }
 
+  /**
+   * @description Получает ссылки на элементы из шаблона.
+   */
   getElements() {
     this.contactControlInput = this.controlTemplate.querySelector(
       `.${this.classNames.contactControlInput}`,
@@ -79,10 +113,16 @@ export class ModalContactControl {
     );
   }
 
+  /**
+   * @description Добавляет обработчики событий.
+   */
   addEvents() {
     this.deleteButton.addEventListener('click', this.destroy.bind(this));
   }
 
+  /**
+   * @description Удаляет элемент контакта и его обработчики событий.
+   */
   destroy() {
     this.deleteButton.removeEventListener('click', this.destroy.bind(this));
     document
@@ -98,12 +138,13 @@ export class ModalContactControl {
     this.controlID = null;
   }
 
+  /**
+   * @description Генерирует уникальный идентификатор элемента контакта.
+   */
   setControlID() {
     this.controlID = Math.floor(1000 + Math.random() * 9000);
     this.controlTemplate
       .querySelector(`.${this.classNames.parentClass}`)
       .setAttribute(this.attrs.contactControlId, this.controlID);
   }
-
-  // TODO: написать документацию в ModalContactControl
 }
