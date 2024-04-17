@@ -74,6 +74,7 @@
   }
   
   &__contact {
+    position: relative;
     display: flex;
     width: 100%;
     border: 1px solid $gray;
@@ -94,6 +95,18 @@
     &_with-error {
       border-color: $invalid-control-border;
     }
+  }
+  
+  &__delete-contact-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  &__contact-control {
+    padding-right: calc(27px + 12px);
   }
   
   &__add-contact-button {

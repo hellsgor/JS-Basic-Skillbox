@@ -14,8 +14,11 @@ export const contacts = {
   classNames: {
     input: 'contact-control__input',
     selectButton: 'select__item',
+    deleteButton: 'delete-contact-btn',
+    parentClass: 'modal__contact',
   },
   attrs: {
     dataSelectedTypeValue: 'data-selected-value',
+    dataContactControlId: 'data-contact-control-id',
   },
 };

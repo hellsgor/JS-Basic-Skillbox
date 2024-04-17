@@ -1,0 +1,40 @@
+@import "@styles/global/_colors.scss";
+
+.delete-contact-btn {
+  display: flex;
+  width: 27px;
+  //height: 100%;
+  border: 1px solid transparent;
+  border-left-color: $gray;
+  align-items: center;
+  justify-content: center;
+  background-color: $select-bg;
+  cursor: pointer;
+  transition: border-color .3s ease-in-out;
+  
+  svg {
+    width: 12px;
+    max-width: unset;
+    height: 12px;
+    max-height: unset;
+    transition: fill .3s ease-in-out;
+    fill: $txt-gray;
+  }
+  
+  @media(hover: hover) {
+    &:hover {
+      border-color: $red;
+      
+      svg {
+        fill: $red;
+      }
+      
+      .tooltip {
+        z-index: 30000;
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+  
+}
