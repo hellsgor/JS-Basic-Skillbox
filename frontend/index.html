@@ -11,9 +11,11 @@
 {{> header}}
 <main>
   {{> clients this }}
-  {{> modal this template='new-client'}}
+  {{> modal template='new-client'}}
+  {{> modal template='edit-client'}}
   {{> elements/backdrop }}
 </main>
+{{> modal-templates this}}
 {{> elements/icon}}
 </body>
 </html>

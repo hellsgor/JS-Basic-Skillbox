@@ -1,0 +1,58 @@
+<div class="modal-templates" style="display: none">
+  <template id="modal-inputs-template">
+    <div class="modal__form-controls">
+      {{#each this.clientControls}}
+        {{> elements/form-control
+          classes='modal__form-control'
+          name=this.name
+          placeholder=this.placeholder
+          forErrorsName=true
+          required=this.required
+          validationRegexpName=this.validationRegexpName
+
+        }}
+      {{/each}}
+    </div>
+  </template>
+
+  <template id="modal-contacts-template">
+    <div class="modal__contacts">
+      <button class="modal__add-contact-button action-button action-button_add" type="button">Добавить контакт</button>
+    </div>
+  </template>
+
+  <template id="modal-errors-template">
+    <div class="modal__errors"></div>
+  </template>
+
+  <template id="modal-buttons-template">
+    <div class="modal__buttons">
+      {{> elements/button
+        text=''
+        modifier='primary'
+        class="modal__action-button"
+      }}
+      <button class="modal__cancel-button action-button action-button_default" type=button></button>
+    </div>
+  </template>
+
+  <template id="modal-contact-template">
+    <div class="modal__contact">
+      {{> elements/select
+        selectConstants=this.contactSelect
+        classes='modal__contact-type'
+      }}
+
+      {{> elements/contact-control
+        controlConstants=this.contactInput
+        classes='modal__contact-control'
+        placeholder='Введите данные контакта'
+        required='true'
+      }}
+
+      {{> elements/delete-contact-btn
+        classes='modal__delete-contact-btn'
+      }}
+    </div>
+  </template>
+</div>
