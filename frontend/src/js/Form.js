@@ -1,12 +1,12 @@
+import { API } from '@/constants/api.js';
 import { ERRORS } from '@/constants/errors.js';
 import { FORMS } from '@/constants/forms';
-import { createElement } from '@/helpers/create-element.js';
+import { MODALS } from '@/constants/modals.js';
 import { regexps } from '@/constants/regexps.js';
 import { clearPhoneNumber } from '@/helpers/clearPhoneNumber.js';
-import { MODALS } from '@/constants/modals.js';
-import { API } from '@/constants/api.js';
-import clientsApi from '@api/Clients-api.js';
+import { createElement } from '@/helpers/create-element.js';
 import { clientsTable } from '@/js/ClientsTable.js';
+import clientsApi from '@api/Clients-api.js';
 
 export class Form {
   form = null;
