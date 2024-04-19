@@ -1,4 +1,5 @@
 import { contacts } from '../constants/contacts.js';
+import { MODALS } from '../constants/modals.js';
 
 export const store = {
   tableHeadRowItems: [
@@ -63,5 +64,12 @@ export const store = {
       button: contacts.classNames.selectButton,
     },
     options: Object.values(contacts.types),
+  },
+
+  modals: {
+    attrs: {
+      modalTemplate: MODALS.ATTRS.MODAL_TEMPLATE,
+    },
+    innerTemplates: MODALS.INNER_TEMPLATES,
   },
 };

@@ -1,28 +1,28 @@
+import { FORMS } from '@/constants/forms.js';
+import { MODALS } from '@/constants/modals.js';
+import { cloneTemplate } from '@/helpers/clone-template.js';
 import { convertTimeStringToMilliseconds } from '@/helpers/convert-time-string-to-milliseconds.js';
 import { createElement } from '@/helpers/create-element.js';
-import { cloneTemplate } from '@/helpers/clone-template.js';
-import { ModalContactControl } from '@/js/ModalContactControl.js';
-import { Form } from '@/js/Form.js';
 import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeholder.js';
-import { MODALS } from '@/constants/modals.js';
+import { Form } from '@/js/Form.js';
+import { ModalContactControl } from '@/js/ModalContactControl.js';
 
 /**
  * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
  * */
 class Modal {
   /**
-   * @param modalClassName - класс любого модального окна
    * @param modal - текущее модальное окно
    * @param modalTemplate - шаблон наполнения модального окна
    * @param closeBtn - кнопка закрытия модального окна
    * @param backdrop - backdrop. Общий для всех модальных окон
    * @param title - заголовок модального окна
    * @param body - условное "тело" модального окна
-   * @param maxContactsNumber - максимальное количество контролов
+   * @param maxContactsNumber - максимальное количество контактов
    * @param formInstance - экземпляр класса Form для Modal
+   * @param classNames - CSS-классы элементов модального окна
    * */
 
-  modalClassName = 'modal';
   modal = null;
   modalTemplate = null;
   closeBtn = null;
@@ -33,28 +33,26 @@ class Modal {
   formInstance = null;
   client = null;
 
-  /**
-   * @param classNames - классы элементов модального окна
-   * */
   classNames = {
-    closeBtn: `${this.modalClassName}__close-btn`,
-    title: `${this.modalClassName}__title`,
-    body: `${this.modalClassName}__body`,
-    contacts: `${this.modalClassName}__contacts`,
-    addContactButton: `${this.modalClassName}__add-contact-button`,
-    actionButton: `${this.modalClassName}__action-button`,
-    cancelButton: `${this.modalClassName}__cancel-button`,
-    contact: `${this.modalClassName}__contact`,
-    errorsWrapper: `${this.modalClassName}__errors`,
-    backdrop: 'backdrop',
-    formControlInput: 'form-control__input',
+    modal: MODALS.CLASS_NAMES.MODAL_CLASS_NAME,
+    closeBtn: MODALS.CLASS_NAMES.CLOSE_BTN,
+    title: MODALS.CLASS_NAMES.TITLE,
+    body: MODALS.CLASS_NAMES.BODY,
+    contacts: MODALS.CLASS_NAMES.CONTACTS,
+    addContactButton: MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON,
+    actionButton: MODALS.CLASS_NAMES.ACTION_BUTTON,
+    cancelButton: MODALS.CLASS_NAMES.CANCEL_BUTTON,
+    contact: MODALS.CLASS_NAMES.CONTACT,
+    errorsWrapper: MODALS.CLASS_NAMES.ERRORS_WRAPPER,
+    backdrop: MODALS.CLASS_NAMES.BACKDROP,
+    formControlInput: FORMS.CLASS_NAMES.FORM_CONTROL_INPUT,
   };
 
   /**
    * @param modalTemplate - data-атрибут для хранения идентификатора шаблона модельного окна
    */
   attributes = {
-    modalTemplate: 'data-modal-template',
+    modalTemplate: MODALS.ATTRS.MODAL_TEMPLATE,
   };
 
   /**
@@ -70,18 +68,18 @@ class Modal {
    * @param modifiers - модификаторы css-селекторов. Для анимаций
    * */
   modifiers = {
-    fadeIn: '_fade-in',
-    fadeOut: '_fade-out',
-    hidden: '_hidden',
+    fadeIn: MODALS.MODIFIERS.FADE_IN,
+    fadeOut: MODALS.MODIFIERS.FADE_OUT,
+    hidden: MODALS.MODIFIERS.HIDDEN,
   };
 
   /**
    * @param locations - список родителей элементов модального окна. Нужны для более простой идентификации родителя добавляемого элемента
    * */
   locations = {
-    body: 'body',
-    form: 'form',
-    contacts: 'contacts',
+    body: MODALS.LOCATIONS.BODY,
+    form: MODALS.LOCATIONS.FORM,
+    contacts: MODALS.LOCATIONS.CONTACTS,
   };
 
   /**
@@ -90,23 +88,23 @@ class Modal {
   templatesIDs = {
     required: {
       inputs: {
-        name: 'inputs',
-        id: 'modal-inputs-template',
+        name: MODALS.INNER_TEMPLATES.INPUTS.NAME,
+        id: MODALS.INNER_TEMPLATES.INPUTS.ID,
         location: this.locations.form,
       },
       contacts: {
-        name: 'contacts',
-        id: 'modal-contacts-template',
+        name: MODALS.INNER_TEMPLATES.CONTACTS.NAME,
+        id: MODALS.INNER_TEMPLATES.CONTACTS.ID,
         location: this.locations.form,
       },
       errors: {
-        name: 'errors',
-        id: 'modal-errors-template',
+        name: MODALS.INNER_TEMPLATES.ERRORS.NAME,
+        id: MODALS.INNER_TEMPLATES.ERRORS.ID,
         location: this.locations.body,
       },
       buttons: {
-        name: 'buttons',
-        id: 'modal-buttons-template',
+        name: MODALS.INNER_TEMPLATES.BUTTONS.NAME,
+        id: MODALS.INNER_TEMPLATES.BUTTONS.ID,
         location: this.locations.body,
       },
     },
@@ -172,9 +170,11 @@ class Modal {
     this.fillModal(this.client);
 
     this.modal.classList.remove(
-      `${this.modalClassName}${this.modifiers.hidden}`,
+      `${this.classNames.modal}${this.modifiers.hidden}`,
     );
-    this.modal.classList.add(`${this.modalClassName}${this.modifiers.fadeIn}`);
+    this.modal.classList.add(
+      `${this.classNames.modal}${this.modifiers.fadeIn}`,
+    );
     this.backdrop.classList.remove(
       `${this.classNames.backdrop}${this.modifiers.hidden}`,
     );
@@ -184,7 +184,7 @@ class Modal {
     setTimeout(
       () => {
         this.modal.classList.remove(
-          `${this.modalClassName}${this.modifiers.fadeIn}`,
+          `${this.classNames.modal}${this.modifiers.fadeIn}`,
         );
         this.backdrop.classList.remove(
           `${this.classNames.backdrop}${this.modifiers.fadeIn}`,
@@ -200,7 +200,9 @@ class Modal {
    * Скрывает модальное окно
    * */
   closeModal() {
-    this.modal.classList.add(`${this.modalClassName}${this.modifiers.fadeOut}`);
+    this.modal.classList.add(
+      `${this.classNames.modal}${this.modifiers.fadeOut}`,
+    );
     this.backdrop.classList.add(
       `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
     );
@@ -208,10 +210,10 @@ class Modal {
     setTimeout(
       () => {
         this.modal.classList.add(
-          `${this.modalClassName}${this.modifiers.hidden}`,
+          `${this.classNames.modal}${this.modifiers.hidden}`,
         );
         this.modal.classList.remove(
-          `${this.modalClassName}${this.modifiers.fadeOut}`,
+          `${this.classNames.modal}${this.modifiers.fadeOut}`,
         );
         this.backdrop.classList.add(
           `${this.classNames.backdrop}${this.modifiers.hidden}`,
@@ -398,7 +400,7 @@ class Modal {
   }
 
   /**
-   * @description - Уничтожает класс Form если он уже был создан
+   * @description - Уничтожает экземпляр класса Form если он уже был создан
    * */
   destroyForm() {
     if (this.formInstance) {
