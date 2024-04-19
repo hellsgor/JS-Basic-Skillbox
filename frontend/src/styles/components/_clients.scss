@@ -1,7 +1,7 @@
 .clients {
-  
   &__table {
     width: 100%;
+    margin-bottom: 40px;
     border-collapse: collapse;
     
     th {
@@ -25,5 +25,9 @@
         width: 207px;
       }
     }
+  }
+  
+  &__add-button {
+    margin: 0 auto;
   }
 }

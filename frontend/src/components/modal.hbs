@@ -1,0 +1,71 @@
+<div class="modal modal_hidden"
+  data-modal-template="{{template}}"
+>
+  <div class="modal__close-btn">
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2333 1.73333L15.2666 0.766664L8.49991 7.53336L1.73324 0.766696L0.766576 1.73336L7.53324 8.50003L0.766603 15.2667L1.73327 16.2333L8.49991 9.46669L15.2666 16.2334L16.2332 15.2667L9.46657 8.50003L16.2333 1.73333Z" />
+    </svg>
+  </div>
+  <div class="modal__title-row">
+    <h3 class="modal__title"></h3>
+    <span class="modal__id"></span>
+  </div>
+  <div class="modal__body"></div>
+</div>
+
+<template id="modal-inputs-template">
+  <div class="modal__form-controls">
+    {{#each this.clientControls}}
+      {{> elements/form-control
+        classes='modal__form-control'
+        name=this.name
+        placeholder=this.placeholder
+        forErrorsName=true
+        required=this.required
+        validationRegexpName=this.validationRegexpName
+
+      }}
+    {{/each}}
+  </div>
+</template>
+
+<template id="modal-contacts-template">
+  <div class="modal__contacts">
+    <button class="modal__add-contact-button action-button action-button_add" type="button">Добавить контакт</button>
+  </div>
+</template>
+
+<template id="modal-errors-template">
+  <div class="modal__errors"></div>
+</template>
+
+<template id="modal-buttons-template">
+  <div class="modal__buttons">
+    {{> elements/button
+      text=''
+      modifier='primary'
+      class="modal__action-button"
+    }}
+    <button class="modal__cancel-button action-button action-button_default" type=button></button>
+  </div>
+</template>
+
+<template id="modal-contact-template">
+  <div class="modal__contact">
+    {{> elements/select
+      selectConstants=this.contactSelect
+      classes='modal__contact-type'
+    }}
+
+    {{> elements/contact-control
+      controlConstants=this.contactInput
+      classes='modal__contact-control'
+      placeholder='Введите данные контакта'
+      required='true'
+    }}
+
+    {{> elements/delete-contact-btn
+      classes='modal__delete-contact-btn'
+    }}
+  </div>
+</template>

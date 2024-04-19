@@ -1,0 +1,33 @@
+.backdrop {
+  @keyframes backdropFade {
+    from {
+      opacity: 0;
+    }
+    
+    to {
+      opacity: .2;
+    }
+  }
+  
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 90;
+  opacity: .2;
+  background-color: $black;
+  
+  &_hidden {
+    z-index: -10000;
+    opacity: 0;
+  }
+  
+  &_fade-in {
+    animation: .3s ease-in-out backdropFade;
+  }
+  
+  &_fade-out {
+    animation: .3s ease-in-out reverse backdropFade;
+  }
+}

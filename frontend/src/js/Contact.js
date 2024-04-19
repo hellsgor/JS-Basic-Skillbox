@@ -58,21 +58,28 @@ export class Contact {
   createTooltip() {
     const tooltip = createElement({
       tag: 'div',
-      classes: ['contact-tooltip', 'contact-tooltip_hidden'],
+      classes: ['tooltip', 'tooltip_hidden'],
+    });
+
+    const tooltipWrapper = createElement({
+      tag: 'div',
+      classes: 'tooltip__wrapper',
     });
 
     if (!this.modifier) {
-      tooltip.appendChild(
+      tooltipWrapper.appendChild(
         createElement({
           tag: 'span',
+          classes: 'tooltip__text',
           text: this.contact.type,
         }),
       );
     }
 
-    tooltip.appendChild(
+    tooltipWrapper.appendChild(
       createElement({
         tag: 'a',
+        classes: 'tooltip__link',
         text: this.processedValue ? this.processedValue : this.contact.value,
         attributes: [
           {
@@ -86,7 +93,7 @@ export class Contact {
         ],
       }),
     );
-
+    tooltip.appendChild(tooltipWrapper);
     this.contactElement.appendChild(tooltip);
   }
 
@@ -119,4 +126,8 @@ export class Contact {
         break;
     }
   }
+
+  // TODO: добавить метод destroy в Contact
+  // TODO: написать документацию в Contact
+  // TODO: вынести строки в константу
 }

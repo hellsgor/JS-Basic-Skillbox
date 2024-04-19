@@ -1,4 +1,4 @@
-import getDataApi from '@api/get-data-api.js';
+import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
 
 export class ClientsTable {
@@ -13,12 +13,27 @@ export class ClientsTable {
     await this.initClients();
 
     this.clients.forEach((client) => {
-      const clientInstance = new Client(client);
-      this.tBody.appendChild(clientInstance.getClientRow());
+      this.addNewClient(client);
     });
   }
 
-  async initClients() {
-    this.clients = await getDataApi.getContacts();
+  renderNewClient(client) {
+    this.addNewClient(client);
   }
+
+  addNewClient(client) {
+    const clientInstance = new Client(client);
+    this.tBody.appendChild(clientInstance.getClientRow());
+  }
+
+  async initClients() {
+    this.clients = await clientsApi.getClients();
+  }
+
+  // TODO: добавить destroy в ClientsTable
+  // TODO: написать документацию в ClientsTable
 }
+
+export const clientsTable = new ClientsTable(
+  document.getElementById('table-body'),
+);

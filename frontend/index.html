@@ -1,16 +1,19 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8"/>
-  <link href="/favicon.svg" rel="icon" type="image/svg+xml"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta charset="UTF-8" />
+  <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>CRM</title>
   <script defer src="./main.js" type="module"></script>
 </head>
 <body>
 {{> header}}
 <main>
-  {{> clients this}}
+  {{> clients this }}
+  {{> modal this template='new-client'}}
+  {{> elements/backdrop }}
 </main>
+{{> elements/icon}}
 </body>
 </html>

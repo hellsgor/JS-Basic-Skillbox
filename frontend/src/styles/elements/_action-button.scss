@@ -1,0 +1,132 @@
+.action-button {
+  display: inline-flex;
+  height: 100%;
+  max-height: 20px;
+  padding: 0;
+  border: none;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color .2s ease-in-out;
+  
+  &::before,
+  &::after {
+    width: 16px;
+    height: 16px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    
+  }
+  
+  &_change,
+  &_delete {
+    &::before,
+    &::after {
+      opacity: .7;
+    }
+    
+    &::before {
+      content: '';
+    }
+  }
+  
+  &_default {
+    font-size: 12px;
+    text-decoration: underline;
+    line-height: normal;
+    color: $black;
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $firm;
+      }
+    }
+  }
+  
+  &_change {
+    margin-right: 30px;
+    
+    &::before {
+      background-image: url("/icons/change.svg");
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $firm;
+      }
+    }
+  }
+  
+  &_delete {
+    &::before {
+      background-image: url("/icons/delete.svg");
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $red;
+      }
+    }
+  }
+  
+  &_add {
+    position: relative;
+    column-gap: 4px;
+    font-weight: 600;
+    line-height: normal;
+    
+    &:before,
+    &::after {
+      background-size: cover;
+      content: '';
+      transition: opacity .3s ease-in-out;
+    }
+    
+    &::before {
+      margin-top: 2px;
+      background-image: url("/icons/add.svg");
+    }
+    
+    &::after {
+      position: absolute;
+      top: 2px;
+      left: 0;
+      opacity: 0;
+      background-image: url("/icons/add_hover.svg");
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        color: $firm;
+        
+        &::before {
+          opacity: 0;
+        }
+        
+        &::after {
+          opacity: 1
+        }
+      }
+    }
+    
+    &:disabled {
+      color: $txt-gray;
+      cursor: not-allowed;
+      
+      &::before,
+      &::after {
+        filter: grayscale(100%);
+      }
+      
+      @media(hover: hover) {
+        &::before {
+          opacity: 1;
+        }
+        &::after {
+          opacity: 0;
+        }
+      }
+    }
+  }
+}

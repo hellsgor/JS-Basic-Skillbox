@@ -7,8 +7,17 @@ body {
   color: $black;
 }
 
+h2,
+h3 {
+  font-weight: 700;
+}
+
 h2 {
   font-size: 24px;
-  font-weight: 700;
   line-height: 33px;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 25px;
 }

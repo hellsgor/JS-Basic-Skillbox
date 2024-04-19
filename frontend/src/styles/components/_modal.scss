@@ -1,0 +1,143 @@
+@import "@styles/global/_colors.scss";
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  width: 100%;
+  max-width: 450px;
+  padding: 24px 0;
+  border: none;
+  background-color: $white;
+  transform: translate(-50%, -50%);
+  
+  &_hidden {
+    z-index: -10000;
+    opacity: 0;
+  }
+  
+  &_fade-in {
+    animation: .3s ease-in-out fade;
+  }
+  
+  &_fade-out {
+    animation: .3s ease-in-out reverse fade;
+  }
+  
+  &__title {
+    padding: 0 30px;
+    margin-bottom: 16px;
+  }
+  
+  &__close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    width: 29px;
+    height: 29px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    svg {
+      width: 20.5px;
+      height: 20.5px;
+      
+      path {
+        transition: fill .3s ease-in-out;
+        fill: $txt-gray;
+      }
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        svg path {
+          fill: $black;
+        }
+      }
+    }
+  }
+  
+  &__form-controls {
+    padding: 0 30px;
+    margin-bottom: 25px;
+  }
+  
+  &__contacts {
+    display: flex;
+    padding: 8px 30px;
+    flex-direction: column;
+    align-items: center;
+    background-color: $modal-contacts-background;
+  }
+  
+  &__contact {
+    position: relative;
+    display: flex;
+    width: 100%;
+    border: 1px solid $gray;
+    transition: border-color .1s ease-in-out;
+    
+    &:first-child {
+      margin-top: 15px;
+    }
+    
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+    
+    &:nth-last-child(2) {
+      margin-bottom: 25px;
+    }
+    
+    &_with-error {
+      border-color: $invalid-control-border;
+    }
+  }
+  
+  &__delete-contact-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  &__contact-control {
+    padding-right: calc(27px + 12px);
+  }
+  
+  &__add-contact-button {
+    
+    &:not(:first-child) {
+      margin-bottom: 17px;
+    }
+  }
+  
+  &__errors {
+    display: flex;
+    padding: 8px 30px 9px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 2px;
+    
+    span {
+      max-width: 255px;
+      font-size: 10px;
+      font-weight: 400;
+      text-align: center;
+      line-height: normal;
+      color: $red;
+    }
+  }
+  
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 5px;
+  }
+}

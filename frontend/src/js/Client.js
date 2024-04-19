@@ -10,13 +10,13 @@ export class Client {
   clientButtons = [
     {
       text: 'Изменить',
-      classes: ['button', 'button_action', 'button_change'],
+      classes: ['action-button', 'action-button_change'],
       callback: this.changeClient.bind(this),
       event: 'click',
     },
     {
       text: 'Удалить',
-      classes: ['button', 'button_action', 'button_delete'],
+      classes: ['action-button', 'action-button_delete'],
       callback: this.deleteClient.bind(this),
       event: 'click',
     },
@@ -158,4 +158,8 @@ export class Client {
   deleteClient() {
     console.log('delete', this.data.id);
   }
+
+  // TODO: вынести строки в Client
+  // TODO: добавить  метода destroy в Client
+  // TODO: написать документацию destroy в Client
 }
