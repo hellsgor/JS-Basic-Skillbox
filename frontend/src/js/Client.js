@@ -2,11 +2,38 @@ import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
 
+/**
+ * Класс, представляющий клиента.
+ * @class
+ */
 export class Client {
-  data = null;
+  /**
+   * @param clientData - Данные клиента.
+   * @param {string} clientData.id - Уникальный идентификатор клиента.
+   * @param {Date} clientData.createdAt - Дата и время создания клиента.
+   * @param {Date} clientData.updatedAt - Дата и время последнего обновления клиента.
+   * @param {string} clientData.name - Имя клиента.
+   * @param {string} clientData.surname - Фамилия клиента.
+   * @param {string=} clientData.lastName - Отчество клиента (необязательное свойство).
+   * @param {Object[]} clientData.contacts - Массив контактов клиента.
+   *
+   * @param {Object} contact - Контакт клиента.
+   * @param {string} contact.type - Тип контакта.
+   * @param {string} contact.value - Значение контакта.
+   *
+   * @param {HTMLTableRowElement} clientRow - Строка, представляющая клиента в таблице.
+   *
+   * @param {Object[]} clientButtons - Массив кнопок действий клиента.
+   *
+   * @param {Object} clientButton - Входные данные для кнопки действия клиента.
+   * @param {string} clientButton.text - Текст кнопки
+   * @param {string[]} clientButton.text - Классы кнопки
+   * @param {Function} clientButton.callback - Коллбэк для кнопки.
+   * @param {string} clientButton.event - Имя события для запуска коллбэка.
+   */
 
+  clientData = null;
   clientRow = null;
-
   clientButtons = [
     {
       text: 'Изменить',
@@ -22,15 +49,26 @@ export class Client {
     },
   ];
 
+  /**
+   * @description Создает экземпляр клиента.
+   * @param {object} data - Данные клиента.
+   * */
   constructor(data) {
-    this.data = data;
+    this.clientData = data;
   }
 
+  /**
+   * Возвращает строку, представляющую клиента в таблице.
+   * @returns {HTMLTableRowElement} Строка таблицы.
+   */
   getClientRow() {
     this.initClient();
     return this.clientRow;
   }
 
+  /**
+   * @description Инициализирует клиента.
+   */
   initClient() {
     this.clientRow = createElement({
       tag: 'tr',
@@ -40,7 +78,7 @@ export class Client {
     this.clientRow.appendChild(
       createElement({
         tag: 'th',
-        text: this.data.id.slice(-6),
+        text: this.clientData.id.slice(-6),
         attributes: [{ name: 'scope', value: 'row' }],
         classes: 'client__id',
       }),
@@ -49,17 +87,22 @@ export class Client {
     this.clientRow.appendChild(
       createElement({
         tag: 'td',
-        text: `${this.data.surname} ${this.data.name} ${this.data.lastName}`,
+        text: `${this.clientData.surname} ${this.clientData.name} ${this.clientData.lastName}`,
         classes: 'client__full-name',
       }),
     );
 
-    this.clientRow.appendChild(this.createDateCell(this.data.createdAt));
-    this.clientRow.appendChild(this.createDateCell(this.data.updatedAt));
-    this.clientRow.appendChild(this.createContacts(this.data.contacts));
+    this.clientRow.appendChild(this.createDateCell(this.clientData.createdAt));
+    this.clientRow.appendChild(this.createDateCell(this.clientData.updatedAt));
+    this.clientRow.appendChild(this.createContacts(this.clientData.contacts));
     this.clientRow.appendChild(this.createActions());
   }
 
+  /**
+   * Создает ячейку с датой.
+   * @param {string} str - Строка с датой.
+   * @returns {HTMLTableCellElement} Ячейка таблицы с датой.
+   */
   createDateCell(str) {
     const newDate = new Date(str);
 
@@ -78,6 +121,11 @@ export class Client {
     });
   }
 
+  /**
+   * @description Создает ячейку с контактами клиента.
+   * @param {Array<Object>} contacts - Массив контактов клиента.
+   * @returns {HTMLTableCellElement} Ячейка таблицы с контактами.
+   */
   createContacts(contacts) {
     const contactsCell = createElement({
       tag: 'td',
@@ -116,6 +164,10 @@ export class Client {
     return contactsCell;
   }
 
+  /**
+   * @description Создает ячейку с кнопками действий.
+   * @returns {HTMLTableCellElement} Ячейка таблицы с кнопками действий.
+   */
   createActions() {
     const actionsCell = createElement({
       tag: 'td',
@@ -131,7 +183,7 @@ export class Client {
           attributes: [
             {
               name: 'data-client-id',
-              value: this.data.id,
+              value: this.clientData.id,
             },
           ],
           callback: btnProps.callback,
@@ -141,6 +193,11 @@ export class Client {
     return actionsCell;
   }
 
+  /**
+   * @description Показывает все контакты клиента.
+   * @param {HTMLTableCellElement} contactsCell - Ячейка с контактами клиента.
+   * @param {HTMLElement} moreIcon - Иконка "Еще контакты".
+   */
   showAllContacts(contactsCell, moreIcon) {
     contactsCell
       .querySelectorAll('.client__contact_hidden')
@@ -151,15 +208,19 @@ export class Client {
     moreIcon.classList.add('client__contact_hidden');
   }
 
+  /**
+   * @description Обрабатывает нажатие на кнопку "Изменить".
+   */
   changeClient() {
-    console.log('change', this.data.id);
+    console.log('change', this.clientData.id);
   }
 
+  /**
+   * @description Обрабатывает нажатие на кнопку "Удалить".
+   */
   deleteClient() {
-    console.log('delete', this.data.id);
+    console.log('delete', this.clientData.id);
   }
 
-  // TODO: вынести строки в Client
   // TODO: добавить  метода destroy в Client
-  // TODO: написать документацию destroy в Client
 }
