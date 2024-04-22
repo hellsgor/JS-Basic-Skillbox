@@ -174,20 +174,16 @@ export class Client {
       classes: 'client__buttons-cell',
     });
 
-    this.clientButtons.forEach((btnProps) => {
-      actionsCell.appendChild(
-        createElement({
-          tag: 'button',
-          classes: btnProps.classes,
-          text: btnProps.text,
-          attributes: [
-            {
-              name: 'data-client-id',
-              value: this.clientData.id,
-            },
-          ],
-          callback: btnProps.callback,
-        }),
+    this.clientButtons.forEach((btnProps, idx) => {
+      this.clientButtons[idx].domElement = createElement({
+        tag: 'button',
+        classes: btnProps.classes,
+        text: btnProps.text,
+      });
+
+      this.clientButtons[idx].domElement.addEventListener(
+        btnProps.event,
+        btnProps.callback,
       );
     });
     return actionsCell;
@@ -220,7 +216,19 @@ export class Client {
    */
   deleteClient() {
     console.log('delete', this.clientData.id);
+
+    this.destroy();
   }
 
-  // TODO: добавить  метода destroy в Client
+  /**
+   * @description Уничтожает экземпляр клиента.
+   */
+  destroy() {
+    this.clientData = null;
+    this.clientRow = null;
+    this.clientButtons.forEach((button) => {
+      button.domElement.removeEventListener(button.event, button.callback);
+      button = null;
+    });
+  }
 }
