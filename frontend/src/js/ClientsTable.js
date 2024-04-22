@@ -4,12 +4,14 @@ import { Client } from '@/js/Client.js';
 export class ClientsTable {
   clients = null;
   tBody = null;
+  modals = null;
 
   constructor(tBody) {
-    this.tBody = tBody;
+    this.tBody = tBody || null;
   }
 
-  async renderClients() {
+  async renderClients(modals) {
+    this.modals = modals || null;
     await this.initClients();
 
     this.clients.forEach((client) => {
@@ -22,8 +24,7 @@ export class ClientsTable {
   }
 
   addNewClient(client) {
-    const clientInstance = new Client(client);
-    this.tBody.appendChild(clientInstance.getClientRow());
+    this.tBody.appendChild(new Client(client, this.modals).getClientRow());
   }
 
   async initClients() {

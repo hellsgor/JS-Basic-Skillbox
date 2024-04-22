@@ -3,11 +3,11 @@ import { initModals } from '@/js/Modal.js';
 import { autoInitForms } from '@/js/Form.js';
 import { clientsTable } from '@/js/ClientsTable.js';
 
-await clientsTable.renderClients();
-
 const addClientButton = document.getElementById('add-client-button');
 const backdrop = document.getElementById('backdrop');
 const modals = initModals();
+
+await clientsTable.renderClients(modals);
 
 addClientButton.addEventListener('click', () => {
   modals['new-client'].showModal();
