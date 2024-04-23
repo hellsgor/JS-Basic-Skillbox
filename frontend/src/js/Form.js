@@ -257,12 +257,15 @@ export class Form {
       case MODALS.TEMPLATES.NEW_CLIENT:
         method = API.METHODS.ADD_CLIENT;
         break;
+      case MODALS.TEMPLATES.EDIT_CLIENT:
+        method = API.METHODS.EDIT_CLIENT;
+        break;
 
       default:
         break;
     }
 
-    clientsApi[method](this.serializeForm()).then((response) => {
+    clientsApi[method](this.serializeForm(), this.clientID).then((response) => {
       this.processingResponse(response);
     });
   }
