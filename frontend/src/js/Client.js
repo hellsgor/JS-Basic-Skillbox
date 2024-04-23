@@ -1,7 +1,9 @@
 import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
+import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
+import clientsApi from '@api/Clients-api.js';
 
 /**
  * Класс, представляющий клиента.
@@ -213,7 +215,9 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Изменить".
    */
   editClient() {
-    this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(this.clientData);
+    clientsApi.getClient(this.clientData.id).then((response) => {
+      this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(response);
+    });
   }
 
   /**

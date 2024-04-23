@@ -33,7 +33,6 @@ class Modal {
   body = null;
   maxContactsNumber = 10;
   formInstance = null;
-  client = null;
 
   classNames = {
     modal: MODALS.CLASS_NAMES.MODAL_CLASS_NAME,
@@ -170,11 +169,7 @@ class Modal {
    * @param {Object} client - Клиент
    * */
   showModal(client = null) {
-    if (client) {
-      this.client = client;
-    }
-
-    this.fillModal(this.client);
+    this.fillModal(client);
 
     this.modal.classList.remove(
       `${this.classNames.modal}${this.modifiers.hidden}`,
@@ -286,6 +281,7 @@ class Modal {
       this.form
         .querySelectorAll(`.${this.classNames.formControlInput}`)
         .forEach((control) => {
+          control.value = client ? client[control.name] : '';
           movedFormControlPlaceholder(control);
         });
     }

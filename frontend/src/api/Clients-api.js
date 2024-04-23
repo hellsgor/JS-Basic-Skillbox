@@ -18,6 +18,18 @@ class ClientsApi {
     }
   }
 
+  async getClient(id) {
+    try {
+      const response = await axios.get(
+        `${this.URL}${this.RESOURCES.CLIENTS}/${id}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Невозможно получить данные из-за ошибки: ${error}`);
+      throw error;
+    }
+  }
+
   async addClient(data) {
     let response;
     try {
