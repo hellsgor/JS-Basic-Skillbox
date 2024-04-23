@@ -363,7 +363,11 @@ export class Form {
     }
 
     if (response.status === 200 || response.status === 201) {
-      clientsTable.renderNewClient(response.data);
+      clientsTable.removeClient(this.clientID);
+      if (response.data && response.data.id) {
+        clientsTable.addClient(response.data);
+      }
+      clientsTable.renderClients();
       this.callback && this.callback();
     }
   }
