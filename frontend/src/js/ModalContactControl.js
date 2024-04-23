@@ -1,6 +1,6 @@
 import { cloneTemplate } from '@/helpers/clone-template.js';
 import { Select } from '@/js/Select.js';
-import { contacts } from '@/constants/contacts.js';
+import { CONTACTS } from '@/constants/contacts.js';
 import { PhoneMask } from '@/js/PhoneMask.js';
 
 /**
@@ -27,10 +27,12 @@ export class ModalContactControl {
   selectButton = null;
   deleteButton = null;
   controlID = null;
+  contactData = null;
 
   classNames = {
     contactControlInput: CONTACTS.CLASS_NAMES.input,
     contactTypeSelectButton: CONTACTS.CLASS_NAMES.selectButton,
+    contactTypeSelectButtonText: CONTACTS.CLASS_NAMES.selectButtonText,
     deleteButton: CONTACTS.CLASS_NAMES.deleteButton,
     parentClass: CONTACTS.CLASS_NAMES.parentClass,
   };
@@ -44,12 +46,15 @@ export class ModalContactControl {
    * @description - Создает экземпляр ModalContactControl.
    * @constructor
    */
-  constructor() {
+  constructor(contact = null) {
+    this.contactData = contact ?? contact;
+
     this.controlTemplate = cloneTemplate(this.templateID);
     this.getElements();
     this.setControlID();
     this.createContactSelect();
     this.addEvents();
+    this.setContactData();
 
     return this.controlTemplate;
   }
@@ -136,6 +141,7 @@ export class ModalContactControl {
     this.selectButton = null;
     this.deleteButton = null;
     this.controlID = null;
+    this.contactData = null;
   }
 
   /**
@@ -146,5 +152,39 @@ export class ModalContactControl {
     this.controlTemplate
       .querySelector(`.${this.classNames.parentClass}`)
       .setAttribute(this.attrs.contactControlId, this.controlID);
+  }
+
+  /**
+   * @description  - Устанавливает данные контакта в контрол
+   * */
+  setContactData() {
+    if (!this.contactData) {
+      return;
+    }
+    const currentType = Object.values(CONTACTS.TYPES).find(
+      (type) => type.text === this.contactData.type,
+    );
+
+    this.selectButton.querySelector(
+      `.${this.classNames.contactTypeSelectButtonText}`,
+    ).innerText = currentType.text;
+
+    this.selectButton.setAttribute(
+      this.attrs.selectedTypeValue,
+      currentType.value,
+    );
+
+    this.contactControlInput.type = currentType.inputType;
+
+    this.contactControlInput.type === 'tel'
+      ? this.addPhoneMask()
+      : this.removePhoneMask();
+
+    this.contactControlInput.value = this.contactData.value;
+    this.phoneMask &&
+      this.phoneMask.onPhoneInput({
+        target: this.contactControlInput,
+        data: '',
+      });
   }
 }

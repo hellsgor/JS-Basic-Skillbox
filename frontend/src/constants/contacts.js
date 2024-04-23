@@ -14,6 +14,7 @@ export const CONTACTS = {
   CLASS_NAMES: {
     input: 'contact-control__input',
     selectButton: 'select__item',
+    selectButtonText: 'select__item-text',
     deleteButton: 'delete-contact-btn',
     parentClass: 'modal__contact',
   },
