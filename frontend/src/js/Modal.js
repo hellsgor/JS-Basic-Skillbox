@@ -28,6 +28,8 @@ class Modal {
   closeBtn = null;
   backdrop = null;
   title = null;
+  id = null;
+  idItem = null;
   body = null;
   maxContactsNumber = 10;
   formInstance = null;
@@ -37,6 +39,8 @@ class Modal {
     modal: MODALS.CLASS_NAMES.MODAL_CLASS_NAME,
     closeBtn: MODALS.CLASS_NAMES.CLOSE_BTN,
     title: MODALS.CLASS_NAMES.TITLE,
+    id: MODALS.CLASS_NAMES.ID,
+    idItem: MODALS.CLASS_NAMES.ID_ITEM,
     body: MODALS.CLASS_NAMES.BODY,
     contacts: MODALS.CLASS_NAMES.CONTACTS,
     addContactButton: MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON,
@@ -147,6 +151,8 @@ class Modal {
     this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
     this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
     this.title = this.modal?.querySelector(`.${this.classNames.title}`);
+    this.id = this.modal?.querySelector(`.${this.classNames.id}`);
+    this.idItem = this.modal?.querySelector(`.${this.classNames.idItem}`);
     this.body = this.modal?.querySelector(`.${this.classNames.body}`);
   }
 
@@ -237,6 +243,7 @@ class Modal {
    * */
   fillModal(client = null) {
     this.setTitle(client);
+    this.setID(client);
 
     if (this.modalTemplate !== this.modalTemplatesList.delete) {
       this.body.appendChild(this.createForm(client));
@@ -299,11 +306,22 @@ class Modal {
       return;
     }
 
-    if (this.modalTemplate === this.modalTemplatesList.newClient) {
-      this.title.innerText = client
-        ? this.strings.title.edit
-        : this.strings.title.new;
+    this.title.innerText = client
+      ? this.strings.title.edit
+      : this.strings.title.new;
+  }
+
+  /**
+   * @description Устанавливает id клиента
+   * @param {Object} client - Клиент
+   * */
+  setID(client) {
+    if (!client || !client.id) {
+      return;
     }
+
+    this.idItem.innerText = client.id;
+    this.id.classList.remove(`${this.classNames.id}${this.modifiers.hidden}`);
   }
 
   /**

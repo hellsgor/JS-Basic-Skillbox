@@ -25,9 +25,24 @@
     animation: .3s ease-in-out reverse fade;
   }
   
-  &__title {
+  &__title-row {
+    display: flex;
     padding: 0 30px;
     margin-bottom: 16px;
+    align-items: baseline;
+    column-gap: 9px;
+  }
+  
+  &__id {
+    display: inline-flex;
+    align-items: baseline;
+    column-gap: 4px;
+    font-size: 12px;
+    color: $txt-gray;
+    
+    &_hidden {
+      display: none;
+    }
   }
   
   &__close-btn {
