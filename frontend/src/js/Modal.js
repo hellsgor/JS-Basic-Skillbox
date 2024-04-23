@@ -166,7 +166,7 @@ class Modal {
 
   /**
    * @description - Показывает модальное окно
-   * @param {Object} client - Клиент
+   * @param {Object} client - Объект с информацией о клиенте
    * */
   showModal(client = null) {
     this.fillModal(client);
@@ -236,7 +236,7 @@ class Modal {
 
   /**
    * @description - Наполняет модальное окно в соответствии с шаблоном наполнения
-   * @param {Object} client - Клиент
+   * @param {Object} client - Объект с информацией о клиенте
    * */
   fillModal(client = null) {
     this.setTitle(client);
@@ -256,12 +256,7 @@ class Modal {
         }
 
         if (templateID === this.templatesIDs.required.contacts.name) {
-          newElement
-            .querySelector(`.${this.classNames.addContactButton}`)
-            .addEventListener('click', () => {
-              this.addContactControl();
-              this.disabledAddContactButton();
-            });
+          newElement = this.setContacts(newElement, client);
         }
 
         switch (this.templatesIDs.required[templateID].location) {
@@ -298,7 +293,7 @@ class Modal {
 
   /**
    * @description - Устанавливает заголовок модального окна
-   * @param {Object} client - Клиент
+   * @param {Object} client - Объект с информацией о клиенте
    * */
   setTitle(client) {
     if (this.modalTemplate === this.modalTemplatesList.delete) {
@@ -313,7 +308,7 @@ class Modal {
 
   /**
    * @description - Устанавливает id клиента
-   * @param {Object} client - Клиент
+   * @param {Object} client - Объект с информацией о клиенте
    * */
   setID(client) {
     if (!client || !client.id) {
@@ -340,7 +335,7 @@ class Modal {
 
   /**
    * @description - Создаёт форму в модальном окне в соответствии с шаблоном наполнения
-   * @param {Object} client - Клиент
+   * @param {Object} client - Объект с информацией о клиенте
    * */
   createForm(client) {
     return createElement({
@@ -362,7 +357,8 @@ class Modal {
   /**
    * @description - Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
    * @param {DocumentFragment} buttonsContainer - Контейнер для кнопок модального окна
-   * @param {Object} client - Клиент
+   * @param {Object} client - Объект с информацией о клиенте
+   * @returns {DocumentFragment} - Блок кнопок модального окна
    * */
   setButtons(buttonsContainer, client) {
     const cancelButton = buttonsContainer.querySelector(
@@ -402,6 +398,43 @@ class Modal {
     }
 
     return buttonsContainer;
+  }
+
+  /**
+   * @description Добавляет контакты клиента к элементу интерфейса.
+   * @param {DocumentFragment} contactsContainer - Элемент интерфейса, к которому добавляются контакты.
+   * @param {Object} client - Объект с информацией о клиенте.
+   * @returns {DocumentFragment} - Блок контактов модального окна с добавленными контактами.
+   */
+  setContacts(contactsContainer, client) {
+    const newElemAddContactButton = contactsContainer.querySelector(
+      `.${this.classNames.addContactButton}`,
+    );
+
+    // Добавление обработчика события для кнопки добавления контакта
+    newElemAddContactButton.addEventListener('click', () => {
+      this.addContactControl();
+      this.disabledAddContactButton();
+    });
+
+    // Если у клиента есть контакты, добавляем их к новому элементу интерфейса
+    if (client && client.contacts.length) {
+      client.contacts.forEach((contact) => {
+        contactsContainer
+          .querySelector(`.${this.classNames.contacts}`)
+          .insertBefore(
+            new ModalContactControl(contact),
+            newElemAddContactButton,
+          );
+      });
+
+      // Если количество контактов клиента достигло максимального значения, блокируем кнопку добавления контакта
+      if (client.contacts.length >= this.maxContactsNumber) {
+        newElemAddContactButton.setAttribute('disabled', 'true');
+      }
+    }
+
+    return contactsContainer;
   }
 
   /**
