@@ -8,7 +8,7 @@ import { Form } from '@/js/Form.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
 
 /**
- * @description Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
+ * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
  * */
 class Modal {
   /**
@@ -69,7 +69,7 @@ class Modal {
   };
 
   /**
-   * @param modifiers - модификаторы css-селекторов. Для анимаций
+   * @param modifiers - модификаторы css-селекторов.
    * */
   modifiers = {
     fadeIn: MODALS.MODIFIERS.FADE_IN,
@@ -145,7 +145,7 @@ class Modal {
   }
 
   /**
-   * Определяет элементы модального окна
+   * @description - Определяет элементы модального окна
    * */
   getModalElements() {
     this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
@@ -157,7 +157,7 @@ class Modal {
   }
 
   /**
-   * Добавляет базовые события элементам модального окна
+   * @description - Добавляет базовые события элементам модального окна
    * */
   addEvents() {
     this.closeBtn.addEventListener('click', () => {
@@ -166,7 +166,8 @@ class Modal {
   }
 
   /**
-   * Показывает модальное окно
+   * @description - Показывает модальное окно
+   * @param {Object} client - Клиент
    * */
   showModal(client = null) {
     if (client) {
@@ -203,7 +204,7 @@ class Modal {
   }
 
   /**
-   * Скрывает модальное окно
+   * @description - Скрывает модальное окно
    * */
   closeModal() {
     this.modal.classList.add(
@@ -239,7 +240,8 @@ class Modal {
   }
 
   /**
-   * Наполняет модальное окно в соответствии с шаблоном наполнения
+   * @description - Наполняет модальное окно в соответствии с шаблоном наполнения
+   * @param {Object} client - Клиент
    * */
   fillModal(client = null) {
     this.setTitle(client);
@@ -290,7 +292,7 @@ class Modal {
   }
 
   /**
-   * Очищает модальное окно
+   * @description - Очищает модальное окно
    * */
   clearModal() {
     this.clearTitle();
@@ -298,7 +300,8 @@ class Modal {
   }
 
   /**
-   * Устанавливает заголовок модального окна
+   * @description - Устанавливает заголовок модального окна
+   * @param {Object} client - Клиент
    * */
   setTitle(client) {
     if (this.modalTemplate === this.modalTemplatesList.delete) {
@@ -312,7 +315,7 @@ class Modal {
   }
 
   /**
-   * @description Устанавливает id клиента
+   * @description - Устанавливает id клиента
    * @param {Object} client - Клиент
    * */
   setID(client) {
@@ -325,14 +328,15 @@ class Modal {
   }
 
   /**
-   * Очищает заголовок модального окна
+   * @description - Очищает заголовок модального окна
    * */
   clearTitle() {
     this.title.innerText = '';
   }
 
   /**
-   * Создаёт форму в модальном окне в соответствии с шаблоном наполнения
+   * @description - Создаёт форму в модальном окне в соответствии с шаблоном наполнения
+   * @param {Object} client - Клиент
    * */
   createForm(client) {
     return createElement({
@@ -345,14 +349,16 @@ class Modal {
   }
 
   /**
-   * Очищает "тело" модального окна
+   * @description - Очищает "тело" модального окна
    * */
   clearBody() {
     this.body.innerHTML = '';
   }
 
   /**
-   * Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
+   * @description - Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
+   * @param {DocumentFragment} buttonsContainer - Контейнер для кнопок модального окна
+   * @param {Object} client - Клиент
    * */
   setButtons(buttonsContainer, client) {
     const cancelButton = buttonsContainer.querySelector(
@@ -395,7 +401,7 @@ class Modal {
   }
 
   /**
-   * Добавляет новый контакт в форму модального окна
+   * @description - Добавляет новый контакт в форму модального окна
    * */
   addContactControl() {
     this.body
@@ -406,6 +412,9 @@ class Modal {
       );
   }
 
+  /**
+   * @description - Делает кнопку недоступной при выполнении условия (проверка на максимальное количество контактов клиента)
+   * */
   disabledAddContactButton() {
     if (
       this.body.querySelectorAll(`.${this.classNames.contact}`).length >=
@@ -431,7 +440,7 @@ class Modal {
 }
 
 /**
- * Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы
+ * @description - Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы
  * */
 export function initModals() {
   const modals = {};
