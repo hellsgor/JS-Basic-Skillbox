@@ -368,34 +368,39 @@ class Modal {
       `.${this.classNames.actionButton}`,
     );
 
-    if (this.modalTemplate === this.modalTemplatesList.newClient) {
-      actionButton.innerText = this.strings.buttons.save;
-      cancelButton.innerText = this.strings.buttons.cancel;
+    this.setButtonsTexts(actionButton, cancelButton);
 
-      cancelButton.addEventListener('click', () => {
-        this.closeModal();
-      });
+    cancelButton.addEventListener('click', () => {
+      this.closeModal();
 
-      actionButton.addEventListener('click', () => {
-        // TODO: сделать валидацию и отправку форм. Скорее всего через отдельный класс Form
-        if (this.formInstance) {
-          this.formInstance.doFormJob();
-        } else {
-          this.formInstance = new Form({
-            form: this.form,
-            submitButton: actionButton,
-            errorsWrapper: this.modal.querySelector(
-              `.${this.classNames.errorsWrapper}`,
-            ),
-            client: client ? client : null,
-            modalTemplate: this.modalTemplate,
-            callback: () => this.closeModal(),
-          });
-        }
+      if (this.modalTemplate === this.modalTemplatesList.editClient) {
+        console.log('вывести модальное окно удаления');
+        // TODO: модальное окно "удалить клиента"
+      }
 
-        console.log('formInstance', this.formInstance);
-      });
-    }
+      if (this.modalTemplate === this.modalTemplatesList.delete) {
+        console.log('вывести модальное окно редактирования клиента');
+        // TODO: модальное окно редактирования клиента если окно удаления было открыто из окна редактирования
+      }
+    });
+
+    actionButton.addEventListener('click', () => {
+      if (this.formInstance) {
+        this.formInstance.doFormJob();
+      } else {
+        this.formInstance = new Form({
+          form: this.form,
+          submitButton: actionButton,
+          errorsWrapper: this.modal.querySelector(
+            `.${this.classNames.errorsWrapper}`,
+          ),
+          client: client ? client : null,
+          modalTemplate: this.modalTemplate,
+          callback: () => this.closeModal(),
+        });
+      }
+      console.log('formInstance', this.formInstance);
+    });
 
     return buttonsContainer;
   }
@@ -473,8 +478,35 @@ class Modal {
     }
   }
 
-  // TODO: написать метод destroy для класса Modal
+  /**
+   * @description - Устанавливает тексты для кнопок действий и отмены в зависимости от шаблона модального окна.
+   * @param {HTMLButtonElement} actionButton - Элемент кнопки действия.
+   * @param {HTMLButtonElement} cancelButton - Элемент кнопки отмены.
+   */
+  setButtonsTexts(actionButton, cancelButton) {
+    switch (this.modalTemplate) {
+      case this.modalTemplatesList.newClient:
+        actionButton.innerText = this.strings.buttons.save;
+        cancelButton.innerText = this.strings.buttons.cancel;
+        break;
+
+      case this.modalTemplatesList.editClient:
+        actionButton.innerText = this.strings.buttons.save;
+        cancelButton.innerText = this.strings.buttons.delete;
+        break;
+
+      case this.modalTemplatesList.delete:
+        actionButton.innerText = this.strings.buttons.deleteSmall;
+        cancelButton.innerText = this.strings.buttons.cancel;
+        break;
+
+      default:
+        break;
+    }
+  }
 }
+
+// TODO: написать метод destroy для класса Modal
 
 /**
  * @description - Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы
