@@ -296,6 +296,7 @@ class Modal {
    * */
   clearModal() {
     this.clearTitle();
+    this.clearID();
     this.clearBody();
   }
 
@@ -332,6 +333,13 @@ class Modal {
    * */
   clearTitle() {
     this.title.innerText = '';
+  }
+
+  /**
+   * @description - Очищает элемент с id клиента
+   * */
+  clearID() {
+    this.idItem.innerText = '';
   }
 
   /**
