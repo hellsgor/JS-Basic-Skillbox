@@ -7,7 +7,7 @@ const addClientButton = document.getElementById('add-client-button');
 const backdrop = document.getElementById('backdrop');
 const modals = initModals();
 
-await clientsTable.renderClients(modals);
+await clientsTable.initClients().then(() => clientsTable.renderClients(modals));
 
 addClientButton.addEventListener('click', () => {
   modals['new-client'].showModal();
