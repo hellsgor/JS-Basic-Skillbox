@@ -18,6 +18,32 @@ class ClientsApi {
     }
   }
 
+  async getClient(id) {
+    try {
+      const response = await axios.get(
+        `${this.URL}${this.RESOURCES.CLIENTS}/${id}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.error(`Невозможно получить данные из-за ошибки: ${error}`);
+      throw error;
+    }
+  }
+
+  async editClient(data, id) {
+    let response;
+    try {
+      response = await axios.patch(
+        `${this.URL}${this.RESOURCES.CLIENTS}/${id}`,
+        data,
+      );
+      return response;
+    } catch (error) {
+      console.error(`Невозможно отправить данные из-за ошибки: ${error}`);
+      return { error };
+    }
+  }
+
   async addClient(data) {
     let response;
     try {

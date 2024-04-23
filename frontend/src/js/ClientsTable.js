@@ -1,33 +1,46 @@
 import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
 
-export class ClientsTable {
+class ClientsTable {
   clients = null;
   tBody = null;
+  modals = null;
 
   constructor(tBody) {
-    this.tBody = tBody;
-  }
-
-  async renderClients() {
-    await this.initClients();
-
-    this.clients.forEach((client) => {
-      this.addNewClient(client);
-    });
-  }
-
-  renderNewClient(client) {
-    this.addNewClient(client);
-  }
-
-  addNewClient(client) {
-    const clientInstance = new Client(client);
-    this.tBody.appendChild(clientInstance.getClientRow());
+    this.tBody = tBody || null;
   }
 
   async initClients() {
     this.clients = await clientsApi.getClients();
+  }
+
+  renderClients(modals = null) {
+    if (modals) {
+      this.modals = modals;
+    }
+
+    this.clearTable();
+    this.clients.forEach((client) => {
+      this.renderClient(client);
+    });
+  }
+
+  renderClient(client) {
+    this.tBody.appendChild(new Client(client, this.modals).getClientRow());
+  }
+
+  addClient(client) {
+    this.clients.push(client);
+  }
+
+  removeClient(clientID) {
+    this.clients = this.clients.filter((client) => {
+      return client.id !== clientID;
+    });
+  }
+
+  clearTable() {
+    this.tBody.innerHTML = '';
   }
 
   // TODO: добавить destroy в ClientsTable

@@ -1,6 +1,6 @@
 import { cloneTemplate } from '@/helpers/clone-template.js';
 import { Select } from '@/js/Select.js';
-import { contacts } from '@/constants/contacts.js';
+import { CONTACTS } from '@/constants/contacts.js';
 import { PhoneMask } from '@/js/PhoneMask.js';
 
 /**
@@ -27,29 +27,35 @@ export class ModalContactControl {
   selectButton = null;
   deleteButton = null;
   controlID = null;
+  contactData = null;
 
   classNames = {
-    contactControlInput: contacts.classNames.input,
-    contactTypeSelectButton: contacts.classNames.selectButton,
-    deleteButton: contacts.classNames.deleteButton,
-    parentClass: contacts.classNames.parentClass,
+    contactControlInput: CONTACTS.CLASS_NAMES.input,
+    contactTypeSelectButton: CONTACTS.CLASS_NAMES.selectButton,
+    contactTypeSelectButtonText: CONTACTS.CLASS_NAMES.selectButtonText,
+    deleteButton: CONTACTS.CLASS_NAMES.deleteButton,
+    parentClass: CONTACTS.CLASS_NAMES.parentClass,
   };
 
   attrs = {
-    selectedTypeValue: contacts.attrs.dataSelectedTypeValue,
-    contactControlId: contacts.attrs.dataContactControlId,
+    selectedTypeValue: CONTACTS.ATTRS.dataSelectedTypeValue,
+    contactControlId: CONTACTS.ATTRS.dataContactControlId,
   };
 
   /**
    * @description - Создает экземпляр ModalContactControl.
    * @constructor
+   * @returns {DocumentFragment} - контент шаблона контрола контакта
    */
-  constructor() {
+  constructor(contact = null) {
+    this.contactData = contact;
+
     this.controlTemplate = cloneTemplate(this.templateID);
     this.getElements();
     this.setControlID();
     this.createContactSelect();
     this.addEvents();
+    this.setContactData();
 
     return this.controlTemplate;
   }
@@ -68,7 +74,7 @@ export class ModalContactControl {
    * @description Переключает тип контакта в зависимости от выбранного значения в выпадающем списке.
    */
   toggleContactType() {
-    this.contactControlInput.type = Object.values(contacts.types).find(
+    this.contactControlInput.type = Object.values(CONTACTS.TYPES).find(
       (type) =>
         type.value ===
         this.selectButton.getAttribute(this.attrs.selectedTypeValue),
@@ -117,7 +123,9 @@ export class ModalContactControl {
    * @description Добавляет обработчики событий.
    */
   addEvents() {
-    this.deleteButton.addEventListener('click', this.destroy.bind(this));
+    this.deleteButton.addEventListener('click', () => {
+      this.destroy();
+    });
   }
 
   /**
@@ -136,6 +144,7 @@ export class ModalContactControl {
     this.selectButton = null;
     this.deleteButton = null;
     this.controlID = null;
+    this.contactData = null;
   }
 
   /**
@@ -146,5 +155,39 @@ export class ModalContactControl {
     this.controlTemplate
       .querySelector(`.${this.classNames.parentClass}`)
       .setAttribute(this.attrs.contactControlId, this.controlID);
+  }
+
+  /**
+   * @description  - Устанавливает данные контакта в контрол
+   * */
+  setContactData() {
+    if (!this.contactData) {
+      return;
+    }
+    const currentType = Object.values(CONTACTS.TYPES).find(
+      (type) => type.text === this.contactData.type,
+    );
+
+    this.selectButton.querySelector(
+      `.${this.classNames.contactTypeSelectButtonText}`,
+    ).innerText = currentType.text;
+
+    this.selectButton.setAttribute(
+      this.attrs.selectedTypeValue,
+      currentType.value,
+    );
+
+    this.contactControlInput.type = currentType.inputType;
+
+    this.contactControlInput.type === 'tel'
+      ? this.addPhoneMask()
+      : this.removePhoneMask();
+
+    this.contactControlInput.value = this.contactData.value;
+    this.phoneMask &&
+      this.phoneMask.onPhoneInput({
+        target: this.contactControlInput,
+        data: '',
+      });
   }
 }

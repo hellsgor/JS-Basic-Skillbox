@@ -1,5 +1,5 @@
-export const contacts = {
-  types: {
+export const CONTACTS = {
+  TYPES: {
     PHONE_NUMBER: { text: 'Телефон', value: 'phone-number', inputType: 'tel' },
     ADDITIONAL_PHONE_NUMBER: {
       text: 'Доп. телефон',
@@ -11,13 +11,14 @@ export const contacts = {
     FACEBOOK: { text: 'Facebook', value: 'facebook', inputType: 'url' },
     TWITTER: { text: 'Twitter', value: 'twitter', inputType: 'url' },
   },
-  classNames: {
+  CLASS_NAMES: {
     input: 'contact-control__input',
     selectButton: 'select__item',
+    selectButtonText: 'select__item-text',
     deleteButton: 'delete-contact-btn',
     parentClass: 'modal__contact',
   },
-  attrs: {
+  ATTRS: {
     dataSelectedTypeValue: 'data-selected-value',
     dataContactControlId: 'data-contact-control-id',
   },

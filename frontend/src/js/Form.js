@@ -257,12 +257,15 @@ export class Form {
       case MODALS.TEMPLATES.NEW_CLIENT:
         method = API.METHODS.ADD_CLIENT;
         break;
+      case MODALS.TEMPLATES.EDIT_CLIENT:
+        method = API.METHODS.EDIT_CLIENT;
+        break;
 
       default:
         break;
     }
 
-    clientsApi[method](this.serializeForm()).then((response) => {
+    clientsApi[method](this.serializeForm(), this.clientID).then((response) => {
       this.processingResponse(response);
     });
   }
@@ -360,7 +363,11 @@ export class Form {
     }
 
     if (response.status === 200 || response.status === 201) {
-      clientsTable.renderNewClient(response.data);
+      clientsTable.removeClient(this.clientID);
+      if (response.data && response.data.id) {
+        clientsTable.addClient(response.data);
+      }
+      clientsTable.renderClients();
       this.callback && this.callback();
     }
   }

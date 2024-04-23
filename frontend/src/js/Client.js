@@ -1,6 +1,9 @@
 import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
+import { clientsTable } from '@/js/ClientsTable.js';
+import { MODALS } from '@/constants/modals.js';
+import clientsApi from '@api/Clients-api.js';
 
 /**
  * Класс, представляющий клиента.
@@ -38,7 +41,7 @@ export class Client {
     {
       text: 'Изменить',
       classes: ['action-button', 'action-button_change'],
-      callback: this.changeClient.bind(this),
+      callback: this.editClient.bind(this),
       event: 'click',
     },
     {
@@ -52,9 +55,11 @@ export class Client {
   /**
    * @description Создает экземпляр клиента.
    * @param {object} data - Данные клиента.
+   * @param modals {Object} - Модальные окна.
    * */
-  constructor(data) {
+  constructor(data, modals) {
     this.clientData = data;
+    this.modals = modals || null;
   }
 
   /**
@@ -185,6 +190,8 @@ export class Client {
         btnProps.event,
         btnProps.callback,
       );
+
+      actionsCell.appendChild(this.clientButtons[idx].domElement);
     });
     return actionsCell;
   }
@@ -207,8 +214,10 @@ export class Client {
   /**
    * @description Обрабатывает нажатие на кнопку "Изменить".
    */
-  changeClient() {
-    console.log('change', this.clientData.id);
+  editClient() {
+    clientsApi.getClient(this.clientData.id).then((response) => {
+      this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(response);
+    });
   }
 
   /**
