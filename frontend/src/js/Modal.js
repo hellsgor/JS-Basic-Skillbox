@@ -6,6 +6,7 @@ import { createElement } from '@/helpers/create-element.js';
 import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeholder.js';
 import { Form } from '@/js/Form.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
+import { CONTACTS } from '@/constants/contacts.js';
 
 /**
  * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -17,10 +18,13 @@ class Modal {
    * @param closeBtn - кнопка закрытия модального окна
    * @param backdrop - backdrop. Общий для всех модальных окон
    * @param title - заголовок модального окна
+   * @param id - контейнер для id клиента
+   * @param idItem - элемент содержащий в себе id клиента
    * @param body - условное "тело" модального окна
    * @param maxContactsNumber - максимальное количество контактов
    * @param formInstance - экземпляр класса Form для Modal
    * @param classNames - CSS-классы элементов модального окна
+   * @param addContactButton - кнопка добавления контрола контакта клиента
    * */
 
   modal = null;
@@ -33,6 +37,7 @@ class Modal {
   body = null;
   maxContactsNumber = 10;
   formInstance = null;
+  addContactButton = null;
 
   classNames = {
     modal: MODALS.CLASS_NAMES.MODAL_CLASS_NAME,
@@ -412,30 +417,25 @@ class Modal {
    * @returns {DocumentFragment} - Блок контактов модального окна с добавленными контактами.
    */
   setContacts(contactsContainer, client) {
-    const newElemAddContactButton = contactsContainer.querySelector(
+    this.addContactButton = contactsContainer.querySelector(
       `.${this.classNames.addContactButton}`,
     );
 
     // Добавление обработчика события для кнопки добавления контакта
-    newElemAddContactButton.addEventListener('click', () => {
+    this.addContactButton.addEventListener('click', () => {
       this.addContactControl();
-      this.disabledAddContactButton();
+      this.accessibilityAddContactButton();
     });
 
     // Если у клиента есть контакты, добавляем их к новому элементу интерфейса
     if (client && client.contacts.length) {
       client.contacts.forEach((contact) => {
-        contactsContainer
-          .querySelector(`.${this.classNames.contacts}`)
-          .insertBefore(
-            new ModalContactControl(contact),
-            newElemAddContactButton,
-          );
+        this.addContactControl(contactsContainer, contact);
       });
 
       // Если количество контактов клиента достигло максимального значения, блокируем кнопку добавления контакта
       if (client.contacts.length >= this.maxContactsNumber) {
-        newElemAddContactButton.setAttribute('disabled', 'true');
+        this.addContactButton.setAttribute('disabled', 'true');
       }
     }
 
@@ -443,28 +443,33 @@ class Modal {
   }
 
   /**
-   * @description - Добавляет новый контакт в форму модального окна
+   * @description - Добавляет новый контакт в форму модального окна и устанавливает слушатель события на кнопку удаления контакта
    * */
-  addContactControl() {
-    this.body
+  addContactControl(parent = null, contact = null) {
+    const modalContactControl = new ModalContactControl(contact);
+    modalContactControl
+      .querySelector(`.${CONTACTS.CLASS_NAMES.deleteButton}`)
+      .addEventListener('click', this.accessibilityAddContactButton.bind(this));
+    // FIXME: код работает верно, но редактор не понимает тип возвращаемый из ModalContactControl - нужно попробовать исправить
+
+    (parent ? parent : this.body)
       .querySelector(`.${this.classNames.contacts}`)
-      .insertBefore(
-        new ModalContactControl(),
-        this.body.querySelector(`.${this.classNames.addContactButton}`),
-      );
+      .insertBefore(modalContactControl, this.addContactButton);
   }
 
   /**
-   * @description - Делает кнопку недоступной при выполнении условия (проверка на максимальное количество контактов клиента)
+   * @description - Управляет доступностью кнопки добавления контакта (проверка на максимальное количество контактов клиента)
    * */
-  disabledAddContactButton() {
+  accessibilityAddContactButton() {
     if (
       this.body.querySelectorAll(`.${this.classNames.contact}`).length >=
       this.maxContactsNumber
     ) {
-      this.body
-        .querySelector(`.${this.classNames.addContactButton}`)
-        .setAttribute('disabled', true);
+      this.addContactButton.setAttribute('disabled', true);
+    } else {
+      if (this.addContactButton.hasAttribute('disabled')) {
+        this.addContactButton.removeAttribute('disabled');
+      }
     }
   }
 
@@ -506,7 +511,7 @@ class Modal {
   }
 }
 
-// TODO: написать метод destroy для класса Modal
+// TODO: написать метод destroy для класса Modal. Не забыть о событиях на кнопках удаления контакта
 
 /**
  * @description - Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы

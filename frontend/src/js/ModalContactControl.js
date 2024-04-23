@@ -45,9 +45,10 @@ export class ModalContactControl {
   /**
    * @description - Создает экземпляр ModalContactControl.
    * @constructor
+   * @returns {DocumentFragment} - контент шаблона контрола контакта
    */
   constructor(contact = null) {
-    this.contactData = contact ?? contact;
+    this.contactData = contact;
 
     this.controlTemplate = cloneTemplate(this.templateID);
     this.getElements();
@@ -122,7 +123,9 @@ export class ModalContactControl {
    * @description Добавляет обработчики событий.
    */
   addEvents() {
-    this.deleteButton.addEventListener('click', this.destroy.bind(this));
+    this.deleteButton.addEventListener('click', () => {
+      this.destroy();
+    });
   }
 
   /**
