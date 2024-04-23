@@ -29,15 +29,15 @@ export class ModalContactControl {
   controlID = null;
 
   classNames = {
-    contactControlInput: contacts.classNames.input,
-    contactTypeSelectButton: contacts.classNames.selectButton,
-    deleteButton: contacts.classNames.deleteButton,
-    parentClass: contacts.classNames.parentClass,
+    contactControlInput: CONTACTS.CLASS_NAMES.input,
+    contactTypeSelectButton: CONTACTS.CLASS_NAMES.selectButton,
+    deleteButton: CONTACTS.CLASS_NAMES.deleteButton,
+    parentClass: CONTACTS.CLASS_NAMES.parentClass,
   };
 
   attrs = {
-    selectedTypeValue: contacts.attrs.dataSelectedTypeValue,
-    contactControlId: contacts.attrs.dataContactControlId,
+    selectedTypeValue: CONTACTS.ATTRS.dataSelectedTypeValue,
+    contactControlId: CONTACTS.ATTRS.dataContactControlId,
   };
 
   /**
@@ -68,7 +68,7 @@ export class ModalContactControl {
    * @description Переключает тип контакта в зависимости от выбранного значения в выпадающем списке.
    */
   toggleContactType() {
-    this.contactControlInput.type = Object.values(contacts.types).find(
+    this.contactControlInput.type = Object.values(CONTACTS.TYPES).find(
       (type) =>
         type.value ===
         this.selectButton.getAttribute(this.attrs.selectedTypeValue),

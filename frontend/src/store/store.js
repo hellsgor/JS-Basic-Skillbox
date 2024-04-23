@@ -1,4 +1,4 @@
-import { contacts } from '../constants/contacts.js';
+import { CONTACTS } from '../constants/contacts.js';
 import { MODALS } from '../constants/modals.js';
 
 export const store = {
@@ -56,14 +56,14 @@ export const store = {
   ],
   contactInput: {
     classes: {
-      input: contacts.classNames.input,
+      input: CONTACTS.CLASS_NAMES.input,
     },
   },
   contactSelect: {
     classes: {
-      button: contacts.classNames.selectButton,
+      button: CONTACTS.CLASS_NAMES.selectButton,
     },
-    options: Object.values(contacts.types),
+    options: Object.values(CONTACTS.TYPES),
   },
 
   modals: {
