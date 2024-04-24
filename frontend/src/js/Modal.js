@@ -145,16 +145,15 @@ class Modal {
   };
 
   constructor(props) {
-    this.modal = props?.modal;
+    props = props || {};
 
-    this.modalTemplate = this.modal?.getAttribute(
-      this.attributes.modalTemplate,
-    );
+    this.modal = props.modal || null;
+    this.modalTemplate =
+      (props.modal && this.modal.getAttribute(this.attributes.modalTemplate)) ||
+      null;
 
     this.getModalElements();
     this.addEvents();
-
-    return this;
   }
 
   /**
@@ -176,9 +175,7 @@ class Modal {
    * @description - Добавляет базовые события элементам модального окна
    * */
   addEvents() {
-    this.closeBtn.addEventListener('click', () => {
-      this.closeModal();
-    });
+    this.closeBtn.addEventListener('click', () => this.closeModal());
   }
 
   /**
@@ -242,13 +239,12 @@ class Modal {
         );
 
         this.clearModal();
+        this.destroyForm();
       },
       convertTimeStringToMilliseconds(
         window.getComputedStyle(this.modal).animationDuration,
       ),
     );
-
-    this.destroyForm();
   }
 
   /**
@@ -572,8 +568,6 @@ class Modal {
     }
   }
 }
-
-// TODO: написать метод destroy для класса Modal. Не забыть о событиях на кнопках удаления контакта
 
 /**
  * @description - Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы
