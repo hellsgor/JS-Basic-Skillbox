@@ -58,5 +58,6 @@ export const MODALS = {
     FADE_IN: '_fade-in',
     FADE_OUT: '_fade-out',
     HIDDEN: '_hidden',
+    CENTERED: '_centered',
   },
 };

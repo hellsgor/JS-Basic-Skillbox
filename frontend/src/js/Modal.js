@@ -82,6 +82,7 @@ class Modal {
     fadeIn: MODALS.MODIFIERS.FADE_IN,
     fadeOut: MODALS.MODIFIERS.FADE_OUT,
     hidden: MODALS.MODIFIERS.HIDDEN,
+    centered: MODALS.MODIFIERS.CENTERED,
   };
 
   /**
@@ -314,6 +315,9 @@ class Modal {
   setTitle(client) {
     if (this.modalTemplate === this.modalTemplatesList.delete) {
       this.title.innerText = this.strings.title.delete;
+      this.title.classList.add(
+        `${this.classNames.title}${this.modifiers.centered}`,
+      );
       return;
     }
 
@@ -360,6 +364,9 @@ class Modal {
    * */
   clearTitle() {
     this.title.innerText = '';
+    this.title.classList.remove(
+      `${this.classNames.title}${this.modifiers.centered}`,
+    );
   }
 
   /**
