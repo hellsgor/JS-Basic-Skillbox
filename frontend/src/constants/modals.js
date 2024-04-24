@@ -34,6 +34,7 @@ export const MODALS = {
 
   ATTRS: {
     MODAL_TEMPLATE: 'data-modal-template',
+    IS_NEED_OPEN_EDIT_MODAL: 'data-is-need-open-edit-modal',
   },
 
   CLASS_NAMES: {
@@ -59,5 +60,10 @@ export const MODALS = {
     FADE_OUT: '_fade-out',
     HIDDEN: '_hidden',
     CENTERED: '_centered',
+  },
+
+  CUSTOM_EVENTS: {
+    DELETE_MODAL_REQUEST: 'delete-modal-request',
+    EDIT_MODAL_REQUEST: 'edit-modal-request',
   },
 };

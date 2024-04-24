@@ -65,6 +65,7 @@ class Modal {
    */
   attributes = {
     modalTemplate: MODALS.ATTRS.MODAL_TEMPLATE,
+    isNeedOpenEditModal: MODALS.ATTRS.IS_NEED_OPEN_EDIT_MODAL,
   };
 
   /**
@@ -311,6 +312,7 @@ class Modal {
     this.clearID();
     this.clearDescription();
     this.clearBody();
+    this.modal.removeAttribute(this.attributes.isNeedOpenEditModal);
   }
 
   /**
@@ -416,11 +418,11 @@ class Modal {
   }
 
   /**
-   * @description - Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
-   * @param {DocumentFragment} buttonsContainer - Контейнер для кнопок модального окна
-   * @param {Object} client - Объект с информацией о клиенте
-   * @returns {DocumentFragment} - Блок кнопок модального окна
-   * */
+   * Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения.
+   * @param {DocumentFragment} buttonsContainer - Контейнер для кнопок модального окна.
+   * @param {Object} client - Объект с информацией о клиенте.
+   * @returns {DocumentFragment} - Блок кнопок модального окна.
+   */
   setButtons(buttonsContainer, client) {
     const cancelButton = buttonsContainer.querySelector(
       `.${this.classNames.cancelButton}`,
@@ -434,14 +436,19 @@ class Modal {
     cancelButton.addEventListener('click', () => {
       this.closeModal();
 
-      if (this.modalTemplate === this.modalTemplatesList.editClient) {
-        console.log('вывести модальное окно удаления');
-        // TODO: модальное окно "удалить клиента"
-      }
+      const eventName =
+        this.modalTemplate === this.modalTemplatesList.editClient
+          ? MODALS.CUSTOM_EVENTS.DELETE_MODAL_REQUEST
+          : this.modalTemplate === this.modalTemplatesList.delete &&
+              this.modal.getAttribute(this.attributes.isNeedOpenEditModal) ===
+                'true'
+            ? MODALS.CUSTOM_EVENTS.EDIT_MODAL_REQUEST
+            : null;
 
-      if (this.modalTemplate === this.modalTemplatesList.delete) {
-        console.log('вывести модальное окно редактирования клиента');
-        // TODO: модальное окно редактирования клиента если окно удаления было открыто из окна редактирования
+      if (eventName) {
+        this.modal.dispatchEvent(
+          new CustomEvent(eventName, { detail: client }),
+        );
       }
     });
 
@@ -455,12 +462,11 @@ class Modal {
           errorsWrapper: this.modal.querySelector(
             `.${this.classNames.errorsWrapper}`,
           ),
-          client: client ? client : null,
+          client: client || null,
           modalTemplate: this.modalTemplate,
           callback: () => this.closeModal(),
         });
       }
-      console.log('formInstance', this.formInstance);
     });
 
     return buttonsContainer;
