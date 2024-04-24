@@ -570,9 +570,14 @@ class Modal {
  * */
 export function initModals() {
   const modals = {};
-  document.querySelectorAll('.modal').forEach((modal) => {
+  const modalElements = document.getElementsByClassName('modal');
+
+  for (const modal of modalElements) {
     const newModal = new Modal({ modal });
-    modals[newModal.modalTemplate] = newModal;
-  });
-  return modals;
+    if (newModal.modalTemplate) {
+      modals[newModal.modalTemplate] = newModal;
+    }
+  }
+
+  return Object.keys(modals).length > 0 ? modals : null;
 }
