@@ -259,44 +259,48 @@ class Modal {
     this.setID(client);
     this.setDescription();
 
-    if (this.modalTemplate !== this.modalTemplatesList.delete) {
-      this.body.appendChild(this.createForm(client));
-      this.form = this.body.querySelector('form');
+    this.body.appendChild(this.createForm());
+    this.form = this.body.querySelector('form');
 
-      Object.keys(this.templatesIDs.required).forEach((templateID) => {
-        let newElement = cloneTemplate(
-          this.templatesIDs.required[templateID].id,
-        );
+    Object.keys(this.templatesIDs.required).forEach((templateID) => {
+      if (
+        this.modalTemplate === this.modalTemplatesList.delete &&
+        (templateID === this.templatesIDs.required.contacts.name ||
+          templateID === this.templatesIDs.required.inputs.name)
+      ) {
+        return;
+      }
 
-        if (templateID === this.templatesIDs.required.buttons.name) {
-          newElement = this.setButtons(newElement, client);
-        }
+      let newElement = cloneTemplate(this.templatesIDs.required[templateID].id);
 
-        if (templateID === this.templatesIDs.required.contacts.name) {
-          newElement = this.setContacts(newElement, client);
-        }
+      if (templateID === this.templatesIDs.required.buttons.name) {
+        newElement = this.setButtons(newElement, client);
+      }
 
-        switch (this.templatesIDs.required[templateID].location) {
-          case this.locations.body:
-            this.body.appendChild(newElement);
-            break;
+      if (templateID === this.templatesIDs.required.contacts.name) {
+        newElement = this.setContacts(newElement, client);
+      }
 
-          case this.locations.form:
-            this.form.appendChild(newElement);
-            break;
+      switch (this.templatesIDs.required[templateID].location) {
+        case this.locations.body:
+          this.body.appendChild(newElement);
+          break;
 
-          default:
-            break;
-        }
+        case this.locations.form:
+          this.form.appendChild(newElement);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    this.form
+      .querySelectorAll(`.${this.classNames.formControlInput}`)
+      .forEach((control) => {
+        control.value = client ? client[control.name] : '';
+        movedFormControlPlaceholder(control);
       });
-
-      this.form
-        .querySelectorAll(`.${this.classNames.formControlInput}`)
-        .forEach((control) => {
-          control.value = client ? client[control.name] : '';
-          movedFormControlPlaceholder(control);
-        });
-    }
   }
 
   /**
