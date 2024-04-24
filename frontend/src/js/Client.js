@@ -60,6 +60,8 @@ export class Client {
     this.clientData = data;
     this.modals = modals || null;
 
+    // TODO: добавить сортировку контактов в соответствии с макетом
+
     this.initClient();
 
     return this;
