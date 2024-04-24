@@ -214,7 +214,7 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Изменить".
    */
   editClient() {
-    clientsApi.getClient(this.clientData.id).then((response) => {
+    clientsApi.getClient({ id: this.clientData.id }).then((response) => {
       this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(response);
     });
   }
