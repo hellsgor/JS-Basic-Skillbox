@@ -59,6 +59,10 @@ export class Client {
   constructor(data, modals) {
     this.clientData = data;
     this.modals = modals || null;
+
+    this.initClient();
+
+    return this;
   }
 
   /**
@@ -66,7 +70,6 @@ export class Client {
    * @returns {HTMLTableRowElement} Строка таблицы.
    */
   getClientRow() {
-    this.initClient();
     return this.clientRow;
   }
 
