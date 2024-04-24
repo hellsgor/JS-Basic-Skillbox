@@ -4,7 +4,6 @@ class ClientsApi {
   URL = 'http://localhost:3000/api/';
 
   RESOURCES = {
-    CLIENT: 'client',
     CLIENTS: 'clients',
   };
 
@@ -18,10 +17,10 @@ class ClientsApi {
     }
   }
 
-  async getClient(id) {
+  async getClient(props) {
     try {
       const response = await axios.get(
-        `${this.URL}${this.RESOURCES.CLIENTS}/${id}`,
+        `${this.URL}${this.RESOURCES.CLIENTS}/${props.id}`,
       );
       return response.data;
     } catch (error) {
@@ -30,12 +29,11 @@ class ClientsApi {
     }
   }
 
-  async editClient(data, id) {
+  async deleteClient(props) {
     let response;
     try {
-      response = await axios.patch(
-        `${this.URL}${this.RESOURCES.CLIENTS}/${id}`,
-        data,
+      response = await axios.delete(
+        `${this.URL}${this.RESOURCES.CLIENTS}/${props.id}`,
       );
       return response;
     } catch (error) {
@@ -44,10 +42,27 @@ class ClientsApi {
     }
   }
 
-  async addClient(data) {
+  async editClient(props) {
     let response;
     try {
-      response = await axios.post(`${this.URL}${this.RESOURCES.CLIENTS}`, data);
+      response = await axios.patch(
+        `${this.URL}${this.RESOURCES.CLIENTS}/${props.id}`,
+        props.data,
+      );
+      return response;
+    } catch (error) {
+      console.error(`Невозможно отправить данные из-за ошибки: ${error}`);
+      return { error };
+    }
+  }
+
+  async addClient(props) {
+    let response;
+    try {
+      response = await axios.post(
+        `${this.URL}${this.RESOURCES.CLIENTS}`,
+        props.data,
+      );
       return response;
     } catch (error) {
       console.error(`Невозможно отправить данные из-за ошибки: ${error}`);

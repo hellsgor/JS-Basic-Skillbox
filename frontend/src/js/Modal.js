@@ -20,6 +20,7 @@ class Modal {
    * @param title - заголовок модального окна
    * @param id - контейнер для id клиента
    * @param idItem - элемент содержащий в себе id клиента
+   * @param description - элемент содержащий в себе описание модального окна если оно предусмотрено
    * @param body - условное "тело" модального окна
    * @param maxContactsNumber - максимальное количество контактов
    * @param formInstance - экземпляр класса Form для Modal
@@ -34,7 +35,9 @@ class Modal {
   title = null;
   id = null;
   idItem = null;
+  description = null;
   body = null;
+  form = null;
   maxContactsNumber = 10;
   formInstance = null;
   addContactButton = null;
@@ -45,6 +48,7 @@ class Modal {
     title: MODALS.CLASS_NAMES.TITLE,
     id: MODALS.CLASS_NAMES.ID,
     idItem: MODALS.CLASS_NAMES.ID_ITEM,
+    description: MODALS.CLASS_NAMES.DESCRIPTION,
     body: MODALS.CLASS_NAMES.BODY,
     contacts: MODALS.CLASS_NAMES.CONTACTS,
     addContactButton: MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON,
@@ -61,6 +65,7 @@ class Modal {
    */
   attributes = {
     modalTemplate: MODALS.ATTRS.MODAL_TEMPLATE,
+    isNeedOpenEditModal: MODALS.ATTRS.IS_NEED_OPEN_EDIT_MODAL,
   };
 
   /**
@@ -69,7 +74,7 @@ class Modal {
   modalTemplatesList = {
     newClient: MODALS.TEMPLATES.NEW_CLIENT,
     editClient: MODALS.TEMPLATES.EDIT_CLIENT,
-    delete: MODALS.TEMPLATES.DELETE,
+    delete: MODALS.TEMPLATES.DELETE_CLIENT,
   };
 
   /**
@@ -79,6 +84,7 @@ class Modal {
     fadeIn: MODALS.MODIFIERS.FADE_IN,
     fadeOut: MODALS.MODIFIERS.FADE_OUT,
     hidden: MODALS.MODIFIERS.HIDDEN,
+    centered: MODALS.MODIFIERS.CENTERED,
   };
 
   /**
@@ -133,6 +139,9 @@ class Modal {
       deleteSmall: 'Удалить',
       save: 'Сохранить',
     },
+    descriptions: {
+      delete: 'Вы&#160;действительно хотите удалить<br/>данного клиента?',
+    },
   };
 
   constructor(props) {
@@ -157,6 +166,9 @@ class Modal {
     this.title = this.modal?.querySelector(`.${this.classNames.title}`);
     this.id = this.modal?.querySelector(`.${this.classNames.id}`);
     this.idItem = this.modal?.querySelector(`.${this.classNames.idItem}`);
+    this.description = this.modal?.querySelector(
+      `.${this.classNames.description}`,
+    );
     this.body = this.modal?.querySelector(`.${this.classNames.body}`);
   }
 
@@ -246,45 +258,50 @@ class Modal {
   fillModal(client = null) {
     this.setTitle(client);
     this.setID(client);
+    this.setDescription();
 
-    if (this.modalTemplate !== this.modalTemplatesList.delete) {
-      this.body.appendChild(this.createForm(client));
-      this.form = this.body.querySelector('form');
+    this.body.appendChild(this.createForm());
+    this.form = this.body.querySelector('form');
 
-      Object.keys(this.templatesIDs.required).forEach((templateID) => {
-        let newElement = cloneTemplate(
-          this.templatesIDs.required[templateID].id,
-        );
+    Object.keys(this.templatesIDs.required).forEach((templateID) => {
+      if (
+        this.modalTemplate === this.modalTemplatesList.delete &&
+        (templateID === this.templatesIDs.required.contacts.name ||
+          templateID === this.templatesIDs.required.inputs.name)
+      ) {
+        return;
+      }
 
-        if (templateID === this.templatesIDs.required.buttons.name) {
-          newElement = this.setButtons(newElement, client);
-        }
+      let newElement = cloneTemplate(this.templatesIDs.required[templateID].id);
 
-        if (templateID === this.templatesIDs.required.contacts.name) {
-          newElement = this.setContacts(newElement, client);
-        }
+      if (templateID === this.templatesIDs.required.buttons.name) {
+        newElement = this.setButtons(newElement, client);
+      }
 
-        switch (this.templatesIDs.required[templateID].location) {
-          case this.locations.body:
-            this.body.appendChild(newElement);
-            break;
+      if (templateID === this.templatesIDs.required.contacts.name) {
+        newElement = this.setContacts(newElement, client);
+      }
 
-          case this.locations.form:
-            this.form.appendChild(newElement);
-            break;
+      switch (this.templatesIDs.required[templateID].location) {
+        case this.locations.body:
+          this.body.appendChild(newElement);
+          break;
 
-          default:
-            break;
-        }
+        case this.locations.form:
+          this.form.appendChild(newElement);
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    this.form
+      .querySelectorAll(`.${this.classNames.formControlInput}`)
+      .forEach((control) => {
+        control.value = client ? client[control.name] : '';
+        movedFormControlPlaceholder(control);
       });
-
-      this.form
-        .querySelectorAll(`.${this.classNames.formControlInput}`)
-        .forEach((control) => {
-          control.value = client ? client[control.name] : '';
-          movedFormControlPlaceholder(control);
-        });
-    }
   }
 
   /**
@@ -293,7 +310,9 @@ class Modal {
   clearModal() {
     this.clearTitle();
     this.clearID();
+    this.clearDescription();
     this.clearBody();
+    this.modal.removeAttribute(this.attributes.isNeedOpenEditModal);
   }
 
   /**
@@ -303,6 +322,9 @@ class Modal {
   setTitle(client) {
     if (this.modalTemplate === this.modalTemplatesList.delete) {
       this.title.innerText = this.strings.title.delete;
+      this.title.classList.add(
+        `${this.classNames.title}${this.modifiers.centered}`,
+      );
       return;
     }
 
@@ -316,7 +338,11 @@ class Modal {
    * @param {Object} client - Объект с информацией о клиенте
    * */
   setID(client) {
-    if (!client || !client.id) {
+    if (
+      this.modalTemplate === this.modalTemplatesList.delete ||
+      !client ||
+      !client.id
+    ) {
       return;
     }
 
@@ -325,10 +351,33 @@ class Modal {
   }
 
   /**
+   * @description - Устанавливает описание модального окна если оно предусмотрено
+   * */
+  setDescription() {
+    switch (this.modalTemplate) {
+      case this.modalTemplatesList.delete:
+        this.description.innerHTML = this.strings.descriptions.delete;
+        break;
+
+      default:
+        break;
+    }
+
+    if (this.description.textContent) {
+      this.description.classList.remove(
+        `${this.classNames.description}${this.modifiers.hidden}`,
+      );
+    }
+  }
+
+  /**
    * @description - Очищает заголовок модального окна
    * */
   clearTitle() {
     this.title.innerText = '';
+    this.title.classList.remove(
+      `${this.classNames.title}${this.modifiers.centered}`,
+    );
   }
 
   /**
@@ -339,14 +388,23 @@ class Modal {
   }
 
   /**
-   * @description - Создаёт форму в модальном окне в соответствии с шаблоном наполнения
-   * @param {Object} client - Объект с информацией о клиенте
+   * @description - Очищает элемент с описанием модального окна
    * */
-  createForm(client) {
+  clearDescription() {
+    this.description.textContent = '';
+    this.description.classList.add(
+      `${this.classNames.description}${this.modifiers.hidden}`,
+    );
+  }
+
+  /**
+   * @description - Создаёт форму в модальном окне в соответствии с шаблоном наполнения
+   * */
+  createForm() {
     return createElement({
       tag: 'form',
       attributes: [
-        { name: 'name', value: client ? 'edit-client' : 'new-client' },
+        { name: 'name', value: this.modalTemplate },
         { name: 'autocomplete', value: 'off' },
       ],
     });
@@ -360,11 +418,11 @@ class Modal {
   }
 
   /**
-   * @description - Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения
-   * @param {DocumentFragment} buttonsContainer - Контейнер для кнопок модального окна
-   * @param {Object} client - Объект с информацией о клиенте
-   * @returns {DocumentFragment} - Блок кнопок модального окна
-   * */
+   * Устанавливает текст и события кнопок модального окна в соответствии с шаблоном наполнения.
+   * @param {DocumentFragment} buttonsContainer - Контейнер для кнопок модального окна.
+   * @param {Object} client - Объект с информацией о клиенте.
+   * @returns {DocumentFragment} - Блок кнопок модального окна.
+   */
   setButtons(buttonsContainer, client) {
     const cancelButton = buttonsContainer.querySelector(
       `.${this.classNames.cancelButton}`,
@@ -378,14 +436,19 @@ class Modal {
     cancelButton.addEventListener('click', () => {
       this.closeModal();
 
-      if (this.modalTemplate === this.modalTemplatesList.editClient) {
-        console.log('вывести модальное окно удаления');
-        // TODO: модальное окно "удалить клиента"
-      }
+      const eventName =
+        this.modalTemplate === this.modalTemplatesList.editClient
+          ? MODALS.CUSTOM_EVENTS.DELETE_MODAL_REQUEST
+          : this.modalTemplate === this.modalTemplatesList.delete &&
+              this.modal.getAttribute(this.attributes.isNeedOpenEditModal) ===
+                'true'
+            ? MODALS.CUSTOM_EVENTS.EDIT_MODAL_REQUEST
+            : null;
 
-      if (this.modalTemplate === this.modalTemplatesList.delete) {
-        console.log('вывести модальное окно редактирования клиента');
-        // TODO: модальное окно редактирования клиента если окно удаления было открыто из окна редактирования
+      if (eventName) {
+        this.modal.dispatchEvent(
+          new CustomEvent(eventName, { detail: client }),
+        );
       }
     });
 
@@ -399,12 +462,11 @@ class Modal {
           errorsWrapper: this.modal.querySelector(
             `.${this.classNames.errorsWrapper}`,
           ),
-          client: client ? client : null,
+          client: client || null,
           modalTemplate: this.modalTemplate,
           callback: () => this.closeModal(),
         });
       }
-      console.log('formInstance', this.formInstance);
     });
 
     return buttonsContainer;

@@ -10,15 +10,19 @@ class ClientsTable {
     this.tBody = tBody || null;
   }
 
-  async initClients() {
-    this.clients = await clientsApi.getClients();
-  }
-
-  renderClients(modals = null) {
+  async initClients(modals = null) {
     if (modals) {
       this.modals = modals;
     }
 
+    this.clients = await clientsApi.getClients().then((response) =>
+      response.map((clientData) => {
+        return new Client(clientData, this.modals);
+      }),
+    );
+  }
+
+  renderClients() {
     this.clearTable();
     this.clients.forEach((client) => {
       this.renderClient(client);
@@ -26,16 +30,21 @@ class ClientsTable {
   }
 
   renderClient(client) {
-    this.tBody.appendChild(new Client(client, this.modals).getClientRow());
+    this.tBody.appendChild(client.getClientRow());
   }
 
-  addClient(client) {
-    this.clients.push(client);
+  addClient(clientData) {
+    this.clients.push(new Client(clientData, this.modals));
   }
 
   removeClient(clientID) {
     this.clients = this.clients.filter((client) => {
-      return client.id !== clientID;
+      if (client.clientData.id === clientID) {
+        client.destroy();
+        client = null;
+      } else {
+        return client;
+      }
     });
   }
 

@@ -4,7 +4,7 @@ export const MODALS = {
   TEMPLATES: {
     NEW_CLIENT: 'new-client',
     EDIT_CLIENT: 'edit-client',
-    DELETE: 'delete',
+    DELETE_CLIENT: 'delete-client',
   },
 
   INNER_TEMPLATES: {
@@ -34,6 +34,7 @@ export const MODALS = {
 
   ATTRS: {
     MODAL_TEMPLATE: 'data-modal-template',
+    IS_NEED_OPEN_EDIT_MODAL: 'data-is-need-open-edit-modal',
   },
 
   CLASS_NAMES: {
@@ -42,6 +43,7 @@ export const MODALS = {
     TITLE: `${MODAL_CLASS_NAME}__title`,
     ID: `${MODAL_CLASS_NAME}__id`,
     ID_ITEM: `${MODAL_CLASS_NAME}__id-item`,
+    DESCRIPTION: `${MODAL_CLASS_NAME}__description`,
     BODY: `${MODAL_CLASS_NAME}__body`,
     CONTACTS: `${MODAL_CLASS_NAME}__contacts`,
     ADD_CONTACT_BUTTON: `${MODAL_CLASS_NAME}__add-contact-button`,
@@ -57,5 +59,11 @@ export const MODALS = {
     FADE_IN: '_fade-in',
     FADE_OUT: '_fade-out',
     HIDDEN: '_hidden',
+    CENTERED: '_centered',
+  },
+
+  CUSTOM_EVENTS: {
+    DELETE_MODAL_REQUEST: 'delete-modal-request',
+    EDIT_MODAL_REQUEST: 'edit-modal-request',
   },
 };

@@ -1,7 +1,6 @@
 import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
-import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
 
@@ -60,6 +59,12 @@ export class Client {
   constructor(data, modals) {
     this.clientData = data;
     this.modals = modals || null;
+
+    // TODO: добавить сортировку контактов в соответствии с макетом
+
+    this.initClient();
+
+    return this;
   }
 
   /**
@@ -67,7 +72,6 @@ export class Client {
    * @returns {HTMLTableRowElement} Строка таблицы.
    */
   getClientRow() {
-    this.initClient();
     return this.clientRow;
   }
 
@@ -215,7 +219,7 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Изменить".
    */
   editClient() {
-    clientsApi.getClient(this.clientData.id).then((response) => {
+    clientsApi.getClient({ id: this.clientData.id }).then((response) => {
       this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(response);
     });
   }
@@ -224,9 +228,7 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Удалить".
    */
   deleteClient() {
-    console.log('delete', this.clientData.id);
-
-    this.destroy();
+    this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData);
   }
 
   /**
@@ -239,5 +241,9 @@ export class Client {
       button.domElement.removeEventListener(button.event, button.callback);
       button = null;
     });
+    this.clientButtons = null;
+    this.modals = null;
+
+    Object.setPrototypeOf(this, null);
   }
 }

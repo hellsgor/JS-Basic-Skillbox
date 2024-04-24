@@ -33,12 +33,31 @@
     column-gap: 9px;
   }
   
+  &__title {
+    width: fit-content;
+    
+    &_centered {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
   &__id {
     display: inline-flex;
     align-items: baseline;
     column-gap: 4px;
     font-size: 12px;
     color: $txt-gray;
+    
+    &_hidden {
+      display: none;
+    }
+  }
+  
+  &__description {
+    padding: 0 30px;
+    margin-bottom: 8px;
+    text-align: center;
     
     &_hidden {
       display: none;

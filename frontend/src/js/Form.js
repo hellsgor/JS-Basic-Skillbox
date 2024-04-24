@@ -261,11 +261,18 @@ export class Form {
         method = API.METHODS.EDIT_CLIENT;
         break;
 
+      case MODALS.TEMPLATES.DELETE_CLIENT:
+        method = API.METHODS.DELETE_CLIENT;
+        break;
+
       default:
         break;
     }
 
-    clientsApi[method](this.serializeForm(), this.clientID).then((response) => {
+    clientsApi[method]({
+      data: this.serializeForm(),
+      id: this.clientID,
+    }).then((response) => {
       this.processingResponse(response);
     });
   }
