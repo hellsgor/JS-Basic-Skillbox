@@ -37,6 +37,7 @@ class Modal {
   idItem = null;
   description = null;
   body = null;
+  form = null;
   maxContactsNumber = 10;
   formInstance = null;
   addContactButton = null;
