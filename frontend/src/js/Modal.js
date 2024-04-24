@@ -163,12 +163,15 @@ class Modal {
     this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
     this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
     this.title = this.modal?.querySelector(`.${this.classNames.title}`);
-    this.id = this.modal?.querySelector(`.${this.classNames.id}`);
-    this.idItem = this.modal?.querySelector(`.${this.classNames.idItem}`);
-    this.description = this.modal?.querySelector(
-      `.${this.classNames.description}`,
-    );
-    this.body = this.modal?.querySelector(`.${this.classNames.body}`);
+
+    if (this.modal) {
+      this.id = this.modal.querySelector(`.${this.classNames.id}`);
+      this.idItem = this.modal.querySelector(`.${this.classNames.idItem}`);
+      this.description = this.modal.querySelector(
+        `.${this.classNames.description}`,
+      );
+      this.body = this.modal.querySelector(`.${this.classNames.body}`);
+    }
   }
 
   /**
