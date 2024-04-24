@@ -331,7 +331,11 @@ class Modal {
    * @param {Object} client - Объект с информацией о клиенте
    * */
   setID(client) {
-    if (!client || !client.id) {
+    if (
+      this.modalTemplate === this.modalTemplatesList.delete ||
+      !client ||
+      !client.id
+    ) {
       return;
     }
 
