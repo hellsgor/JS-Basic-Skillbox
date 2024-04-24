@@ -522,16 +522,9 @@ class Modal {
    * @description - Управляет доступностью кнопки добавления контакта (проверка на максимальное количество контактов клиента)
    * */
   accessibilityAddContactButton() {
-    if (
+    this.addContactButton.disabled =
       this.body.querySelectorAll(`.${this.classNames.contact}`).length >=
-      this.maxContactsNumber
-    ) {
-      this.addContactButton.setAttribute('disabled', true);
-    } else {
-      if (this.addContactButton.hasAttribute('disabled')) {
-        this.addContactButton.removeAttribute('disabled');
-      }
-    }
+      this.maxContactsNumber;
   }
 
   /**
