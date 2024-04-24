@@ -223,8 +223,6 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Удалить".
    */
   deleteClient() {
-    console.log('delete', this.clientData.id);
-
     this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData);
   }
 
@@ -238,5 +236,9 @@ export class Client {
       button.domElement.removeEventListener(button.event, button.callback);
       button = null;
     });
+    this.clientButtons = null;
+    this.modals = null;
+
+    Object.setPrototypeOf(this, null);
   }
 }
