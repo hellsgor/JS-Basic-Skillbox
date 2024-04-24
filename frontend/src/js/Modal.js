@@ -7,6 +7,7 @@ import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeh
 import { Form } from '@/js/Form.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
 import { CONTACTS } from '@/constants/contacts.js';
+import clientsApi from '@api/Clients-api.js';
 
 /**
  * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -142,6 +143,13 @@ class Modal {
     descriptions: {
       delete: 'Вы&#160;действительно хотите удалить<br/>данного клиента?',
     },
+  };
+
+  /**
+   * @param errors - объект для текстов ошибок
+   * */
+  errors = {
+    clientDataError: 'Ошибка получения данных клиента:',
   };
 
   constructor(props) {
@@ -433,21 +441,35 @@ class Modal {
 
     this.setButtonsTexts(actionButton, cancelButton);
 
-    cancelButton.addEventListener('click', () => {
+    cancelButton.addEventListener('click', async () => {
       this.closeModal();
 
-      const eventName =
-        this.modalTemplate === this.modalTemplatesList.editClient
-          ? MODALS.CUSTOM_EVENTS.DELETE_MODAL_REQUEST
-          : this.modalTemplate === this.modalTemplatesList.delete &&
-              this.modal.getAttribute(this.attributes.isNeedOpenEditModal) ===
-                'true'
-            ? MODALS.CUSTOM_EVENTS.EDIT_MODAL_REQUEST
-            : null;
+      let eventName = null;
+      let currentClient = null;
+
+      if (this.modalTemplate === this.modalTemplatesList.editClient) {
+        eventName = MODALS.CUSTOM_EVENTS.DELETE_MODAL_REQUEST;
+      } else if (
+        this.modalTemplate === this.modalTemplatesList.delete &&
+        this.modal.getAttribute(this.attributes.isNeedOpenEditModal) === 'true'
+      ) {
+        eventName = MODALS.CUSTOM_EVENTS.EDIT_MODAL_REQUEST;
+      }
+
+      if (this.modalTemplate === this.modalTemplatesList.delete) {
+        try {
+          currentClient = await clientsApi.getClient({ id: client.id });
+        } catch (error) {
+          console.error(this.errors.clientDataError, error);
+          return;
+        }
+      } else {
+        currentClient = client;
+      }
 
       if (eventName) {
         this.modal.dispatchEvent(
-          new CustomEvent(eventName, { detail: client }),
+          new CustomEvent(eventName, { detail: currentClient }),
         );
       }
     });
