@@ -392,13 +392,12 @@ class Modal {
 
   /**
    * @description - Создаёт форму в модальном окне в соответствии с шаблоном наполнения
-   * @param {Object} client - Объект с информацией о клиенте
    * */
-  createForm(client) {
+  createForm() {
     return createElement({
       tag: 'form',
       attributes: [
-        { name: 'name', value: client ? 'edit-client' : 'new-client' },
+        { name: 'name', value: this.modalTemplate },
         { name: 'autocomplete', value: 'off' },
       ],
     });
