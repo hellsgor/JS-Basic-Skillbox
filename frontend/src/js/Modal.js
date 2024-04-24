@@ -20,6 +20,7 @@ class Modal {
    * @param title - заголовок модального окна
    * @param id - контейнер для id клиента
    * @param idItem - элемент содержащий в себе id клиента
+   * @param description - элемент содержащий в себе описание модального окна если оно предусмотрено
    * @param body - условное "тело" модального окна
    * @param maxContactsNumber - максимальное количество контактов
    * @param formInstance - экземпляр класса Form для Modal
@@ -34,6 +35,7 @@ class Modal {
   title = null;
   id = null;
   idItem = null;
+  description = null;
   body = null;
   maxContactsNumber = 10;
   formInstance = null;
@@ -45,6 +47,7 @@ class Modal {
     title: MODALS.CLASS_NAMES.TITLE,
     id: MODALS.CLASS_NAMES.ID,
     idItem: MODALS.CLASS_NAMES.ID_ITEM,
+    description: MODALS.CLASS_NAMES.DESCRIPTION,
     body: MODALS.CLASS_NAMES.BODY,
     contacts: MODALS.CLASS_NAMES.CONTACTS,
     addContactButton: MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON,
@@ -133,6 +136,9 @@ class Modal {
       deleteSmall: 'Удалить',
       save: 'Сохранить',
     },
+    descriptions: {
+      delete: 'Вы&#160;действительно хотите удалить<br/>данного клиента?',
+    },
   };
 
   constructor(props) {
@@ -157,6 +163,9 @@ class Modal {
     this.title = this.modal?.querySelector(`.${this.classNames.title}`);
     this.id = this.modal?.querySelector(`.${this.classNames.id}`);
     this.idItem = this.modal?.querySelector(`.${this.classNames.idItem}`);
+    this.description = this.modal?.querySelector(
+      `.${this.classNames.description}`,
+    );
     this.body = this.modal?.querySelector(`.${this.classNames.body}`);
   }
 
@@ -246,6 +255,7 @@ class Modal {
   fillModal(client = null) {
     this.setTitle(client);
     this.setID(client);
+    this.setDescription();
 
     if (this.modalTemplate !== this.modalTemplatesList.delete) {
       this.body.appendChild(this.createForm(client));
@@ -293,6 +303,7 @@ class Modal {
   clearModal() {
     this.clearTitle();
     this.clearID();
+    this.clearDescription();
     this.clearBody();
   }
 
@@ -325,6 +336,26 @@ class Modal {
   }
 
   /**
+   * @description - Устанавливает описание модального окна если оно предусмотрено
+   * */
+  setDescription() {
+    switch (this.modalTemplate) {
+      case this.modalTemplatesList.delete:
+        this.description.innerHTML = this.strings.descriptions.delete;
+        break;
+
+      default:
+        break;
+    }
+
+    if (this.description.textContent) {
+      this.description.classList.remove(
+        `${this.classNames.description}${this.modifiers.hidden}`,
+      );
+    }
+  }
+
+  /**
    * @description - Очищает заголовок модального окна
    * */
   clearTitle() {
@@ -336,6 +367,16 @@ class Modal {
    * */
   clearID() {
     this.idItem.innerText = '';
+  }
+
+  /**
+   * @description - Очищает элемент с описанием модального окна
+   * */
+  clearDescription() {
+    this.description.textContent = '';
+    this.description.classList.add(
+      `${this.classNames.description}${this.modifiers.hidden}`,
+    );
   }
 
   /**

@@ -42,6 +42,7 @@ export const MODALS = {
     TITLE: `${MODAL_CLASS_NAME}__title`,
     ID: `${MODAL_CLASS_NAME}__id`,
     ID_ITEM: `${MODAL_CLASS_NAME}__id-item`,
+    DESCRIPTION: `${MODAL_CLASS_NAME}__description`,
     BODY: `${MODAL_CLASS_NAME}__body`,
     CONTACTS: `${MODAL_CLASS_NAME}__contacts`,
     ADD_CONTACT_BUTTON: `${MODAL_CLASS_NAME}__add-contact-button`,
