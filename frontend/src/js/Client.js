@@ -225,7 +225,7 @@ export class Client {
   deleteClient() {
     console.log('delete', this.clientData.id);
 
-    this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData.id);
+    this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData);
   }
 
   /**
