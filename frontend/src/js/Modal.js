@@ -200,6 +200,7 @@ class Modal {
     this.backdrop.classList.add(
       `${this.classNames.backdrop}${this.modifiers.fadeIn}`,
     );
+
     setTimeout(
       () => {
         this.modal.classList.remove(
@@ -482,19 +483,16 @@ class Modal {
       `.${this.classNames.addContactButton}`,
     );
 
-    // Добавление обработчика события для кнопки добавления контакта
     this.addContactButton.addEventListener('click', () => {
       this.addContactControl();
       this.accessibilityAddContactButton();
     });
 
-    // Если у клиента есть контакты, добавляем их к новому элементу интерфейса
     if (client && client.contacts.length) {
       client.contacts.forEach((contact) => {
         this.addContactControl(contactsContainer, contact);
       });
 
-      // Если количество контактов клиента достигло максимального значения, блокируем кнопку добавления контакта
       if (client.contacts.length >= this.maxContactsNumber) {
         this.addContactButton.setAttribute('disabled', 'true');
       }
@@ -513,7 +511,7 @@ class Modal {
       .addEventListener('click', this.accessibilityAddContactButton.bind(this));
     // FIXME: код работает верно, но редактор не понимает тип возвращаемый из ModalContactControl - нужно попробовать исправить
 
-    (parent ? parent : this.body)
+    (parent || this.body)
       .querySelector(`.${this.classNames.contacts}`)
       .insertBefore(modalContactControl, this.addContactButton);
   }
