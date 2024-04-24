@@ -1,7 +1,6 @@
 import { createElement } from '@/helpers/create-element.js';
 import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
-import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
 
@@ -226,7 +225,7 @@ export class Client {
   deleteClient() {
     console.log('delete', this.clientData.id);
 
-    this.destroy();
+    this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData.id);
   }
 
   /**

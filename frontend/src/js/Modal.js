@@ -69,7 +69,7 @@ class Modal {
   modalTemplatesList = {
     newClient: MODALS.TEMPLATES.NEW_CLIENT,
     editClient: MODALS.TEMPLATES.EDIT_CLIENT,
-    delete: MODALS.TEMPLATES.DELETE,
+    delete: MODALS.TEMPLATES.DELETE_CLIENT,
   };
 
   /**
