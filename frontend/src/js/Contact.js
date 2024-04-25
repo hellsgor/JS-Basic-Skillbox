@@ -116,13 +116,19 @@ export class Contact {
         break;
       case CONTACTS.TYPES.FACEBOOK.text:
         this.modifier = CONTACTS.TYPES.FACEBOOK.modifier;
-        this.processedValue = extractPathWithoutExtension(this.contact.value);
+        this.processedValue = extractPathWithoutExtension(
+          this.contact.value,
+          true,
+        );
         break;
       case CONTACTS.TYPES.VK.text:
         this.modifier = CONTACTS.TYPES.VK.modifier;
-        this.processedValue = extractPathWithoutExtension(this.contact.value);
+        this.processedValue = extractPathWithoutExtension(
+          this.contact.value,
+          true,
+        );
         break;
-      case CONTACTS.TYPES.TWITTER:
+      case CONTACTS.TYPES.TWITTER.text:
         this.processedValue = extractPathWithoutExtension(
           this.contact.value,
           true,
