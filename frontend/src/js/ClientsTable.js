@@ -30,6 +30,11 @@ class ClientsTable {
   }
 
   renderClients() {
+    if (!this.tBody) {
+      console.error('Элемент таблицы не найден');
+      return;
+    }
+
     this.clearTable();
     this.clients.forEach((client) => {
       this.renderClient(client);
