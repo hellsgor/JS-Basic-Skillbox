@@ -18,11 +18,15 @@ class ClientsTable {
       this.modals = modals;
     }
 
-    this.clients = await clientsApi.getClients().then((response) =>
-      response.map((clientData) => {
+    try {
+      const response = await clientsApi.getClients();
+      this.clients = response.map((clientData) => {
         return new Client(clientData, this.modals, this.sortedContactsTypes);
-      }),
-    );
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке клиентов:', error);
+      this.clients = [];
+    }
   }
 
   renderClients() {
@@ -57,7 +61,6 @@ class ClientsTable {
     this.tBody.innerHTML = '';
   }
 
-  // TODO: добавить destroy в ClientsTable
   // TODO: написать документацию в ClientsTable
 }
 
