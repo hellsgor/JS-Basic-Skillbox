@@ -1,6 +1,7 @@
 import { formatPhoneNumber } from '@/helpers/formatPhoneNumber.js';
 import { extractPathWithoutExtension } from '@/helpers/extract-path-without-extension.js';
 import { createElement } from '@/helpers/create-element.js';
+import { CONTACTS } from '@/constants/contacts.js';
 
 export class Contact {
   contact = null;
@@ -99,24 +100,29 @@ export class Contact {
 
   setAdditionalContactProperties() {
     switch (this.contact.type) {
-      case 'Телефон':
-        this.modifier = 'phone';
+      case CONTACTS.TYPES.PHONE_NUMBER.text:
+        this.modifier = CONTACTS.TYPES.PHONE_NUMBER.modifier;
         this.hrefPrefix = 'tel:';
         this.processedValue = formatPhoneNumber(this.contact.value);
         break;
-      case 'Email':
-        this.modifier = 'email';
+      case CONTACTS.TYPES.ADDITIONAL_PHONE_NUMBER.text:
+        this.modifier = CONTACTS.TYPES.ADDITIONAL_PHONE_NUMBER.modifier;
+        this.hrefPrefix = 'tel:';
+        this.processedValue = formatPhoneNumber(this.contact.value);
+        break;
+      case CONTACTS.TYPES.EMAIL.text:
+        this.modifier = CONTACTS.TYPES.EMAIL.modifier;
         this.hrefPrefix = 'mailto:';
         break;
-      case 'Facebook':
-        this.modifier = 'facebook';
+      case CONTACTS.TYPES.FACEBOOK.text:
+        this.modifier = CONTACTS.TYPES.FACEBOOK.modifier;
         this.processedValue = extractPathWithoutExtension(this.contact.value);
         break;
-      case 'VK':
-        this.modifier = 'vk';
+      case CONTACTS.TYPES.VK.text:
+        this.modifier = CONTACTS.TYPES.VK.modifier;
         this.processedValue = extractPathWithoutExtension(this.contact.value);
         break;
-      case 'Twitter':
+      case CONTACTS.TYPES.TWITTER:
         this.processedValue = extractPathWithoutExtension(
           this.contact.value,
           true,
