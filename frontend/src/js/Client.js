@@ -1,5 +1,4 @@
 import { createElement } from '@/helpers/create-element.js';
-import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
@@ -36,6 +35,7 @@ export class Client {
 
   clientData = null;
   clientRow = null;
+  sortedContactsTypes = null;
   clientButtons = [
     {
       text: 'Изменить',
@@ -60,7 +60,7 @@ export class Client {
   constructor(data, modals, sortedContactsTypes) {
     this.clientData = data;
     this.modals = modals || null;
-    this.sortedContsctsTypes = sortedContactsTypes || null;
+    this.sortedContactsTypes = sortedContactsTypes || null;
 
     this.sortContacts();
     this.initClient();
@@ -114,18 +114,24 @@ export class Client {
   createDateCell(str) {
     const newDate = new Date(str);
 
-    const date = pudZero(newDate.getDate());
-    const month =
-      newDate.getMonth() + 1 > 12 ? '01' : pudZero(newDate.getMonth() + 1);
-    const minutes = pudZero(newDate.getMinutes());
-
     return createElement({
       tag: 'td',
       classes: 'client__date-cell',
       html: `
-      <span class="client__date">${date}.${month}.${newDate.getFullYear()}</span>
-      <time class="client__time" datetime="${str}">${newDate.getHours()}:${minutes}</time>
-    `,
+        <span class="client__date">
+          ${newDate.toLocaleDateString('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })}
+        </span>
+        <time class="client__time" datetime="${str}">
+          ${newDate.toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </time>
+      `,
     });
   }
 
@@ -234,7 +240,7 @@ export class Client {
    * @description Сортирует контакты клиента
    * */
   sortContacts() {
-    this.clientData.contacts = this.sortedContsctsTypes.flatMap((type) => {
+    this.clientData.contacts = this.sortedContactsTypes.flatMap((type) => {
       return this.clientData.contacts.filter((contact) => {
         return contact.type === type.text;
       });
