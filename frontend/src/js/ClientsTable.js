@@ -1,13 +1,16 @@
 import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
+import { sortContactsTypes } from '@/helpers/sort-contacts-types.js';
 
 class ClientsTable {
   clients = null;
   tBody = null;
   modals = null;
+  sortedContactsTypes = null;
 
   constructor(tBody) {
     this.tBody = tBody || null;
+    this.sortedContactsTypes = sortContactsTypes() || null;
   }
 
   async initClients(modals = null) {
@@ -17,7 +20,7 @@ class ClientsTable {
 
     this.clients = await clientsApi.getClients().then((response) =>
       response.map((clientData) => {
-        return new Client(clientData, this.modals);
+        return new Client(clientData, this.modals, this.sortedContactsTypes);
       }),
     );
   }
@@ -34,7 +37,9 @@ class ClientsTable {
   }
 
   addClient(clientData) {
-    this.clients.push(new Client(clientData, this.modals));
+    this.clients.push(
+      new Client(clientData, this.modals, this.sortedContactsTypes),
+    );
   }
 
   removeClient(clientID) {

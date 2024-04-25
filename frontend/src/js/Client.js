@@ -55,16 +55,15 @@ export class Client {
    * @description Создает экземпляр клиента.
    * @param {object} data - Данные клиента.
    * @param modals {Object} - Модальные окна.
+   * @param sortedContactsTypes {Array} - Отсортированные типы контактов
    * */
-  constructor(data, modals) {
+  constructor(data, modals, sortedContactsTypes) {
     this.clientData = data;
     this.modals = modals || null;
+    this.sortedContsctsTypes = sortedContactsTypes || null;
 
-    // TODO: добавить сортировку контактов в соответствии с макетом
-
+    this.sortContacts();
     this.initClient();
-
-    return this;
   }
 
   /**
@@ -229,6 +228,17 @@ export class Client {
    */
   deleteClient() {
     this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData);
+  }
+
+  /**
+   * @description Сортирует контакты клиента
+   * */
+  sortContacts() {
+    this.clientData.contacts = this.sortedContsctsTypes.flatMap((type) => {
+      return this.clientData.contacts.filter((contact) => {
+        return contact.type === type.text;
+      });
+    });
   }
 
   /**
