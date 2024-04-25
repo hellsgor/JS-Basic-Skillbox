@@ -179,17 +179,14 @@ export class Client {
       classes: 'client__buttons-cell',
     });
 
-    this.clientButtons.forEach((btnProps, idx) => {
+    this.clientButtons.forEach(({ classes, text, event, callback }, idx) => {
       this.clientButtons[idx].domElement = createElement({
         tag: 'button',
-        classes: btnProps.classes,
-        text: btnProps.text,
+        classes,
+        text,
       });
 
-      this.clientButtons[idx].domElement.addEventListener(
-        btnProps.event,
-        btnProps.callback,
-      );
+      this.clientButtons[idx].domElement.addEventListener(event, callback);
 
       actionsCell.appendChild(this.clientButtons[idx].domElement);
     });
