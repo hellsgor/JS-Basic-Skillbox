@@ -4,7 +4,7 @@ import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
 
 /**
- * Класс, представляющий клиента.
+ * @description Класс, представляющий клиента.
  * @class
  */
 export class Client {
@@ -67,7 +67,7 @@ export class Client {
   }
 
   /**
-   * Возвращает строку, представляющую клиента в таблице.
+   * @description Возвращает строку, представляющую клиента в таблице.
    * @returns {HTMLTableRowElement} Строка таблицы.
    */
   getClientRow() {
@@ -107,7 +107,7 @@ export class Client {
   }
 
   /**
-   * Создает ячейку с датой.
+   * @description Создает ячейку с датой.
    * @param {string} str - Строка с датой.
    * @returns {HTMLTableCellElement} Ячейка таблицы с датой.
    */
