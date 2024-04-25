@@ -42,7 +42,7 @@ class ClientsTable {
   }
 
   renderClient(client) {
-    this.tBody.appendChild(client.getClientRow());
+    this.tBody.insertAdjacentElement('beforeend', client.getClientRow());
   }
 
   addClient(clientData) {
