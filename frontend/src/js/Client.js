@@ -265,12 +265,14 @@ export class Client {
   destroy() {
     this.clientData = null;
     this.clientRow = null;
+    this.modals = null;
+    this.sortedContactsTypes = null;
+
     this.clientButtons.forEach((button) => {
       button.domElement.removeEventListener(button.event, button.callback);
       button = null;
     });
     this.clientButtons = null;
-    this.modals = null;
 
     Object.setPrototypeOf(this, null);
   }
