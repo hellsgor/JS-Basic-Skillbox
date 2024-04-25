@@ -146,33 +146,24 @@ export class Client {
       classes: 'client__contacts-cell',
     });
 
+    const fragment = document.createDocumentFragment();
+
     contacts.forEach((contact, idx) => {
-      const newContact = new Contact({
-        contact,
-        contactIndex: idx,
-        contactsLength: contacts.length,
-        contactsCell,
-      });
-      contactsCell.appendChild(newContact.initContact());
+      fragment.appendChild(
+        new Contact({
+          contact,
+          contactIndex: idx,
+          contactsLength: contacts.length,
+          contactsCell,
+        }).initContact(),
+      );
     });
+    contactsCell.appendChild(fragment);
 
     if (contacts.length > 5) {
-      const moreContactIcon = createElement({
-        tag: 'div',
-        classes: ['contact-icon', 'contact-icon_more'],
-      });
-
-      moreContactIcon.appendChild(
-        createElement({
-          tag: 'span',
-          text: `${contacts.length - 4}`,
-        }),
+      contactsCell.appendChild(
+        this.createMoreContactsIcon(contactsCell, contacts),
       );
-
-      moreContactIcon.addEventListener('click', () => {
-        this.showAllContacts(contactsCell, moreContactIcon);
-      });
-      contactsCell.appendChild(moreContactIcon);
     }
 
     return contactsCell;
@@ -245,6 +236,30 @@ export class Client {
         return contact.type === type.text;
       });
     });
+  }
+
+  /**
+   * @description Создает иконку для отображения дополнительных контактов и добавляет обработчик клика для их отображения.
+   * @param {HTMLElement} contactsCell - Ячейка таблицы, в которой отображаются контакты.
+   * @param {Array<Object>} contacts - Массив объектов контактов.
+   * @returns {HTMLDivElement} Созданная иконка для дополнительных контактов.
+   */
+  createMoreContactsIcon(contactsCell, contacts) {
+    const moreContactIcon = createElement({
+      tag: 'div',
+      classes: ['contact-icon', 'contact-icon_more'],
+    });
+
+    moreContactIcon.appendChild(
+      createElement({
+        tag: 'span',
+        text: `${contacts.length - 4}`,
+      }),
+    );
+    moreContactIcon.addEventListener('click', () => {
+      this.showAllContacts(contactsCell, moreContactIcon);
+    });
+    return moreContactIcon;
   }
 
   /**
