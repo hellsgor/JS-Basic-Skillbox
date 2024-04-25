@@ -52,14 +52,13 @@ class ClientsTable {
   }
 
   removeClient(clientID) {
-    this.clients = this.clients.filter((client) => {
-      if (client.clientData.id === clientID) {
-        client.destroy();
-        client = null;
-      } else {
-        return client;
-      }
-    });
+    const indexToRemove = this.clients.findIndex(
+      (client) => client.clientData.id === clientID,
+    );
+    if (indexToRemove !== -1) {
+      this.clients[indexToRemove].destroy();
+      this.clients.splice(indexToRemove, 1);
+    }
   }
 
   clearTable() {
