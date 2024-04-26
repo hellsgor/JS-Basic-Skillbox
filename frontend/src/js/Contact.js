@@ -3,6 +3,9 @@ import { extractPathWithoutExtension } from '@/helpers/extract-path-without-exte
 import { createElement } from '@/helpers/create-element.js';
 import { CONTACTS } from '@/constants/contacts.js';
 
+/**
+ * @description Класс для представления контактов клиентов.
+ */
 export class Contact {
   contact = null;
   contactsLength = null;
@@ -13,6 +16,14 @@ export class Contact {
   hrefPrefix = null;
   processedValue = null;
 
+  /**
+   * @description Создает экземпляр контакта.
+   * @param {Object} props - Параметры контакта.
+   * @param {Object} props.contact - Информация о контакте.
+   * @param {number || null} props.contactIndex - Индекс контакта.
+   * @param {number || null} props.contactsLength - Общее количество контактов.
+   * @param {HTMLElement || null} props.contactsCell - Элемент ячейки с контактами.
+   */
   constructor({
     contact = null,
     contactIndex = null,
@@ -25,10 +36,18 @@ export class Contact {
     this.contactsCell = contactsCell;
   }
 
+  /**
+   * @description Инициализирует контакт.
+   * @returns {HTMLElement} - Элемент контакта.
+   */
   initContact() {
     return this.createContact();
   }
 
+  /**
+   * @description Создает элемент контакта.
+   * @returns {HTMLElement} - Элемент контакта.
+   */
   createContact() {
     this.setAdditionalContactProperties();
 
@@ -51,6 +70,10 @@ export class Contact {
     return contactElement;
   }
 
+  /**
+   * @description Создает иконку контакта.
+   * @returns {HTMLElement} - Иконка контакта.
+   */
   createContactIcon() {
     return createElement({
       tag: 'div',
@@ -60,6 +83,10 @@ export class Contact {
     });
   }
 
+  /**
+   * @description Создает всплывающую подсказку для контакта.
+   * @returns {HTMLElement} - Всплывающая подсказка.
+   */
   createTooltip() {
     const tooltip = createElement({
       tag: 'div',
@@ -99,9 +126,13 @@ export class Contact {
       }),
     );
 
-    return tooltip.appendChild(tooltipWrapper);
+    tooltip.appendChild(tooltipWrapper);
+    return tooltip;
   }
 
+  /**
+   * @description Устанавливает дополнительные свойства контакта.
+   */
   setAdditionalContactProperties() {
     switch (this.contact.type) {
       case CONTACTS.TYPES.PHONE_NUMBER.text:
@@ -143,7 +174,18 @@ export class Contact {
     }
   }
 
-  // TODO: добавить метод destroy в Contact
-  // TODO: написать документацию в Contact
-  // TODO: вынести строки в константу
+  /**
+   * @description Уничтожает экземпляр контакта
+   * */
+  destroy() {
+    this.contact = null;
+    this.contactsLength = null;
+    this.contactIndex = null;
+    this.contactsCell = null;
+    this.modifier = null;
+    this.hrefPrefix = null;
+    this.processedValue = null;
+
+    Object.setPrototypeOf(this, null);
+  }
 }

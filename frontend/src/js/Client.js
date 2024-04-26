@@ -147,16 +147,16 @@ export class Client {
     });
 
     const fragment = document.createDocumentFragment();
-
     contacts.forEach((contact, idx) => {
-      fragment.appendChild(
-        new Contact({
-          contact,
-          contactIndex: idx,
-          contactsLength: contacts.length,
-          contactsCell,
-        }).initContact(),
-      );
+      const newContact = new Contact({
+        contact,
+        contactIndex: idx,
+        contactsLength: contacts.length,
+        contactsCell,
+      });
+
+      fragment.appendChild(newContact.initContact());
+      newContact.destroy();
     });
     contactsCell.appendChild(fragment);
 
