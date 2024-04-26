@@ -255,6 +255,7 @@ export class Form {
       case MODALS.TEMPLATES.NEW_CLIENT:
         method = API.METHODS.ADD_CLIENT;
         break;
+
       case MODALS.TEMPLATES.EDIT_CLIENT:
         method = API.METHODS.EDIT_CLIENT;
         break;
@@ -264,7 +265,19 @@ export class Form {
         break;
 
       default:
-        break;
+        console.error(
+          'Неизвестный шаблон модального окна:',
+          this.modalTemplate,
+        );
+        return;
+    }
+
+    if (!method) {
+      console.error(
+        'Метод не определен для шаблона модального окна:',
+        this.modalTemplate,
+      );
+      return;
     }
 
     clientsApi[method]({
