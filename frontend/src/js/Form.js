@@ -326,14 +326,14 @@ export class Form {
   destroy() {
     this.controls.forEach((control) => {
       control.removeEventListener('input', this.removeError);
+      this.removeErrorStyle(control);
     });
 
-    this.controls = [];
-
-    this.resetErrors();
+    this.errorsCounter = null;
+    this.errorsWrapper = null;
+    this.controls = null;
     this.form = null;
     this.submitButton = null;
-    this.errorsWrapper = null;
   }
 
   /**
