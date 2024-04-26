@@ -289,7 +289,7 @@ export class Form {
   }
 
   /**
-   * @description - метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
+   * @description - Метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
    * @param {HTMLInputElement} control - обрабатываемый контрол
    * @param {Object || null} errorProps - объект с кодом или текстом ошибки
    * @param {string || null} errorProps.code - код ошибки
