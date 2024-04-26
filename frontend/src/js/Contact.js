@@ -40,9 +40,9 @@ export class Contact {
     contactElement.appendChild(this.createContactIcon());
     contactElement.appendChild(this.createTooltip());
 
-    let contactModifier = 'client__contact_';
-    this.modifier ? (contactModifier += 'white') : (contactModifier += 'firm');
-    contactElement.classList.add(contactModifier);
+    contactElement.classList.add(
+      this.modifier ? 'client__contact_white' : 'client__contact_firm',
+    );
 
     if (this.contactsLength > 5 && this.contactIndex > 3) {
       contactElement.classList.add('client__contact_hidden');
