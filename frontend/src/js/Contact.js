@@ -13,47 +13,51 @@ export class Contact {
   hrefPrefix = null;
   processedValue = null;
 
-  contactElement = null;
-
-  constructor(props) {
-    this.contact = props.contact || null;
-    this.contactIndex = props.contactIndex || null;
-    this.contactsLength = props.contactsLength || null;
-    this.contactsCell = props.contactsCell || null;
+  constructor({
+    contact = null,
+    contactIndex = null,
+    contactsLength = null,
+    contactsCell = null,
+  }) {
+    this.contact = contact;
+    this.contactIndex = contactIndex;
+    this.contactsLength = contactsLength;
+    this.contactsCell = contactsCell;
   }
 
   initContact() {
-    this.createContact();
-    return this.contactElement;
+    return this.createContact();
   }
 
   createContact() {
     this.setAdditionalContactProperties();
-    this.contactElement = createElement({
+
+    const contactElement = createElement({
       tag: 'div',
       classes: ['client__contact'],
     });
-    this.createContactIcon();
-    this.createTooltip();
+
+    contactElement.appendChild(this.createContactIcon());
+    contactElement.appendChild(this.createTooltip());
 
     let contactModifier = 'client__contact_';
     this.modifier ? (contactModifier += 'white') : (contactModifier += 'firm');
-    this.contactElement.classList.add(contactModifier);
+    contactElement.classList.add(contactModifier);
 
     if (this.contactsLength > 5 && this.contactIndex > 3) {
-      this.contactElement.classList.add('client__contact_hidden');
+      contactElement.classList.add('client__contact_hidden');
     }
+
+    return contactElement;
   }
 
   createContactIcon() {
-    const contactIcon = createElement({
+    return createElement({
       tag: 'div',
       classes: this.modifier
         ? ['contact-icon', `contact-icon_${this.modifier}`]
         : 'contact-icon',
     });
-
-    this.contactElement.appendChild(contactIcon);
   }
 
   createTooltip() {
@@ -94,8 +98,8 @@ export class Contact {
         ],
       }),
     );
-    tooltip.appendChild(tooltipWrapper);
-    this.contactElement.appendChild(tooltip);
+
+    return tooltip.appendChild(tooltipWrapper);
   }
 
   setAdditionalContactProperties() {
