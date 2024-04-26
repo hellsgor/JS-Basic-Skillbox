@@ -57,15 +57,13 @@ export class Form {
    */
   constructor(props) {
     this.form = props?.form || null;
-    this.submitButton = props.submitButton || null;
-    this.errorsWrapper = props.errorsWrapper || null;
-    this.clientID = props.client ? props.client.id : null;
-    this.modalTemplate = props.modalTemplate || null;
-    this.callback = props.callback || null;
+    this.submitButton = props?.submitButton || null;
+    this.errorsWrapper = props?.errorsWrapper || null;
+    this.clientID = props?.client?.id || null;
+    this.modalTemplate = props?.modalTemplate || null;
+    this.callback = props?.callback || null;
 
     this.doFormJob();
-
-    return this;
   }
 
   /**
