@@ -347,25 +347,22 @@ export class Form {
    *   - value {string}: Значение контакта.
    */
   serializeForm() {
-    const data = {
-      contacts: [],
-    };
-    Array.from(this.controls).map((control) => {
-      if (control.name) {
-        data[control.name] = this.convertControlValue(control);
-      }
-
-      if (!control.name) {
-        data.contacts.push({
-          type: control
-            .closest(`.${this.classNames.modalContact}`)
-            .querySelector('button span').textContent,
-          value: this.convertControlValue(control),
-        });
-      }
-    });
-
-    return data;
+    return Array.from(this.controls).reduce(
+      (data, control) => {
+        if (control.name) {
+          data[control.name] = this.convertControlValue(control);
+        } else {
+          data.contacts.push({
+            type: control
+              .closest(`.${this.classNames.modalContact}`)
+              .querySelector('button span').textContent,
+            value: this.convertControlValue(control),
+          });
+        }
+        return data;
+      },
+      { contacts: [] },
+    );
   }
 
   /**
