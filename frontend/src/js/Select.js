@@ -1,14 +1,35 @@
 import { CONTACTS } from '@/constants/contacts.js';
 import { createElement } from '@/helpers/create-element.js';
 
+/**
+ * Представляет собой пользовательский компонент select.
+ */
 export class Select {
+  /**
+   * @param {HTMLElement} select - элемент select.
+   * @param {HTMLButtonElement} button - кнопка селекта.
+   * @param {HTMLSpanElement} buttonText - текст кнопки селекта.
+   * @param {HTMLSpanElement} buttonArrow - стрелка кнопки селекта.
+   * @param {HTMLUListElement} dropdown - выпадающий список.
+   * @param {Object[] | null} optionsList - массив объектов для элементов списка.
+   * @param {HTMLLIElement[] | null} options - массив элементов списка.
+   * @param {Function | null} callback - функция обратного вызова при выборе опции.
+   * @param {Function | null} documentClickHandler - обёртка для удаления слушателя события клика с document.
+   * @param {string} selectClassName - CSS-класс селектора.
+   * @param {Object} classNames - CSS-классы элементов селектора.
+   * @param {Object} modifiers - модификаторы для CSS-классов элементов селектора.
+   * @param {Object} actions - действия для переключения состояний компонента select.
+   * @param {Object} errors - сообщения об ошибках.
+   * @param {Object} attrs - атрибуты элементов компонента select.
+   * */
+
   select = null;
   button = null;
   buttonText = null;
   buttonArrow = null;
   dropdown = null;
+  optionsList = null;
   options = [];
-  selected = null;
 
   callback = null;
 
@@ -43,6 +64,16 @@ export class Select {
     dataSelectedValue: CONTACTS.ATTRS.dataSelectedTypeValue,
   };
 
+  /**
+   * @description Создает экземпляр класса Select.
+   * @constructor
+   * @param {Object} props - Свойства для компонента Select.
+   * @param {HTMLElement} props.select - Элемент select.
+   * @param {Array<Object>} props.options - Список опций для выбора.
+   * @param {string} props.options[].text - Текст опции.
+   * @param {string} props.options[].value - Значение опции.
+   * @param {Function} [props.callback] - Функция обратного вызова, которая будет вызвана при выборе опции.
+   */
   constructor({ select, options, callback }) {
     if (!select) {
       throw new Error(this.errors.noSelectElement);
@@ -63,6 +94,9 @@ export class Select {
     this.addEventsListeners();
   }
 
+  /**
+   * @description Получает необходимые элементы компонента select.
+   */
   getElements() {
     if (!this.select) {
       return;
@@ -78,10 +112,17 @@ export class Select {
     this.dropdown = this.select.querySelector(`.${this.classNames.dropdown}`);
   }
 
+  /**
+   * @description Добавляет обработчики событий.
+   */
   addEventsListeners() {
     this.button.addEventListener('click', () => this.toggleDropdown());
   }
 
+  /**
+   * @description Переключает состояние выпадающего списка опций.
+   * @param {string|null} [action=null] - Действие: 'add' - добавить, 'remove' - удалить, null - переключить.
+   */
   toggleDropdown(action = null) {
     this.select.classList[action || 'toggle'](
       `${this.selectClassName}_${this.modifiers.opened}`,
@@ -113,6 +154,10 @@ export class Select {
     }
   }
 
+  /**
+   * @description Скрывает выпадающий список опций.
+   * @param {MouseEvent} event - Событие клика вне компонента select.
+   */
   hideDropdown(event) {
     if (!this.select.contains(event.target)) {
       this.select.classList.remove(
@@ -122,6 +167,11 @@ export class Select {
     }
   }
 
+  /**
+   * @description Выбирает опцию.
+   * @param {Object} params - Объект события или объект.
+   * @param {HTMLElement} params.target - Выбранный элемент списка или элемент переданный в свойстве объекта.
+   */
   doSelected({ target }) {
     this.toggleDropdown(this.actions.remove);
     this.options.forEach((option) => {
@@ -140,6 +190,10 @@ export class Select {
     this.callback && this.callback(this.button);
   }
 
+  /**
+   * @description Создает элементы списка для дропдауна.
+   * @private
+   */
   createOptions() {
     this.optionsList.forEach((option) => {
       const optionElement = createElement({
@@ -162,6 +216,4 @@ export class Select {
 
     this.optionsList = null;
   }
-
-  // TODO: написать документацию в Select
 }
