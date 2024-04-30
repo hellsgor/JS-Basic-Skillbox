@@ -1,3 +1,8 @@
+/**
+ * @description Обрабатывает перемещение placeholder.
+ * @param {HTMLElement} control - контрол, для которого нужно переместить placeholder.
+ */
+
 export function movedFormControlPlaceholder(control) {
   let placeholder = control.nextElementSibling;
 

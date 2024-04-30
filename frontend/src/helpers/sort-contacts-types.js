@@ -1,5 +1,10 @@
 import { CONTACTS } from '@/constants/contacts.js';
 
+/**
+ * @description Сортирует типы контактов в соответствии с их порядком сортировки и возвращает отсортированный массив объектов.
+ * @returns {Object[]} - Отсортированный массив объектов типов контактов.
+ */
+
 export function sortContactsTypes() {
   return Object.values(CONTACTS.TYPES)
     .sort((a, b) => {

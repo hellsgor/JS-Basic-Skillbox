@@ -1,5 +1,17 @@
-export function createElement(props) {
-  const element = document.createElement(props.tag);
+/**
+ * @description Создает новый HTML элемент с указанными свойствами.
+ * @param {Object} properties - Объект с параметрами для создания элемента.
+ * @param {string} properties.tag - Тип создаваемого HTML элемента.
+ * @param {(string|string[])} properties.classes - CSS-классы для применения к элементу.
+ * @param {string} properties.text - Текстовое содержимое элемента.
+ * @param {string} properties.html - HTML содержимое элемента.
+ * @property {Object[]} properties.attributes - Массив атрибутов для добавления к элементу.
+ * @param {string} attributes.name - Имя атрибута.
+ * @param {string} attributes.value - Значение атрибута.
+ * @param {function} properties.callback - Функция обратного вызова, которая будет вызвана при событии.
+ * @param {string} properties.event - Тип события, на которое будет привязан обработчик (по умолчанию 'click').
+ * @returns {HTMLElement} Новый HTML элемент с указанными свойствами.
+ */
 
 export function createElement({
   tag,
