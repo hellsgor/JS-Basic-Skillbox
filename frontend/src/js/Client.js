@@ -1,11 +1,10 @@
 import { createElement } from '@/helpers/create-element.js';
-import { pudZero } from '@/helpers/pud-zero.js';
 import { Contact } from '@/js/Contact.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
 
 /**
- * Класс, представляющий клиента.
+ * @description Класс, представляющий клиента.
  * @class
  */
 export class Client {
@@ -36,6 +35,7 @@ export class Client {
 
   clientData = null;
   clientRow = null;
+  sortedContactsTypes = null;
   clientButtons = [
     {
       text: 'Изменить',
@@ -55,20 +55,19 @@ export class Client {
    * @description Создает экземпляр клиента.
    * @param {object} data - Данные клиента.
    * @param modals {Object} - Модальные окна.
+   * @param sortedContactsTypes {Array} - Отсортированные типы контактов
    * */
-  constructor(data, modals) {
+  constructor(data, modals, sortedContactsTypes) {
     this.clientData = data;
     this.modals = modals || null;
+    this.sortedContactsTypes = sortedContactsTypes || null;
 
-    // TODO: добавить сортировку контактов в соответствии с макетом
-
+    this.sortContacts();
     this.initClient();
-
-    return this;
   }
 
   /**
-   * Возвращает строку, представляющую клиента в таблице.
+   * @description Возвращает строку, представляющую клиента в таблице.
    * @returns {HTMLTableRowElement} Строка таблицы.
    */
   getClientRow() {
@@ -108,25 +107,31 @@ export class Client {
   }
 
   /**
-   * Создает ячейку с датой.
+   * @description Создает ячейку с датой.
    * @param {string} str - Строка с датой.
    * @returns {HTMLTableCellElement} Ячейка таблицы с датой.
    */
   createDateCell(str) {
     const newDate = new Date(str);
 
-    const date = pudZero(newDate.getDate());
-    const month =
-      newDate.getMonth() + 1 > 12 ? '01' : pudZero(newDate.getMonth() + 1);
-    const minutes = pudZero(newDate.getMinutes());
-
     return createElement({
       tag: 'td',
       classes: 'client__date-cell',
       html: `
-      <span class="client__date">${date}.${month}.${newDate.getFullYear()}</span>
-      <time class="client__time" datetime="${str}">${newDate.getHours()}:${minutes}</time>
-    `,
+        <span class="client__date">
+          ${newDate.toLocaleDateString('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })}
+        </span>
+        <time class="client__time" datetime="${str}">
+          ${newDate.toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </time>
+      `,
     });
   }
 
@@ -141,6 +146,7 @@ export class Client {
       classes: 'client__contacts-cell',
     });
 
+    const fragment = document.createDocumentFragment();
     contacts.forEach((contact, idx) => {
       const newContact = new Contact({
         contact,
@@ -148,26 +154,16 @@ export class Client {
         contactsLength: contacts.length,
         contactsCell,
       });
-      contactsCell.appendChild(newContact.initContact());
+
+      fragment.appendChild(newContact.initContact());
+      newContact.destroy();
     });
+    contactsCell.appendChild(fragment);
 
     if (contacts.length > 5) {
-      const moreContactIcon = createElement({
-        tag: 'div',
-        classes: ['contact-icon', 'contact-icon_more'],
-      });
-
-      moreContactIcon.appendChild(
-        createElement({
-          tag: 'span',
-          text: `${contacts.length - 4}`,
-        }),
+      contactsCell.appendChild(
+        this.createMoreContactsIcon(contactsCell, contacts),
       );
-
-      moreContactIcon.addEventListener('click', () => {
-        this.showAllContacts(contactsCell, moreContactIcon);
-      });
-      contactsCell.appendChild(moreContactIcon);
     }
 
     return contactsCell;
@@ -183,17 +179,14 @@ export class Client {
       classes: 'client__buttons-cell',
     });
 
-    this.clientButtons.forEach((btnProps, idx) => {
+    this.clientButtons.forEach(({ classes, text, event, callback }, idx) => {
       this.clientButtons[idx].domElement = createElement({
         tag: 'button',
-        classes: btnProps.classes,
-        text: btnProps.text,
+        classes,
+        text,
       });
 
-      this.clientButtons[idx].domElement.addEventListener(
-        btnProps.event,
-        btnProps.callback,
-      );
+      this.clientButtons[idx].domElement.addEventListener(event, callback);
 
       actionsCell.appendChild(this.clientButtons[idx].domElement);
     });
@@ -232,17 +225,54 @@ export class Client {
   }
 
   /**
+   * @description Сортирует контакты клиента
+   * */
+  sortContacts() {
+    this.clientData.contacts = this.sortedContactsTypes.flatMap((type) => {
+      return this.clientData.contacts.filter((contact) => {
+        return contact.type === type.text;
+      });
+    });
+  }
+
+  /**
+   * @description Создает иконку для отображения дополнительных контактов и добавляет обработчик клика для их отображения.
+   * @param {HTMLElement} contactsCell - Ячейка таблицы, в которой отображаются контакты.
+   * @param {Array<Object>} contacts - Массив объектов контактов.
+   * @returns {HTMLDivElement} Созданная иконка для дополнительных контактов.
+   */
+  createMoreContactsIcon(contactsCell, contacts) {
+    const moreContactIcon = createElement({
+      tag: 'div',
+      classes: ['contact-icon', 'contact-icon_more'],
+    });
+
+    moreContactIcon.appendChild(
+      createElement({
+        tag: 'span',
+        text: `${contacts.length - 4}`,
+      }),
+    );
+    moreContactIcon.addEventListener('click', () => {
+      this.showAllContacts(contactsCell, moreContactIcon);
+    });
+    return moreContactIcon;
+  }
+
+  /**
    * @description Уничтожает экземпляр клиента.
    */
   destroy() {
     this.clientData = null;
     this.clientRow = null;
+    this.modals = null;
+    this.sortedContactsTypes = null;
+
     this.clientButtons.forEach((button) => {
       button.domElement.removeEventListener(button.event, button.callback);
       button = null;
     });
     this.clientButtons = null;
-    this.modals = null;
 
     Object.setPrototypeOf(this, null);
   }

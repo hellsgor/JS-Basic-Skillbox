@@ -57,15 +57,13 @@ export class Form {
    */
   constructor(props) {
     this.form = props?.form || null;
-    this.submitButton = props.submitButton || null;
-    this.errorsWrapper = props.errorsWrapper || null;
-    this.clientID = props.client ? props.client.id : null;
-    this.modalTemplate = props.modalTemplate || null;
-    this.callback = props.callback || null;
+    this.submitButton = props?.submitButton || null;
+    this.errorsWrapper = props?.errorsWrapper || null;
+    this.clientID = props?.client?.id || null;
+    this.modalTemplate = props?.modalTemplate || null;
+    this.callback = props?.callback || null;
 
     this.doFormJob();
-
-    return this;
   }
 
   /**
@@ -257,6 +255,7 @@ export class Form {
       case MODALS.TEMPLATES.NEW_CLIENT:
         method = API.METHODS.ADD_CLIENT;
         break;
+
       case MODALS.TEMPLATES.EDIT_CLIENT:
         method = API.METHODS.EDIT_CLIENT;
         break;
@@ -266,7 +265,19 @@ export class Form {
         break;
 
       default:
-        break;
+        console.error(
+          'Неизвестный шаблон модального окна:',
+          this.modalTemplate,
+        );
+        return;
+    }
+
+    if (!method) {
+      console.error(
+        'Метод не определен для шаблона модального окна:',
+        this.modalTemplate,
+      );
+      return;
     }
 
     clientsApi[method]({
@@ -278,7 +289,7 @@ export class Form {
   }
 
   /**
-   * @description - метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
+   * @description - Метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
    * @param {HTMLInputElement} control - обрабатываемый контрол
    * @param {Object || null} errorProps - объект с кодом или текстом ошибки
    * @param {string || null} errorProps.code - код ошибки
@@ -315,14 +326,14 @@ export class Form {
   destroy() {
     this.controls.forEach((control) => {
       control.removeEventListener('input', this.removeError);
+      this.removeErrorStyle(control);
     });
 
-    this.controls = [];
-
-    this.resetErrors();
+    this.errorsCounter = null;
+    this.errorsWrapper = null;
+    this.controls = null;
     this.form = null;
     this.submitButton = null;
-    this.errorsWrapper = null;
   }
 
   /**
@@ -336,25 +347,22 @@ export class Form {
    *   - value {string}: Значение контакта.
    */
   serializeForm() {
-    const data = {
-      contacts: [],
-    };
-    Array.from(this.controls).map((control) => {
-      if (control.name) {
-        data[control.name] = this.convertControlValue(control);
-      }
-
-      if (!control.name) {
-        data.contacts.push({
-          type: control
-            .closest(`.${this.classNames.modalContact}`)
-            .querySelector('button span').textContent,
-          value: this.convertControlValue(control),
-        });
-      }
-    });
-
-    return data;
+    return Array.from(this.controls).reduce(
+      (data, control) => {
+        if (control.name) {
+          data[control.name] = this.convertControlValue(control);
+        } else {
+          data.contacts.push({
+            type: control
+              .closest(`.${this.classNames.modalContact}`)
+              .querySelector('button span').textContent,
+            value: this.convertControlValue(control),
+          });
+        }
+        return data;
+      },
+      { contacts: [] },
+    );
   }
 
   /**
@@ -380,75 +388,121 @@ export class Form {
   }
 
   /**
-   * @description - Обрабатывает ошибки из ответа сервера
-   * @param response - объект ответа сервера (Axios)
-   * */
+   * @description Обрабатывает ошибки из ответа сервера.
+   * @param {Object} response - Объект ответа сервера (Axios).
+   */
   processingResponseErrors(response) {
+    if (this.handleNetworkError(response)) {
+      return;
+    }
+
+    if (this.handleValidationErrors(response)) {
+      return;
+    }
+  }
+
+  /**
+   * @description Обрабатывает ошибки сети и статус 404.
+   * @param {Object} response - Объект ответа сервера (Axios).
+   * @returns {boolean} Возвращает true, если ошибка сети или статус 404, иначе false.
+   */
+  handleNetworkError(response) {
     if (
       response.error.code === 'ERR_NETWORK' ||
       response.error.response.status === 404 ||
       response.error.response.status >= 500
     ) {
       this.showError(ERRORS.EF003());
-      return;
+      return true;
     }
+    return false;
+  }
 
+  /**
+   * @description Обрабатывает ошибки валидации.
+   * @param {Object} response - Объект ответа сервера (Axios).
+   * @returns {boolean} Возвращает true, если есть ошибки валидации, иначе false.
+   */
+  handleValidationErrors(response) {
     if (response.error.response.status === 422) {
       response.error.response.data.errors.forEach((error) => {
         if (error.field !== FORMS.CLIENT_OBJECT_CONTACTS_PROPERTY_NAME) {
-          this.invalidate(
-            Array.from(this.controls).find(
-              (control) => control.name === error.field,
-            ),
-            { text: error.message, code: null },
-          );
+          this.handleControlError(error);
         } else {
-          this.controls.forEach((control) => {
-            if (
-              control.closest(`.${this.classNames.modalContact}`) &&
-              !control.value.trim()
-            ) {
-              ++this.errorsCounter;
-              this.addErrorStyle(control, false);
-              control.addEventListener('input', (event) => {
-                const errorText = error.message;
-                let isSomeContactsWithError = false;
-
-                this.removeError(event, false);
-
-                this.controls.forEach((control) => {
-                  if (
-                    control.closest(`.${this.classNames.modalContact}`) &&
-                    control
-                      .closest(`.${this.classNames.modalContact}`)
-                      .classList.contains(
-                        `${this.classNames.modalContactWithError}`,
-                      )
-                  ) {
-                    isSomeContactsWithError = true;
-                  }
-                });
-                if (!isSomeContactsWithError) {
-                  const contactsErrorElement = Array.from(
-                    this.errorsWrapper.querySelectorAll(
-                      `.${this.classNames.modalError}`,
-                    ),
-                  ).find(
-                    (errorElement) => errorElement.textContent === errorText,
-                  );
-
-                  contactsErrorElement && contactsErrorElement.remove();
-                }
-              });
-            }
-          });
-          this.showError(error.message);
+          this.handleContactError(error);
         }
       });
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * @description Обрабатывает ошибки контролов формы.
+   * @param {Object} error - Объект с информацией об ошибке.
+   */
+  handleControlError(error) {
+    const control = Array.from(this.controls).find(
+      (control) => control.name === error.field,
+    );
+    if (control) {
+      this.invalidate(control, { text: error.message });
+    }
+  }
+
+  /**
+   * @description Обрабатывает ошибки контактов формы.
+   * @param {Object} error - Объект с информацией об ошибке.
+   */
+  handleContactError(error) {
+    this.controls.forEach((control) => {
+      if (
+        control.closest(`.${this.classNames.modalContact}`) &&
+        !control.value.trim()
+      ) {
+        this.handleEmptyContact(control, error.message);
+      }
+    });
+  }
+
+  /**
+   * @description Обрабатывает ошибки пустых контактов формы.
+   * @param {HTMLInputElement} control - Контрол контакта, у которого значение пустое.
+   * @param {string} errorMessage - Текст ошибки.
+   */
+  handleEmptyContact(control, errorMessage) {
+    ++this.errorsCounter;
+    this.addErrorStyle(control, false);
+    control.addEventListener('input', () =>
+      this.removeEmptyContactError(errorMessage),
+    );
+    this.showError(errorMessage);
+  }
+
+  /**
+   * @description Удаляет ошибки пустых контактов формы.
+   * @param {string} errorMessage - Текст ошибки.
+   */
+  removeEmptyContactError(errorMessage) {
+    const isSomeContactsWithError = Array.from(this.controls).some(
+      (control) =>
+        control.closest(`.${this.classNames.modalContact}`) &&
+        control
+          .closest(`.${this.classNames.modalContact}`)
+          .classList.contains(`${this.classNames.modalContactWithError}`),
+    );
+    if (!isSomeContactsWithError) {
+      const contactsErrorElement = Array.from(
+        this.errorsWrapper.querySelectorAll(`.${this.classNames.modalError}`),
+      ).find((errorElement) => errorElement.textContent === errorMessage);
+      contactsErrorElement && contactsErrorElement.remove();
     }
   }
 }
 
+/**
+ * @description Автоматически инициализирует формы на странице, помеченные data-атрибутом.
+ */
 export function autoInitForms() {
   document
     .querySelectorAll(`form[${FORMS.ATTRS.FORM_AUTO_INIT_DATA_ATTR}]`)

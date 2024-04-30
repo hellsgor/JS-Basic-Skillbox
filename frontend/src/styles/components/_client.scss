@@ -56,13 +56,13 @@
     }
     
     &_white {
-      .contact-tooltip a {
+      .tooltip a {
         color: $white;
       }
     }
     
     &_firm {
-      .contact-tooltip a {
+      .tooltip a {
         text-decoration: underline;
         color: $firm;
       }

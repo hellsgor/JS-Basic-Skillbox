@@ -1,7 +1,11 @@
 import { formatPhoneNumber } from '@/helpers/formatPhoneNumber.js';
 import { extractPathWithoutExtension } from '@/helpers/extract-path-without-extension.js';
 import { createElement } from '@/helpers/create-element.js';
+import { CONTACTS } from '@/constants/contacts.js';
 
+/**
+ * @description Класс для представления контактов клиентов.
+ */
 export class Contact {
   contact = null;
   contactsLength = null;
@@ -12,49 +16,77 @@ export class Contact {
   hrefPrefix = null;
   processedValue = null;
 
-  contactElement = null;
-
-  constructor(props) {
-    this.contact = props.contact || null;
-    this.contactIndex = props.contactIndex || null;
-    this.contactsLength = props.contactsLength || null;
-    this.contactsCell = props.contactsCell || null;
+  /**
+   * @description Создает экземпляр контакта.
+   * @param {Object} props - Параметры контакта.
+   * @param {Object} props.contact - Информация о контакте.
+   * @param {number || null} props.contactIndex - Индекс контакта.
+   * @param {number || null} props.contactsLength - Общее количество контактов.
+   * @param {HTMLElement || null} props.contactsCell - Элемент ячейки с контактами.
+   */
+  constructor({
+    contact = null,
+    contactIndex = null,
+    contactsLength = null,
+    contactsCell = null,
+  }) {
+    this.contact = contact;
+    this.contactIndex = contactIndex;
+    this.contactsLength = contactsLength;
+    this.contactsCell = contactsCell;
   }
 
+  /**
+   * @description Инициализирует контакт.
+   * @returns {HTMLElement} - Элемент контакта.
+   */
   initContact() {
-    this.createContact();
-    return this.contactElement;
+    return this.createContact();
   }
 
+  /**
+   * @description Создает элемент контакта.
+   * @returns {HTMLElement} - Элемент контакта.
+   */
   createContact() {
     this.setAdditionalContactProperties();
-    this.contactElement = createElement({
+
+    const contactElement = createElement({
       tag: 'div',
       classes: ['client__contact'],
     });
-    this.createContactIcon();
-    this.createTooltip();
 
-    let contactModifier = 'client__contact_';
-    this.modifier ? (contactModifier += 'white') : (contactModifier += 'firm');
-    this.contactElement.classList.add(contactModifier);
+    contactElement.appendChild(this.createContactIcon());
+    contactElement.appendChild(this.createTooltip());
+
+    contactElement.classList.add(
+      this.modifier ? 'client__contact_white' : 'client__contact_firm',
+    );
 
     if (this.contactsLength > 5 && this.contactIndex > 3) {
-      this.contactElement.classList.add('client__contact_hidden');
+      contactElement.classList.add('client__contact_hidden');
     }
+
+    return contactElement;
   }
 
+  /**
+   * @description Создает иконку контакта.
+   * @returns {HTMLElement} - Иконка контакта.
+   */
   createContactIcon() {
-    const contactIcon = createElement({
+    return createElement({
       tag: 'div',
       classes: this.modifier
         ? ['contact-icon', `contact-icon_${this.modifier}`]
         : 'contact-icon',
     });
-
-    this.contactElement.appendChild(contactIcon);
   }
 
+  /**
+   * @description Создает всплывающую подсказку для контакта.
+   * @returns {HTMLElement} - Всплывающая подсказка.
+   */
   createTooltip() {
     const tooltip = createElement({
       tag: 'div',
@@ -93,30 +125,45 @@ export class Contact {
         ],
       }),
     );
+
     tooltip.appendChild(tooltipWrapper);
-    this.contactElement.appendChild(tooltip);
+    return tooltip;
   }
 
+  /**
+   * @description Устанавливает дополнительные свойства контакта.
+   */
   setAdditionalContactProperties() {
     switch (this.contact.type) {
-      case 'Телефон':
-        this.modifier = 'phone';
+      case CONTACTS.TYPES.PHONE_NUMBER.text:
+        this.modifier = CONTACTS.TYPES.PHONE_NUMBER.modifier;
         this.hrefPrefix = 'tel:';
         this.processedValue = formatPhoneNumber(this.contact.value);
         break;
-      case 'Email':
-        this.modifier = 'email';
+      case CONTACTS.TYPES.ADDITIONAL_PHONE_NUMBER.text:
+        this.modifier = CONTACTS.TYPES.ADDITIONAL_PHONE_NUMBER.modifier;
+        this.hrefPrefix = 'tel:';
+        this.processedValue = formatPhoneNumber(this.contact.value);
+        break;
+      case CONTACTS.TYPES.EMAIL.text:
+        this.modifier = CONTACTS.TYPES.EMAIL.modifier;
         this.hrefPrefix = 'mailto:';
         break;
-      case 'Facebook':
-        this.modifier = 'facebook';
-        this.processedValue = extractPathWithoutExtension(this.contact.value);
+      case CONTACTS.TYPES.FACEBOOK.text:
+        this.modifier = CONTACTS.TYPES.FACEBOOK.modifier;
+        this.processedValue = extractPathWithoutExtension(
+          this.contact.value,
+          true,
+        );
         break;
-      case 'VK':
-        this.modifier = 'vk';
-        this.processedValue = extractPathWithoutExtension(this.contact.value);
+      case CONTACTS.TYPES.VK.text:
+        this.modifier = CONTACTS.TYPES.VK.modifier;
+        this.processedValue = extractPathWithoutExtension(
+          this.contact.value,
+          true,
+        );
         break;
-      case 'Twitter':
+      case CONTACTS.TYPES.TWITTER.text:
         this.processedValue = extractPathWithoutExtension(
           this.contact.value,
           true,
@@ -127,7 +174,18 @@ export class Contact {
     }
   }
 
-  // TODO: добавить метод destroy в Contact
-  // TODO: написать документацию в Contact
-  // TODO: вынести строки в константу
+  /**
+   * @description Уничтожает экземпляр контакта
+   * */
+  destroy() {
+    this.contact = null;
+    this.contactsLength = null;
+    this.contactIndex = null;
+    this.contactsCell = null;
+    this.modifier = null;
+    this.hrefPrefix = null;
+    this.processedValue = null;
+
+    Object.setPrototypeOf(this, null);
+  }
 }

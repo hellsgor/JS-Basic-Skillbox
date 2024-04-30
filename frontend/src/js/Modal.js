@@ -7,6 +7,7 @@ import { movedFormControlPlaceholder } from '@/helpers/moved-form-control-placeh
 import { Form } from '@/js/Form.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
 import { CONTACTS } from '@/constants/contacts.js';
+import clientsApi from '@api/Clients-api.js';
 
 /**
  * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -144,41 +145,45 @@ class Modal {
     },
   };
 
-  constructor(props) {
-    this.modal = props?.modal;
+  /**
+   * @param errors - объект для текстов ошибок
+   * */
+  errors = {
+    clientDataError: 'Ошибка получения данных клиента:',
+  };
 
-    this.modalTemplate = this.modal?.getAttribute(
-      this.attributes.modalTemplate,
-    );
+  constructor(props = {}) {
+    this.modal = props.modal || null;
+    this.modalTemplate = this.modal
+      ? this.modal.getAttribute(this.attributes.modalTemplate)
+      : null;
 
-    this.getModalElements();
-    this.addEvents();
-
-    return this;
+    if (this.modal) {
+      this.getModalElements();
+      this.addEvents();
+    }
   }
 
   /**
    * @description - Определяет элементы модального окна
    * */
   getModalElements() {
-    this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
+    this.closeBtn = this.modal.querySelector(`.${this.classNames.closeBtn}`);
     this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
-    this.title = this.modal?.querySelector(`.${this.classNames.title}`);
-    this.id = this.modal?.querySelector(`.${this.classNames.id}`);
-    this.idItem = this.modal?.querySelector(`.${this.classNames.idItem}`);
-    this.description = this.modal?.querySelector(
+    this.title = this.modal.querySelector(`.${this.classNames.title}`);
+    this.id = this.modal.querySelector(`.${this.classNames.id}`);
+    this.idItem = this.modal.querySelector(`.${this.classNames.idItem}`);
+    this.description = this.modal.querySelector(
       `.${this.classNames.description}`,
     );
-    this.body = this.modal?.querySelector(`.${this.classNames.body}`);
+    this.body = this.modal.querySelector(`.${this.classNames.body}`);
   }
 
   /**
    * @description - Добавляет базовые события элементам модального окна
    * */
   addEvents() {
-    this.closeBtn.addEventListener('click', () => {
-      this.closeModal();
-    });
+    this.closeBtn.addEventListener('click', () => this.closeModal());
   }
 
   /**
@@ -200,6 +205,7 @@ class Modal {
     this.backdrop.classList.add(
       `${this.classNames.backdrop}${this.modifiers.fadeIn}`,
     );
+
     setTimeout(
       () => {
         this.modal.classList.remove(
@@ -242,13 +248,12 @@ class Modal {
         );
 
         this.clearModal();
+        this.destroyForm();
       },
       convertTimeStringToMilliseconds(
         window.getComputedStyle(this.modal).animationDuration,
       ),
     );
-
-    this.destroyForm();
   }
 
   /**
@@ -433,21 +438,35 @@ class Modal {
 
     this.setButtonsTexts(actionButton, cancelButton);
 
-    cancelButton.addEventListener('click', () => {
+    cancelButton.addEventListener('click', async () => {
       this.closeModal();
 
-      const eventName =
-        this.modalTemplate === this.modalTemplatesList.editClient
-          ? MODALS.CUSTOM_EVENTS.DELETE_MODAL_REQUEST
-          : this.modalTemplate === this.modalTemplatesList.delete &&
-              this.modal.getAttribute(this.attributes.isNeedOpenEditModal) ===
-                'true'
-            ? MODALS.CUSTOM_EVENTS.EDIT_MODAL_REQUEST
-            : null;
+      let eventName = null;
+      let currentClient = null;
+
+      if (this.modalTemplate === this.modalTemplatesList.editClient) {
+        eventName = MODALS.CUSTOM_EVENTS.DELETE_MODAL_REQUEST;
+      } else if (
+        this.modalTemplate === this.modalTemplatesList.delete &&
+        this.modal.getAttribute(this.attributes.isNeedOpenEditModal) === 'true'
+      ) {
+        eventName = MODALS.CUSTOM_EVENTS.EDIT_MODAL_REQUEST;
+      }
+
+      if (this.modalTemplate === this.modalTemplatesList.delete) {
+        try {
+          currentClient = await clientsApi.getClient({ id: client.id });
+        } catch (error) {
+          console.error(this.errors.clientDataError, error);
+          return;
+        }
+      } else {
+        currentClient = client;
+      }
 
       if (eventName) {
         this.modal.dispatchEvent(
-          new CustomEvent(eventName, { detail: client }),
+          new CustomEvent(eventName, { detail: currentClient }),
         );
       }
     });
@@ -483,19 +502,16 @@ class Modal {
       `.${this.classNames.addContactButton}`,
     );
 
-    // Добавление обработчика события для кнопки добавления контакта
     this.addContactButton.addEventListener('click', () => {
       this.addContactControl();
       this.accessibilityAddContactButton();
     });
 
-    // Если у клиента есть контакты, добавляем их к новому элементу интерфейса
     if (client && client.contacts.length) {
       client.contacts.forEach((contact) => {
         this.addContactControl(contactsContainer, contact);
       });
 
-      // Если количество контактов клиента достигло максимального значения, блокируем кнопку добавления контакта
       if (client.contacts.length >= this.maxContactsNumber) {
         this.addContactButton.setAttribute('disabled', 'true');
       }
@@ -514,7 +530,7 @@ class Modal {
       .addEventListener('click', this.accessibilityAddContactButton.bind(this));
     // FIXME: код работает верно, но редактор не понимает тип возвращаемый из ModalContactControl - нужно попробовать исправить
 
-    (parent ? parent : this.body)
+    (parent || this.body)
       .querySelector(`.${this.classNames.contacts}`)
       .insertBefore(modalContactControl, this.addContactButton);
   }
@@ -523,16 +539,9 @@ class Modal {
    * @description - Управляет доступностью кнопки добавления контакта (проверка на максимальное количество контактов клиента)
    * */
   accessibilityAddContactButton() {
-    if (
+    this.addContactButton.disabled =
       this.body.querySelectorAll(`.${this.classNames.contact}`).length >=
-      this.maxContactsNumber
-    ) {
-      this.addContactButton.setAttribute('disabled', true);
-    } else {
-      if (this.addContactButton.hasAttribute('disabled')) {
-        this.addContactButton.removeAttribute('disabled');
-      }
-    }
+      this.maxContactsNumber;
   }
 
   /**
@@ -573,16 +582,19 @@ class Modal {
   }
 }
 
-// TODO: написать метод destroy для класса Modal. Не забыть о событиях на кнопках удаления контакта
-
 /**
  * @description - Инициализирует все модальные окна на странице. Следует запустить один раз из js-файла страницы
  * */
 export function initModals() {
   const modals = {};
-  document.querySelectorAll('.modal').forEach((modal) => {
+  const modalElements = document.getElementsByClassName('modal');
+
+  for (const modal of modalElements) {
     const newModal = new Modal({ modal });
-    modals[newModal.modalTemplate] = newModal;
-  });
-  return modals;
+    if (newModal.modalTemplate) {
+      modals[newModal.modalTemplate] = newModal;
+    }
+  }
+
+  return Object.keys(modals).length > 0 ? modals : null;
 }
