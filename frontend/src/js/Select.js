@@ -41,17 +41,19 @@ export class Select {
   }
 
   getElements() {
-    if (this.select) {
-      this.button = this.select.querySelector(`.${this.classNames.button}`);
-      this.buttonText = this.select.querySelector(
-        `.${this.classNames.buttonText}`,
-      );
-      this.buttonArrow = this.select.querySelector(
-        `.${this.classNames.buttonArrow}`,
-      );
-      this.dropdown = this.select.querySelector(`.${this.classNames.dropdown}`);
-      this.options = this.select.querySelectorAll(`.${this.classNames.option}`);
+    if (!this.select) {
+      return;
     }
+
+    this.button = this.select.querySelector(`.${this.classNames.button}`);
+    this.buttonText = this.select.querySelector(
+      `.${this.classNames.buttonText}`,
+    );
+    this.buttonArrow = this.select.querySelector(
+      `.${this.classNames.buttonArrow}`,
+    );
+    this.dropdown = this.select.querySelector(`.${this.classNames.dropdown}`);
+    this.options = this.select.querySelectorAll(`.${this.classNames.option}`);
   }
 
   addEventsListeners() {
