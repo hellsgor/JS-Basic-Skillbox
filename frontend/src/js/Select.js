@@ -9,6 +9,8 @@ export class Select {
 
   callback = null;
 
+  documentClickHandler = null;
+
   selectClassName = 'select';
   classNames = {
     button: `${this.selectClassName}__item`,
@@ -34,6 +36,8 @@ export class Select {
 
     this.select = select || null;
     this.callback = callback || null;
+
+    this.documentClickHandler = this.hideDropdown.bind(this);
 
     this.getElements();
     this.addEventsListeners();
@@ -80,7 +84,7 @@ export class Select {
         `${this.selectClassName}_${this.modifiers.opened}`,
       )
     ) {
-      document.addEventListener('click', this.hideDropdown.bind(this));
+      document.addEventListener('click', this.documentClickHandler);
     }
 
     /**
@@ -92,7 +96,8 @@ export class Select {
         `${this.selectClassName}_${this.modifiers.opened}`,
       )
     ) {
-      this.select.removeEventListener('click', this.hideDropdown);
+      this.select.removeEventListener('click', this.documentClickHandler);
+      document.removeEventListener('click', this.documentClickHandler);
     }
   }
 
@@ -101,6 +106,7 @@ export class Select {
       this.select.classList.remove(
         `${this.selectClassName}_${this.modifiers.opened}`,
       );
+      document.removeEventListener('click', this.documentClickHandler);
     }
   }
 
