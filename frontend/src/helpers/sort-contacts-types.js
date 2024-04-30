@@ -16,5 +16,6 @@ export function sortContactsTypes() {
     .map((contactType) => ({
       sortIndex: contactType.sortIndex,
       text: contactType.text,
+      value: contactType.value,
     }));
 }

@@ -1,10 +1,13 @@
+import { CONTACTS } from '@/constants/contacts.js';
+import { createElement } from '@/helpers/create-element.js';
+
 export class Select {
   select = null;
   button = null;
   buttonText = null;
   buttonArrow = null;
   dropdown = null;
-  options = null;
+  options = [];
   selected = null;
 
   callback = null;
@@ -40,7 +43,7 @@ export class Select {
     dataSelectedValue: CONTACTS.ATTRS.dataSelectedTypeValue,
   };
 
-  constructor({ select, callback }) {
+  constructor({ select, options, callback }) {
     if (!select) {
       throw new Error(this.errors.noSelectElement);
     }
@@ -49,13 +52,15 @@ export class Select {
     }
 
     this.select = select || null;
+    this.optionsList = options || [];
     this.callback = callback || null;
 
     this.documentClickHandler = this.hideDropdown.bind(this);
 
     this.getElements();
+    this.createOptions();
+    this.doSelected({ target: this.options[0] });
     this.addEventsListeners();
-    this.doSelected(this.options[0]);
   }
 
   getElements() {
@@ -71,20 +76,13 @@ export class Select {
       `.${this.classNames.buttonArrow}`,
     );
     this.dropdown = this.select.querySelector(`.${this.classNames.dropdown}`);
-    this.options = this.select.querySelectorAll(`.${this.classNames.option}`);
   }
 
   addEventsListeners() {
     this.button.addEventListener('click', () => this.toggleDropdown());
-
-    this.options.forEach((option) => {
-      option.addEventListener('click', (event) =>
-        this.doSelected(event.target),
-      );
-    });
   }
 
-  toggleDropdown(action) {
+  toggleDropdown(action = null) {
     this.select.classList[action || 'toggle'](
       `${this.selectClassName}_${this.modifiers.opened}`,
     );
@@ -124,7 +122,7 @@ export class Select {
     }
   }
 
-  doSelected(target) {
+  doSelected({ target }) {
     this.toggleDropdown(this.actions.remove);
     this.options.forEach((option) => {
       option.classList.remove(
@@ -136,10 +134,33 @@ export class Select {
     );
     this.button.setAttribute(
       this.attrs.dataSelectedValue,
-      target.dataset.optionValue,
+      target.getAttribute(this.attrs.dataSelectedValue),
     );
     this.buttonText.innerText = target.textContent;
     this.callback && this.callback(this.button);
+  }
+
+  createOptions() {
+    this.optionsList.forEach((option) => {
+      const optionElement = createElement({
+        tag: 'li',
+        classes: 'select__option',
+        text: option.text,
+        attributes: [
+          {
+            name: `${CONTACTS.ATTRS.dataSelectedTypeValue}`,
+            value: option.value,
+          },
+        ],
+        event: 'click',
+        callback: (event) => this.doSelected(event),
+      });
+
+      this.options.push(optionElement);
+      this.dropdown.appendChild(optionElement);
+    });
+
+    this.optionsList = null;
   }
 
   // TODO: написать документацию в Select

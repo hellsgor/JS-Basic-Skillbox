@@ -2,6 +2,7 @@ import { cloneTemplate } from '@/helpers/clone-template.js';
 import { Select } from '@/js/Select.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import { PhoneMask } from '@/js/PhoneMask.js';
+import { sortContactsTypes } from '@/helpers/sort-contacts-types.js';
 
 /**
  * @description - Класс для управления контактом в модальном окне.
@@ -66,6 +67,7 @@ export class ModalContactControl {
   createContactSelect() {
     new Select({
       select: this.controlTemplate.querySelector('.select'),
+      options: sortContactsTypes(),
       callback: this.toggleContactType.bind(this),
     });
   }

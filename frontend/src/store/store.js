@@ -63,7 +63,6 @@ export const store = {
     classes: {
       button: CONTACTS.CLASS_NAMES.selectButton,
     },
-    options: Object.values(CONTACTS.TYPES),
   },
 
   modals: {
