@@ -24,9 +24,16 @@ export class Select {
     visible: 'visible',
   };
 
-  constructor(props) {
-    this.select = props.select || null;
-    this.callback = props.callback || null;
+  constructor({ select, callback }) {
+    if (!select) {
+      throw new Error('Не предоставлен элемент .select');
+    }
+    if (callback && typeof callback !== 'function') {
+      throw new Error('Callback должен быть функцией');
+    }
+
+    this.select = select || null;
+    this.callback = callback || null;
 
     this.getElements();
     this.addEventsListeners();
