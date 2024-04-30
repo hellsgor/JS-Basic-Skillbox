@@ -500,6 +500,9 @@ export class Form {
   }
 }
 
+/**
+ * @description Автоматически инициализирует формы на странице, помеченные data-атрибутом.
+ */
 export function autoInitForms() {
   document
     .querySelectorAll(`form[${FORMS.ATTRS.FORM_AUTO_INIT_DATA_ATTR}]`)
