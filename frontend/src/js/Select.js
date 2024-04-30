@@ -120,17 +120,9 @@ export class Select {
     target.classList.add(
       `${this.classNames.option}_${this.modifiers.selected}`,
     );
-    if (
-      target.dataset.optionValue !==
-      this.button.getAttribute('data-selected-value')
-    ) {
-      this.button.setAttribute(
-        'data-selected-value',
-        target.dataset.optionValue,
-      );
-      this.buttonText.innerText = target.textContent;
-      this.callback && this.callback(this.button);
-    }
+    this.button.setAttribute('data-selected-value', target.dataset.optionValue);
+    this.buttonText.innerText = target.textContent;
+    this.callback && this.callback(this.button);
   }
 
   // TODO: написать документацию в Select
