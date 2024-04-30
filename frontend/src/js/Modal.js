@@ -168,18 +168,15 @@ class Modal {
    * @description - Определяет элементы модального окна
    * */
   getModalElements() {
-    this.closeBtn = this.modal?.querySelector(`.${this.classNames.closeBtn}`);
+    this.closeBtn = this.modal.querySelector(`.${this.classNames.closeBtn}`);
     this.backdrop = document.querySelector(`.${this.classNames.backdrop}`);
-    this.title = this.modal?.querySelector(`.${this.classNames.title}`);
-
-    if (this.modal) {
-      this.id = this.modal.querySelector(`.${this.classNames.id}`);
-      this.idItem = this.modal.querySelector(`.${this.classNames.idItem}`);
-      this.description = this.modal.querySelector(
-        `.${this.classNames.description}`,
-      );
-      this.body = this.modal.querySelector(`.${this.classNames.body}`);
-    }
+    this.title = this.modal.querySelector(`.${this.classNames.title}`);
+    this.id = this.modal.querySelector(`.${this.classNames.id}`);
+    this.idItem = this.modal.querySelector(`.${this.classNames.idItem}`);
+    this.description = this.modal.querySelector(
+      `.${this.classNames.description}`,
+    );
+    this.body = this.modal.querySelector(`.${this.classNames.body}`);
   }
 
   /**
