@@ -152,16 +152,16 @@ class Modal {
     clientDataError: 'Ошибка получения данных клиента:',
   };
 
-  constructor(props) {
-    props = props || {};
-
+  constructor(props = {}) {
     this.modal = props.modal || null;
-    this.modalTemplate =
-      (props.modal && this.modal.getAttribute(this.attributes.modalTemplate)) ||
-      null;
+    this.modalTemplate = this.modal
+      ? this.modal.getAttribute(this.attributes.modalTemplate)
+      : null;
 
-    this.getModalElements();
-    this.addEvents();
+    if (this.modal) {
+      this.getModalElements();
+      this.addEvents();
+    }
   }
 
   /**
