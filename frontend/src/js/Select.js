@@ -26,12 +26,26 @@ export class Select {
     visible: 'visible',
   };
 
+  actions = {
+    remove: 'remove',
+    add: 'add',
+  };
+
+  errors = {
+    noSelectElement: 'Не передан элемент select',
+    isCallbackFunction: 'Callback должен быть функцией',
+  };
+
+  attrs = {
+    dataSelectedValue: CONTACTS.ATTRS.dataSelectedTypeValue,
+  };
+
   constructor({ select, callback }) {
     if (!select) {
-      throw new Error('Не предоставлен элемент .select');
+      throw new Error(this.errors.noSelectElement);
     }
     if (callback && typeof callback !== 'function') {
-      throw new Error('Callback должен быть функцией');
+      throw new Error(this.errors.isCallbackFunction);
     }
 
     this.select = select || null;
@@ -79,7 +93,7 @@ export class Select {
      * добавление слушателя события click вне select для закрытия dropdown
      * */
     if (
-      action === 'add' ||
+      action === this.actions.add ||
       this.select.classList.contains(
         `${this.selectClassName}_${this.modifiers.opened}`,
       )
@@ -91,7 +105,7 @@ export class Select {
      * удаление слушателя события click с документа при закрытии dropdown
      * */
     if (
-      action === 'remove' ||
+      action === this.actions.remove ||
       !this.select.classList.contains(
         `${this.selectClassName}_${this.modifiers.opened}`,
       )
@@ -111,7 +125,7 @@ export class Select {
   }
 
   doSelected(target) {
-    this.toggleDropdown('remove');
+    this.toggleDropdown(this.actions.remove);
     this.options.forEach((option) => {
       option.classList.remove(
         `${this.classNames.option}_${this.modifiers.selected}`,
@@ -120,11 +134,13 @@ export class Select {
     target.classList.add(
       `${this.classNames.option}_${this.modifiers.selected}`,
     );
-    this.button.setAttribute('data-selected-value', target.dataset.optionValue);
+    this.button.setAttribute(
+      this.attrs.dataSelectedValue,
+      target.dataset.optionValue,
+    );
     this.buttonText.innerText = target.textContent;
     this.callback && this.callback(this.button);
   }
 
   // TODO: написать документацию в Select
-  // TODO: вынести строки в Select
 }
