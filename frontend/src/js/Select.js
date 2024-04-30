@@ -67,7 +67,7 @@ export class Select {
   }
 
   toggleDropdown(action) {
-    this.select.classList[action ? action : 'toggle'](
+    this.select.classList[action || 'toggle'](
       `${this.selectClassName}_${this.modifiers.opened}`,
     );
 
