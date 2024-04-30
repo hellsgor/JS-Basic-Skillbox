@@ -102,7 +102,7 @@ export class Select {
   }
 
   hideDropdown(event) {
-    if (event.composedPath().includes(this.select) === false) {
+    if (!this.select.contains(event.target)) {
       this.select.classList.remove(
         `${this.selectClassName}_${this.modifiers.opened}`,
       );
