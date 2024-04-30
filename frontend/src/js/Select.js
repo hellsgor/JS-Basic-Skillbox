@@ -57,14 +57,12 @@ export class Select {
   }
 
   addEventsListeners() {
-    this.button.addEventListener('click', () => {
-      this.toggleDropdown();
-    });
+    this.button.addEventListener('click', () => this.toggleDropdown());
 
     this.options.forEach((option) => {
-      option.addEventListener('click', (event) => {
-        this.doSelected(event.target);
-      });
+      option.addEventListener('click', (event) =>
+        this.doSelected(event.target),
+      );
     });
   }
 
