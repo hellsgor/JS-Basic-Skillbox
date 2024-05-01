@@ -31,6 +31,7 @@ class ClientsTable {
   constructor(tBody) {
     this.tBody = tBody || null;
     this.getElements();
+    this.createPreloader();
   }
 
   /**
@@ -131,11 +132,23 @@ class ClientsTable {
     this.tBody.innerHTML = '';
   }
 
+  /**
+   * @description Удаляет всех клиентов.
+   * */
   removeAllClients() {
     this.clients.forEach((client) => {
       client.destroy();
     });
     this.clients = null;
+  }
+
+  /**
+   * @description Создает прелоадер и добавляет его внутрь элемента прелоадера.
+   * */
+  createPreloader() {
+    this.preloader.element
+      .querySelector(`.${this.preloader.className}-inner`)
+      .appendChild(preloader.create());
   }
 }
 

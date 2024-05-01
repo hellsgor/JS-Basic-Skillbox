@@ -1,20 +1,37 @@
 import { createElement } from '@/helpers/create-element.js';
 
+/**
+ * Представляет собой объект для управления прелоадером.
+ */
 export class Preloader {
   modifiers = {
     hidden: 'hidden',
   };
 
-  constructor() {}
-
+  /**
+   * @description Показывает прелоадер.
+   * @param {Object} options - Параметры для управления прелоадером.
+   * @param {HTMLElement} options.element - Элемент, в котором находится прелоадер.
+   * @param {string} options.className - СSS-класс элемента в котором находится прелоадер.
+   */
   show({ element, className }) {
     element.classList.remove(`${className}_${this.modifiers.hidden}`);
   }
 
+  /**
+   * @description Скрывает прелоадер.
+   * @param {Object} options - Параметры для управления прелоадером.
+   * @param {HTMLElement} options.element - Элемент, в котором находится прелоадер.
+   * @param {string} options.className - СSS-класс элемента в котором находится прелоадер.
+   * */
   hide({ element, className }) {
     element.classList.add(`${className}_${this.modifiers.hidden}`);
   }
 
+  /**
+   * @description Создает элемент прелоадера.
+   * @returns {HTMLElement} Элемент прелоадера.
+   */
   create() {
     return createElement({
       tag: 'div',
