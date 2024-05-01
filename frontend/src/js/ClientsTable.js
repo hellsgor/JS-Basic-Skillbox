@@ -1,13 +1,17 @@
 import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
 import { sortContactsTypes } from '@/helpers/sort-contacts-types.js';
+import { preloader } from '@/js/Preloader.js';
 
 /**
  * @description Класс для управления таблицей клиентов.
  * @param {Array || null} clients Список клиентов.
- * @param {HTMLTableSectionElement || null} tBody - Элемент tbody таблицы, в который будут добавляться клиенты.
+ * @param {HTMLTableSectionElement || null} tBody Элемент tbody таблицы, в который будут добавляться клиенты.
  * @param {Object || null} modals Модальные окна, используемые для клиентов.
  * @param {Array || null} sortedContactsTypes Отсортированные типы контактов.
+ * @param {Object} preloader Прелоадер для ClientsTable
+ * @param {HTMLElement | null} preloader.element Элемент прелоадера
+ * @param {string} preloader.className CSS-класс контейнера для прелоадера
  */
 class ClientsTable {
   clients = null;
@@ -15,12 +19,27 @@ class ClientsTable {
   modals = null;
   sortedContactsTypes = sortContactsTypes();
 
+  preloader = {
+    element: null,
+    className: 'clients__preloader',
+  };
+
   /**
    * @description Создает экземпляр таблицы клиентов.
    * @param {HTMLTableSectionElement} tBody - Элемент tbody таблицы, в который будут добавляться клиенты.
    */
   constructor(tBody) {
     this.tBody = tBody || null;
+    this.getElements();
+  }
+
+  /**
+   * @description Определяет элементы необходимые классу
+   * */
+  getElements() {
+    this.preloader.element = document.querySelector(
+      `.${this.preloader.className}`,
+    );
   }
 
   /**
@@ -29,6 +48,10 @@ class ClientsTable {
    * @returns {Promise<void>} - Промис, который разрешается после загрузки клиентов.
    */
   async initClients(modals = null) {
+    if (this.preloader.element) {
+      preloader.show(this.preloader);
+    }
+
     if (modals) {
       this.modals = modals;
     }
@@ -57,6 +80,10 @@ class ClientsTable {
     this.clients.forEach((client) => {
       this.renderClient(client);
     });
+
+    if (this.preloader.element) {
+      preloader.hide(this.preloader);
+    }
   }
 
   /**

@@ -1,16 +1,23 @@
 <section class="clients section">
   <div class="clients__wrapper section__container">
     <h2 class="clients__title section__title">Клиенты</h2>
-    <table class="clients__table">
-      <thead>
-      <tr>
-        {{#each this.tableHeadRowItems}}
-          {{> elements/head-cell this}}
-        {{/each}}
-      </tr>
-      </thead>
-      <tbody id="table-body"></tbody>
-    </table>
+    <div class="clients__inner">
+      <table class="clients__table">
+        <thead>
+        <tr>
+          {{#each this.tableHeadRowItems}}
+            {{> elements/head-cell this}}
+          {{/each}}
+        </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+      <div class="clients__preloader" id='clients-preloader'>
+        <div class="clients__preloader-inner">
+          {{> preloader}}
+        </div>
+      </div>
+    </div>
     {{> elements/button
       text='Добавить клиента'
       modifier='secondary'
