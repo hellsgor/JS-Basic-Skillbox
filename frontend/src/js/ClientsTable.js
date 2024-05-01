@@ -49,11 +49,16 @@ class ClientsTable {
    */
   async initClients(modals = null) {
     if (this.preloader.element) {
+      this.tBody.style = 'display: none;';
       preloader.show(this.preloader);
     }
 
-    if (modals) {
+    if (modals && !this.modals) {
       this.modals = modals;
+    }
+
+    if (this.clients) {
+      this.removeAllClients();
     }
 
     try {
@@ -83,6 +88,7 @@ class ClientsTable {
 
     if (this.preloader.element) {
       preloader.hide(this.preloader);
+      this.tBody.style = 'display: table-row-group';
     }
   }
 
@@ -123,6 +129,13 @@ class ClientsTable {
    */
   clearTable() {
     this.tBody.innerHTML = '';
+  }
+
+  removeAllClients() {
+    this.clients.forEach((client) => {
+      client.destroy();
+    });
+    this.clients = null;
   }
 }
 

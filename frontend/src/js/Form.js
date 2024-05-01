@@ -378,11 +378,9 @@ export class Form {
     }
 
     if (response.status === 200 || response.status === 201) {
-      clientsTable.removeClient(this.clientID);
-      if (response.data && response.data.id) {
-        clientsTable.addClient(response.data);
-      }
-      clientsTable.renderClients();
+      clientsTable.initClients().then(() => {
+        clientsTable.renderClients();
+      });
       this.callback && this.callback();
     }
   }
