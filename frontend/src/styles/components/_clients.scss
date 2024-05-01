@@ -1,7 +1,10 @@
 .clients {
+  &__inner {
+    margin-bottom: 40px;
+  }
+  
   &__table {
     width: 100%;
-    margin-bottom: 40px;
     border-collapse: collapse;
     
     th {
@@ -29,5 +32,23 @@
   
   &__add-button {
     margin: 0 auto;
+  }
+  
+  &__preloader {
+    display: flex;
+    width: 100%;
+    padding: 100px 0;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    
+    &-inner {
+      width: 100px;
+      height: 100px;
+    }
+    
+    &_hidden {
+      display: none;
+    }
   }
 }
