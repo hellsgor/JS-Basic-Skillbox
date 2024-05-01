@@ -2,6 +2,7 @@ import { createElement } from '@/helpers/create-element.js';
 import { Contact } from '@/js/Contact.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
+import { preloader } from '@/js/Preloader.js';
 
 /**
  * @description Класс, представляющий клиента.
@@ -31,17 +32,25 @@ export class Client {
    * @param {string[]} clientButton.text - Классы кнопки
    * @param {Function} clientButton.callback - Коллбэк для кнопки.
    * @param {string} clientButton.event - Имя события для запуска коллбэка.
+   *
+   * @param {Object} editButtonPreloader - Объект прелоадера для кнопки "Изменить".
+   * @param {HTMLElement} editButtonPreloader.element - Элемент-контейнер для прелоадера.
+   * @param {HTMLElement} editButtonPreloader.className - класс элемента-контейнера для прелоадера.
    */
 
   clientData = null;
   clientRow = null;
   sortedContactsTypes = null;
+  editButtonPreloader = {
+    element: null,
+    className: 'action-button__preloader',
+  };
   clientButtons = [
     {
-      text: 'Изменить',
       classes: ['action-button', 'action-button_change'],
       callback: this.editClient.bind(this),
       event: 'click',
+      html: '<span>Изменить</span><div class="action-button__preloader action-button__preloader_hidden"></div>',
     },
     {
       text: 'Удалить',
@@ -179,17 +188,22 @@ export class Client {
       classes: 'client__buttons-cell',
     });
 
-    this.clientButtons.forEach(({ classes, text, event, callback }, idx) => {
-      this.clientButtons[idx].domElement = createElement({
-        tag: 'button',
-        classes,
-        text,
-      });
+    this.clientButtons.forEach(
+      ({ classes, text = null, event, callback, html = null }, idx) => {
+        this.clientButtons[idx].domElement = createElement({
+          tag: 'button',
+          classes,
+          text,
+          html,
+          event,
+          callback,
+        });
 
-      this.clientButtons[idx].domElement.addEventListener(event, callback);
+        this.addEditButtonPreloader(this.clientButtons[idx].domElement);
 
-      actionsCell.appendChild(this.clientButtons[idx].domElement);
-    });
+        actionsCell.appendChild(this.clientButtons[idx].domElement);
+      },
+    );
     return actionsCell;
   }
 
@@ -212,8 +226,10 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Изменить".
    */
   editClient() {
+    preloader.show(this.editButtonPreloader);
     clientsApi.getClient({ id: this.clientData.id }).then((response) => {
       this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(response);
+      preloader.hide(this.editButtonPreloader);
     });
   }
 
@@ -275,5 +291,20 @@ export class Client {
     this.clientButtons = null;
 
     Object.setPrototypeOf(this, null);
+  }
+
+  /**
+   * @description Добавляет прелоадер в кнопку действия клиента при прохождении проверки.
+   * @param {HTMLElement} clientButtonElement Элемент кнопки действия клиента.
+   * */
+  addEditButtonPreloader(clientButtonElement) {
+    if (!clientButtonElement.classList.contains('action-button_change')) {
+      return;
+    }
+
+    this.editButtonPreloader.element = clientButtonElement.querySelector(
+      '.action-button__preloader',
+    );
+    this.editButtonPreloader.element.appendChild(preloader.create());
   }
 }
