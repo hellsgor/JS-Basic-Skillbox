@@ -10,62 +10,71 @@
     padding-right: 20px;
   }
   
-  span {
-    position: relative;
-    width: fit-content;
+  &__wrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+  }
+  
+  &__text {
     font-size: 12px;
     font-weight: 400;
     line-height: 16px;
+    white-space: nowrap;
     color: $txt-gray;
+  }
+  
+  &__arrow,
+  &__letters {
+    opacity: .7;
+  }
+  
+  &__arrow {
+    display: flex;
+    width: 12px;
+    height: 12px;
+    align-items: center;
+    justify-content: center;
+    background: url("/icons/sort-arrow.svg") no-repeat center;
+    background-size: 12px;
+  }
+  
+  &__letters {
+    display: flex;
+    align-items: baseline;
+    font-size: 10px;
+    font-weight: 600;
+    color: $firm;
     
-    &::before,
+    &::before {
+      content: 'А';
+    }
+    
     &::after {
-      position: absolute;
-      top: 50%;
-      opacity: .7;
-      transform: translateY(-50%);
+      content: 'Я';
     }
   }
   
   &_sortable {
-    & span {
+    .head-cell__wrapper {
       cursor: pointer;
-      
-      &::after {
-        right: -12px;
-        display: block;
-        width: 12px;
-        height: 12px;
-        background: url("/icons/sort-arrow.svg") no-repeat center;
-        background-size: 12px;
-        content: '';
-      }
     }
   }
   
-  &_sortable-string {
-    & span::before {
-      right: -32px;
-      width: fit-content;
-      color: $firm;
-      content: 'А-Я';
-    }
-  }
-  
-  &_reverse-sort {
-    & span::after {
+  &_reverse {
+    .head-cell__arrow {
       transform: rotate(180deg);
     }
   }
   
-  &_is-active-sort {
-    span {
+  &_active {
+    .head-cell__text {
       color: $firm;
-      
-      &::before,
-      &::after {
-        opacity: 1;
-      }
+    }
+    
+    .head-cell__arrow,
+    .head-cell__letters {
+      opacity: 1;
     }
   }
 }
