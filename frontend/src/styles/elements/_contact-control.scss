@@ -18,5 +18,9 @@
       font-weight: 400;
       color: $txt-gray;
     }
+    
+    &:disabled {
+      color: $txt-gray;
+    }
   }
 }

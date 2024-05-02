@@ -8,6 +8,7 @@ import { Form } from '@/js/Form.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import clientsApi from '@api/Clients-api.js';
+import { preloader } from '@/js/Preloader.js';
 
 /**
  * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -54,6 +55,8 @@ class Modal {
     contacts: MODALS.CLASS_NAMES.CONTACTS,
     addContactButton: MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON,
     actionButton: MODALS.CLASS_NAMES.ACTION_BUTTON,
+    actionButtonPreloader: MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER,
+    actionButtonText: MODALS.CLASS_NAMES.ACTION_BUTTON_TEXT,
     cancelButton: MODALS.CLASS_NAMES.CANCEL_BUTTON,
     contact: MODALS.CLASS_NAMES.CONTACT,
     errorsWrapper: MODALS.CLASS_NAMES.ERRORS_WRAPPER,
@@ -62,7 +65,9 @@ class Modal {
   };
 
   /**
-   * @param modalTemplate - data-атрибут для хранения идентификатора шаблона модельного окна
+   * @param attributes - data-атрибуты используемые в модальном окне
+   * @param attributes.modalTemplate - data-атрибут для хранения идентификатора шаблона модельного окна
+   * @param attributes.isNeedOpenEditModal - data-атрибут, фактически флаг, свидетельствующий о необходимости открыть окно редактирования при закрытии окна удаления клиента
    */
   attributes = {
     modalTemplate: MODALS.ATTRS.MODAL_TEMPLATE,
@@ -432,8 +437,8 @@ class Modal {
     const cancelButton = buttonsContainer.querySelector(
       `.${this.classNames.cancelButton}`,
     );
-    const actionButton = buttonsContainer.querySelector(
-      `.${this.classNames.actionButton}`,
+    const actionButton = this.addActionButtonPreloader(
+      buttonsContainer.querySelector(`.${this.classNames.actionButton}`),
     );
 
     this.setButtonsTexts(actionButton, cancelButton);
@@ -478,6 +483,7 @@ class Modal {
         this.formInstance = new Form({
           form: this.form,
           submitButton: actionButton,
+          cancelButton,
           errorsWrapper: this.modal.querySelector(
             `.${this.classNames.errorsWrapper}`,
           ),
@@ -560,25 +566,48 @@ class Modal {
    * @param {HTMLButtonElement} cancelButton - Элемент кнопки отмены.
    */
   setButtonsTexts(actionButton, cancelButton) {
+    const actionButtonText = actionButton.querySelector(
+      `.${this.classNames.actionButtonText}`,
+    );
     switch (this.modalTemplate) {
       case this.modalTemplatesList.newClient:
-        actionButton.innerText = this.strings.buttons.save;
+        actionButtonText.innerText = this.strings.buttons.save;
         cancelButton.innerText = this.strings.buttons.cancel;
         break;
 
       case this.modalTemplatesList.editClient:
-        actionButton.innerText = this.strings.buttons.save;
+        actionButtonText.innerText = this.strings.buttons.save;
         cancelButton.innerText = this.strings.buttons.delete;
         break;
 
       case this.modalTemplatesList.delete:
-        actionButton.innerText = this.strings.buttons.deleteSmall;
+        actionButtonText.innerText = this.strings.buttons.deleteSmall;
         cancelButton.innerText = this.strings.buttons.cancel;
         break;
 
       default:
         break;
     }
+  }
+
+  /**
+   * @description Добавляет прелоадер к кнопке действия.
+   * @param {HTMLElement} actionButton - Элемент кнопки действия.
+   * @returns {HTMLElement} - Элемент кнопки действия с прелоадером.
+   */
+  addActionButtonPreloader(actionButton) {
+    const preloaderContainer = createElement({
+      tag: 'div',
+      classes: [
+        this.classNames.actionButtonPreloader,
+        `${this.classNames.actionButtonPreloader}${this.modifiers.hidden}`,
+      ],
+    });
+
+    preloaderContainer.appendChild(preloader.create(true));
+
+    actionButton.appendChild(preloaderContainer);
+    return actionButton;
   }
 }
 
