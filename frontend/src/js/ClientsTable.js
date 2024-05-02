@@ -102,30 +102,6 @@ class ClientsTable {
   }
 
   /**
-   * @description Добавляет нового клиента в список.
-   * @param {Object} clientData - Данные нового клиента.
-   */
-  addClient(clientData) {
-    this.clients.push(
-      new Client(clientData, this.modals, this.sortedContactsTypes),
-    );
-  }
-
-  /**
-   * @description Удаляет клиента из списка.
-   * @param {string || null} clientID - Идентификатор клиента для удаления.
-   */
-  removeClient(clientID) {
-    const indexToRemove = this.clients.findIndex(
-      (client) => client.clientData.id === clientID,
-    );
-    if (indexToRemove !== -1) {
-      this.clients[indexToRemove].destroy();
-      this.clients.splice(indexToRemove, 1);
-    }
-  }
-
-  /**
    * @description Очищает таблицу.
    */
   clearTable() {
