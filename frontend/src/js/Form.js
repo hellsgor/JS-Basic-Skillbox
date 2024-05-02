@@ -9,6 +9,7 @@ import { clientsTable } from '@/js/ClientsTable.js';
 import clientsApi from '@api/Clients-api.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import { SELECTS } from '@/constants/selects.js';
+import { preloader } from '@/js/Preloader.js';
 
 export class Form {
   form = null;
@@ -79,12 +80,14 @@ export class Form {
     this.resetErrors();
     this.getControls();
 
+    this.showSubmitButtonPreloader();
     this.setControlsAvailability(true);
 
     if (this.validation()) {
       this.submitForm();
     } else {
       this.setControlsAvailability(false);
+      this.hideSubmitButtonPreloader();
     }
   }
 
@@ -388,6 +391,7 @@ export class Form {
 
     if (response.response && response.response.data.errors.length) {
       this.setControlsAvailability(false);
+      this.hideSubmitButtonPreloader();
       this.processingResponseErrors(response);
     }
 
@@ -542,6 +546,36 @@ export class Form {
 
     this.submitButton[method]('disabled', 'true');
     this.cancelButton[method]('disabled', 'true');
+  }
+
+  /**
+   * @description Показывает прелоадер на кнопке отправки формы.
+   */
+  showSubmitButtonPreloader() {
+    preloader.show({
+      element: this.submitButton.querySelector(
+        `.${MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER}`,
+      ),
+      className: MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER,
+    });
+    this.submitButton.querySelector(
+      `.${MODALS.CLASS_NAMES.ACTION_BUTTON_TEXT}`,
+    ).style = 'display: none';
+  }
+
+  /**
+   * @description Скрывает прелоадер на кнопке отправки формы.
+   */
+  hideSubmitButtonPreloader() {
+    preloader.hide({
+      element: this.submitButton.querySelector(
+        `.${MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER}`,
+      ),
+      className: MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER,
+    });
+    this.submitButton
+      .querySelector(`.${MODALS.CLASS_NAMES.ACTION_BUTTON_TEXT}`)
+      .removeAttribute('style');
   }
 }
 
