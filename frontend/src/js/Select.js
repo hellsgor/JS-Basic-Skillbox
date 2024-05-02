@@ -1,5 +1,5 @@
-import { CONTACTS } from '@/constants/contacts.js';
 import { createElement } from '@/helpers/create-element.js';
+import { SELECTS } from '@/constants/selects.js';
 
 /**
  * Представляет собой пользовательский компонент select.
@@ -35,19 +35,19 @@ export class Select {
 
   documentClickHandler = null;
 
-  selectClassName = 'select';
   classNames = {
-    button: `${this.selectClassName}__item`,
-    buttonText: `${this.selectClassName}__item-text`,
-    buttonArrow: `${this.selectClassName}__item-arrow`,
-    dropdown: `${this.selectClassName}__dropdown`,
-    option: `${this.selectClassName}__option`,
+    select: SELECTS.CLASS_NAMES.SELECT,
+    button: SELECTS.CLASS_NAMES.BUTTON,
+    buttonText: SELECTS.CLASS_NAMES.BUTTON_TEXT,
+    buttonArrow: SELECTS.CLASS_NAMES.BUTTON_ARROW,
+    dropdown: SELECTS.CLASS_NAMES.DROPDOWN,
+    option: SELECTS.CLASS_NAMES.OPTION,
   };
 
   modifiers = {
-    opened: 'opened',
-    selected: 'selected',
-    visible: 'visible',
+    opened: SELECTS.MODIFIERS.OPENED,
+    selected: SELECTS.MODIFIERS.SELECTED,
+    visible: SELECTS.MODIFIERS.VISIBLE,
   };
 
   actions = {
@@ -61,7 +61,7 @@ export class Select {
   };
 
   attrs = {
-    dataSelectedValue: CONTACTS.ATTRS.dataSelectedTypeValue,
+    dataSelectedValue: SELECTS.ATTRS.DATA_SELECTED_TYPE_VALUE,
   };
 
   /**
@@ -125,7 +125,7 @@ export class Select {
    */
   toggleDropdown(action = null) {
     this.select.classList[action || 'toggle'](
-      `${this.selectClassName}_${this.modifiers.opened}`,
+      `${this.classNames.select}_${this.modifiers.opened}`,
     );
 
     /**
@@ -134,7 +134,7 @@ export class Select {
     if (
       action === this.actions.add ||
       this.select.classList.contains(
-        `${this.selectClassName}_${this.modifiers.opened}`,
+        `${this.classNames.select}_${this.modifiers.opened}`,
       )
     ) {
       document.addEventListener('click', this.documentClickHandler);
@@ -146,7 +146,7 @@ export class Select {
     if (
       action === this.actions.remove ||
       !this.select.classList.contains(
-        `${this.selectClassName}_${this.modifiers.opened}`,
+        `${this.classNames.select}_${this.modifiers.opened}`,
       )
     ) {
       this.select.removeEventListener('click', this.documentClickHandler);
@@ -161,7 +161,7 @@ export class Select {
   hideDropdown(event) {
     if (!this.select.contains(event.target)) {
       this.select.classList.remove(
-        `${this.selectClassName}_${this.modifiers.opened}`,
+        `${this.classNames.select}_${this.modifiers.opened}`,
       );
       document.removeEventListener('click', this.documentClickHandler);
     }
@@ -202,7 +202,7 @@ export class Select {
         text: option.text,
         attributes: [
           {
-            name: `${CONTACTS.ATTRS.dataSelectedTypeValue}`,
+            name: `${this.attrs.dataSelectedValue}`,
             value: option.value,
           },
         ],

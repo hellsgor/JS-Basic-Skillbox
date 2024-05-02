@@ -1,3 +1,5 @@
+import { MODALS } from '@/constants/modals.js';
+
 export const FORMS = {
   ATTRS: {
     FORM_AUTO_INIT_DATA_ATTR: 'data-form-auto-init',
@@ -7,11 +9,12 @@ export const FORMS = {
   },
 
   CLASS_NAMES: {
-    MODAL_CONTACT: 'modal__contact',
-    MODAL_CONTACT_WITH_ERROR: 'modal__contact_with-error',
-    MODAL_ERROR: 'modal__error',
+    MODAL_CONTACT: MODALS.CLASS_NAMES.CONTACT,
+    MODAL_CONTACT_WITH_ERROR: `${MODALS.CLASS_NAMES.CONTACT}_with-error`,
+    MODAL_ERROR: MODALS.CLASS_NAMES.ERROR,
     FORM_CONTROL_INPUT: 'form-control__input',
     FORM_CONTROL_INPUT_INVALID: 'form-control__input_invalid',
+    MODAL_CONTACT_TYPE_SELECT: MODALS.CLASS_NAMES.CONTACT_TYPE_SELECT,
   },
 
   CLIENT_OBJECT_CONTACTS_PROPERTY_NAME: 'contacts',

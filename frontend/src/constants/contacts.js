@@ -1,3 +1,6 @@
+import { SELECTS } from '@/constants/selects.js';
+import { MODALS } from '@/constants/modals.js';
+
 export const CONTACTS = {
   TYPES: {
     EMAIL: {
@@ -45,13 +48,13 @@ export const CONTACTS = {
   },
   CLASS_NAMES: {
     input: 'contact-control__input',
-    selectButton: 'select__item',
-    selectButtonText: 'select__item-text',
+    selectButton: SELECTS.CLASS_NAMES.BUTTON,
+    selectButtonText: SELECTS.CLASS_NAMES.BUTTON_TEXT,
     deleteButton: 'delete-contact-btn',
-    parentClass: 'modal__contact',
+    parentClass: MODALS.CLASS_NAMES.CONTACT,
   },
   ATTRS: {
-    dataSelectedTypeValue: 'data-selected-value',
+    dataSelectedTypeValue: SELECTS.ATTRS.DATA_SELECTED_TYPE_VALUE,
     dataContactControlId: 'data-contact-control-id',
   },
 };
