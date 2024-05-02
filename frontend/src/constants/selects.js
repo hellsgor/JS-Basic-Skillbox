@@ -14,6 +14,7 @@ export const SELECTS = {
     OPENED: 'opened',
     SELECTED: 'selected',
     VISIBLE: 'visible',
+    DISABLED: 'disabled',
   },
 
   ATTRS: {

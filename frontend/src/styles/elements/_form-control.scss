@@ -43,6 +43,11 @@
       }
     }
     
+    &:disabled {
+      background-color: transparent;
+      color: $txt-gray;
+    }
+    
     &_invalid {
       border-bottom-color: $invalid-control-border;
     }

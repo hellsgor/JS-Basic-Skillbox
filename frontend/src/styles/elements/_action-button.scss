@@ -43,6 +43,11 @@
         color: $firm;
       }
     }
+    
+    &:disabled {
+      color: $txt-gray;
+      cursor: not-allowed;
+    }
   }
   
   &_change {

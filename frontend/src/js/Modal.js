@@ -478,6 +478,7 @@ class Modal {
         this.formInstance = new Form({
           form: this.form,
           submitButton: actionButton,
+          cancelButton,
           errorsWrapper: this.modal.querySelector(
             `.${this.classNames.errorsWrapper}`,
           ),

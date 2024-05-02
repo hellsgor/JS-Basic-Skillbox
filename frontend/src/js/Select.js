@@ -192,7 +192,6 @@ export class Select {
 
   /**
    * @description Создает элементы списка для дропдауна.
-   * @private
    */
   createOptions() {
     this.optionsList.forEach((option) => {

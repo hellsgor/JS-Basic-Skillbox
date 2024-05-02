@@ -51,6 +51,7 @@ export const MODALS = {
     CANCEL_BUTTON: `${MODAL_CLASS_NAME}__cancel-button`,
     CONTACT: `${MODAL_CLASS_NAME}__contact`,
     CONTACT_TYPE_SELECT: `${MODAL_CLASS_NAME}__contact-type`,
+    CONTACT_DELETE_BUTTON: `${MODAL_CLASS_NAME}__delete-contact-btn`,
     ERRORS_WRAPPER: `${MODAL_CLASS_NAME}__errors`,
     ERROR: `${MODAL_CLASS_NAME}__error`,
     FORM_CONTROLS: `${MODAL_CLASS_NAME}__form-controls`,

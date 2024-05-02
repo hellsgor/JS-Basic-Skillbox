@@ -7,6 +7,8 @@ import { clearPhoneNumber } from '@/helpers/clearPhoneNumber.js';
 import { createElement } from '@/helpers/create-element.js';
 import { clientsTable } from '@/js/ClientsTable.js';
 import clientsApi from '@api/Clients-api.js';
+import { CONTACTS } from '@/constants/contacts.js';
+import { SELECTS } from '@/constants/selects.js';
 
 export class Form {
   form = null;
@@ -21,6 +23,7 @@ export class Form {
   classNames = {
     modalContact: FORMS.CLASS_NAMES.MODAL_CONTACT,
     modalContactWithError: FORMS.CLASS_NAMES.MODAL_CONTACT_WITH_ERROR,
+    modalContactType: FORMS.CLASS_NAMES.MODAL_CONTACT_TYPE_SELECT,
     formControlInput: FORMS.CLASS_NAMES.FORM_CONTROL_INPUT,
     formControlInputInvalid: FORMS.CLASS_NAMES.FORM_CONTROL_INPUT_INVALID,
     modalError: FORMS.CLASS_NAMES.MODAL_ERROR,
@@ -47,17 +50,20 @@ export class Form {
 
   /**
    * @description - Создаёт экземпляр класса Form
-   * @param {Object || null} props - объект передаваемых в конструктор свойств
-   * @param {HTMLFormElement || null} props.form - элемент формы
-   * @param {HTMLElement || null} props.submitButton - элемент отправляющий форму
-   * @param {HTMLDivElement || null} props.errorsWrapper - элемент в котором будут выведены ошибки при валидации
-   * @param {string || null} props.clientID - id клиента
-   * @param {string || null} props.modalTemplate - шаблон модального окна для идентификации метода API
-   * @returns {Form} экземпляр класса Form
+   * @param {Object} props - Объект передаваемых в конструктор свойств.
+   * @param {HTMLFormElement} props.form - Элемент формы.
+   * @param {HTMLElement} props.submitButton - Элемент, отправляющий форму.
+   * @param {HTMLElement} [props.cancelButton] - Элемент, отменяющий отправку формы (опционально).
+   * @param {HTMLDivElement} props.errorsWrapper - Элемент, в котором будут выведены ошибки при валидации.
+   * @param {Object} props.client - Объект с информацией о клиенте.
+   * @param {string} props.clientID - ID клиента.
+   * @param {string} props.modalTemplate - Шаблон модального окна для идентификации метода API.
+   * @param {Function} [props.callback] - Функция обратного вызова (опционально).
    */
   constructor(props) {
     this.form = props?.form || null;
     this.submitButton = props?.submitButton || null;
+    this.cancelButton = props?.cancelButton || null;
     this.errorsWrapper = props?.errorsWrapper || null;
     this.clientID = props?.client?.id || null;
     this.modalTemplate = props?.modalTemplate || null;
@@ -73,8 +79,12 @@ export class Form {
     this.resetErrors();
     this.getControls();
 
+    this.setControlsAvailability(true);
+
     if (this.validation()) {
       this.submitForm();
+    } else {
+      this.setControlsAvailability(false);
     }
   }
 
@@ -377,6 +387,7 @@ export class Form {
     // );
 
     if (response.response && response.response.data.errors.length) {
+      this.setControlsAvailability(false);
       this.processingResponseErrors(response);
     }
 
@@ -498,6 +509,39 @@ export class Form {
       ).find((errorElement) => errorElement.textContent === errorMessage);
       contactsErrorElement && contactsErrorElement.remove();
     }
+  }
+
+  /**
+   * @description Устанавливает доступность элементов управления формой.
+   * @param {boolean} isMakeDisabled - Флаг, указывающий на необходимость сделать элементы управления неактивными.
+   */
+  setControlsAvailability(isMakeDisabled) {
+    const method = isMakeDisabled ? 'setAttribute' : 'removeAttribute';
+
+    this.controls.forEach((control) => {
+      control[method]('disabled', 'true');
+
+      if (control.classList.contains(CONTACTS.CLASS_NAMES.input)) {
+        const contactControl = control.closest(
+          `.${this.classNames.modalContact}`,
+        );
+        contactControl
+          .querySelector(`.${SELECTS.CLASS_NAMES.BUTTON}`)
+          [method]('disabled', 'true');
+        contactControl
+          .querySelector(`.${MODALS.CLASS_NAMES.CONTACT_DELETE_BUTTON}`)
+          [method]('disabled', 'true');
+      }
+    });
+
+    if (this.form.querySelector(`.${MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON}`)) {
+      this.form
+        .querySelector(`.${MODALS.CLASS_NAMES.ADD_CONTACT_BUTTON}`)
+        [method]('disabled', 'true');
+    }
+
+    this.submitButton[method]('disabled', 'true');
+    this.cancelButton[method]('disabled', 'true');
   }
 }
 
