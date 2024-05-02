@@ -11,9 +11,11 @@ import { preloaderInstance } from './Preloader.js';
  * @param {HTMLTableSectionElement || null} tBody Элемент tbody таблицы, в который будут добавляться клиенты.
  * @param {Object || null} modals Модальные окна, используемые для клиентов.
  * @param {Array || null} sortedContactsTypes Отсортированные типы контактов.
- * @param {Object} preloader Прелоадер для ClientsTable
- * @param {HTMLElement | null} preloader.element Элемент прелоадера
- * @param {string} preloader.className CSS-класс контейнера для прелоадера
+ * @param {Object} preloader Прелоадер для ClientsTable.
+ * @param {HTMLElement | null} preloader.element Элемент прелоадера.
+ * @param {string} preloader.className CSS-класс контейнера для прелоадера.
+ * @param {Object} classNames CSS-классы элементов таблицы.
+ * @param {string} defaultSortedCellId - ID ячейки, по которой будут отсортированы клиенты при загрузке страницы.
  */
 class ClientsTable {
   clients = null;
@@ -28,6 +30,13 @@ class ClientsTable {
     className: 'clients__preloader',
   };
 
+  classNames = {
+    sortableHeadCells: 'head-cell_sortable',
+    activeSortableHeadCell: 'head-cell_active',
+  };
+
+  defaultSortedCellId = 'head-row-id';
+
   /**
    * @description Создает экземпляр таблицы клиентов.
    * @param {HTMLTableSectionElement} table - Элемент таблицы.
@@ -35,6 +44,7 @@ class ClientsTable {
   constructor(table) {
     this.table = table || null;
     this.getElements();
+    this.setDefaultSortedCell();
     this.createPreloader();
   }
 
@@ -135,6 +145,18 @@ class ClientsTable {
     this.preloader.element
       .querySelector(`.${this.preloader.className}-inner`)
       .appendChild(preloaderInstance.create());
+  }
+
+  /**
+   * @description Устанавливает класс активной сортировки на ячейку, по которой должна выполняться сортировка при загрузке страницы.
+   * */
+  setDefaultSortedCell() {
+    this.sortingCells.forEach((cell) => {
+      if (cell.id === this.defaultSortedCellId) {
+        cell.classList.add(this.classNames.activeSortableHeadCell);
+        return;
+      }
+    });
   }
 }
 
