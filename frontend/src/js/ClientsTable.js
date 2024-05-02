@@ -6,6 +6,8 @@ import { preloaderInstance } from './Preloader.js';
 /**
  * @description Класс для управления таблицей клиентов.
  * @param {Array || null} clients Список клиентов.
+ * @param {HTMLTableElement | null} table Элемент таблицы клиентов.
+ * @param {HTMLTableCellElement[] | null} sortingCells Сортируемые ячейки.
  * @param {HTMLTableSectionElement || null} tBody Элемент tbody таблицы, в который будут добавляться клиенты.
  * @param {Object || null} modals Модальные окна, используемые для клиентов.
  * @param {Array || null} sortedContactsTypes Отсортированные типы контактов.
@@ -15,6 +17,8 @@ import { preloaderInstance } from './Preloader.js';
  */
 class ClientsTable {
   clients = null;
+  table = null;
+  sortingCells = null;
   tBody = null;
   modals = null;
   sortedContactsTypes = sortContactsTypes();
@@ -26,10 +30,10 @@ class ClientsTable {
 
   /**
    * @description Создает экземпляр таблицы клиентов.
-   * @param {HTMLTableSectionElement} tBody - Элемент tbody таблицы, в который будут добавляться клиенты.
+   * @param {HTMLTableSectionElement} table - Элемент таблицы.
    */
-  constructor(tBody) {
-    this.tBody = tBody || null;
+  constructor(table) {
+    this.table = table || null;
     this.getElements();
     this.createPreloader();
   }
@@ -38,6 +42,12 @@ class ClientsTable {
    * @description Определяет элементы необходимые классу
    * */
   getElements() {
+    this.tBody = this.table.querySelector('#table-body');
+    this.sortingCells = Array.from(
+      this.table
+        .querySelector('thead')
+        .querySelectorAll(`.${this.classNames.sortableHeadCells}`),
+    );
     this.preloader.element = document.querySelector(
       `.${this.preloader.className}`,
     );
@@ -58,7 +68,7 @@ class ClientsTable {
       this.modals = modals;
     }
 
-    if (this.clients) {
+    if (this.clients && this.clients.length) {
       this.removeAllClients();
     }
 
@@ -129,5 +139,5 @@ class ClientsTable {
 }
 
 export const clientsTable = new ClientsTable(
-  document.getElementById('table-body'),
+  document.querySelector('.clients__table'),
 );
