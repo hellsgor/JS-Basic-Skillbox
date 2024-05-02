@@ -370,10 +370,10 @@ export class Form {
    * @param response - объект ответа сервера (Axios)
    * */
   processingResponse(response) {
-    // console.log('Статус ответа сервера:', response.status);
     // console.log('Ответ', response);
+    // console.log('Статус ответа сервера:', response.response.status);
 
-    if (response.error) {
+    if (response.response.data.errors.length) {
       this.processingResponseErrors(response);
     }
 
@@ -406,9 +406,9 @@ export class Form {
    */
   handleNetworkError(response) {
     if (
-      response.error.code === 'ERR_NETWORK' ||
-      response.error.response.status === 404 ||
-      response.error.response.status >= 500
+      response.code === 'ERR_NETWORK' ||
+      response.response.status === 404 ||
+      response.response.status >= 500
     ) {
       this.showError(ERRORS.EF003());
       return true;
@@ -422,8 +422,8 @@ export class Form {
    * @returns {boolean} Возвращает true, если есть ошибки валидации, иначе false.
    */
   handleValidationErrors(response) {
-    if (response.error.response.status === 422) {
-      response.error.response.data.errors.forEach((error) => {
+    if (response.response.status === 422) {
+      response.response.data.errors.forEach((error) => {
         if (error.field !== FORMS.CLIENT_OBJECT_CONTACTS_PROPERTY_NAME) {
           this.handleControlError(error);
         } else {
