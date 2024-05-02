@@ -33,6 +33,7 @@ class ClientsApi {
       return response;
     } catch (error) {
       this.handleError(error);
+      return error;
     }
   }
 
@@ -45,6 +46,7 @@ class ClientsApi {
       return response;
     } catch (error) {
       this.handleError(error);
+      return error;
     }
   }
 
@@ -54,12 +56,12 @@ class ClientsApi {
       return response;
     } catch (error) {
       this.handleError(error);
+      return error;
     }
   }
 
   handleError(error) {
     console.error(`Невозможно выполнить операцию из-за ошибки: ${error}`);
-    throw error;
   }
 }
 
