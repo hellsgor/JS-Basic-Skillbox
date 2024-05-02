@@ -35,7 +35,7 @@ class ClientsTable {
     activeSortableHeadCell: 'head-cell_active',
   };
 
-  defaultSortedCellId = 'head-row-id';
+  defaultSortedCellId = 'head-col-id';
 
   /**
    * @description Создает экземпляр таблицы клиентов.
