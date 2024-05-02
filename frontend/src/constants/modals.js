@@ -48,6 +48,8 @@ export const MODALS = {
     CONTACTS: `${MODAL_CLASS_NAME}__contacts`,
     ADD_CONTACT_BUTTON: `${MODAL_CLASS_NAME}__add-contact-button`,
     ACTION_BUTTON: `${MODAL_CLASS_NAME}__action-button`,
+    ACTION_BUTTON_PRELOADER: `${MODAL_CLASS_NAME}__action-button-preloader`,
+    ACTION_BUTTON_TEXT: 'button__text',
     CANCEL_BUTTON: `${MODAL_CLASS_NAME}__cancel-button`,
     CONTACT: `${MODAL_CLASS_NAME}__contact`,
     CONTACT_TYPE_SELECT: `${MODAL_CLASS_NAME}__contact-type`,

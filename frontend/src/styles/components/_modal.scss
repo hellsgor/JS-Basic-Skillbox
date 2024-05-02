@@ -174,4 +174,13 @@
     align-items: center;
     row-gap: 5px;
   }
+  
+  &__action-button-preloader {
+    width: 19px;
+    height: 19px;
+    
+    &_hidden {
+      display: none;
+    }
+  }
 }
