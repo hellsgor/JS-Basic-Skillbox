@@ -91,6 +91,8 @@ class ClientsTable {
       console.error('Ошибка при загрузке клиентов:', error);
       this.clients = [];
     }
+
+    console.log(this.getActiveSortingCell());
   }
 
   /**
@@ -148,15 +150,27 @@ class ClientsTable {
   }
 
   /**
+   * @description Находит ячейку с активной сортировкой.
+   * @return {HTMLTableCellElement} Ячейка с активной сортировкой.
+   * */
+  getActiveSortingCell() {
+    return this.sortingCells.find((cell) =>
+      cell.classList.contains(this.classNames.activeSortableHeadCell),
+    );
+  }
+
+  /**
    * @description Устанавливает класс активной сортировки на ячейку, по которой должна выполняться сортировка при загрузке страницы.
    * */
   setDefaultSortedCell() {
-    this.sortingCells.forEach((cell) => {
-      if (cell.id === this.defaultSortedCellId) {
-        cell.classList.add(this.classNames.activeSortableHeadCell);
-        return;
+    for (let i = 0; i <= this.sortingCells.length; i++) {
+      if (this.sortingCells[i].id === this.defaultSortedCellId) {
+        this.sortingCells[i].classList.add(
+          this.classNames.activeSortableHeadCell,
+        );
+        break;
       }
-    });
+    }
   }
 }
 
