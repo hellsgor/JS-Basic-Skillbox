@@ -9,7 +9,7 @@ import { clientsTable } from '@/js/ClientsTable.js';
 import clientsApi from '@api/Clients-api.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import { SELECTS } from '@/constants/selects.js';
-import { preloader } from '@/js/Preloader.js';
+import { preloaderInstance } from '@/js/Preloader.js';
 
 export class Form {
   form = null;
@@ -552,7 +552,7 @@ export class Form {
    * @description Показывает прелоадер на кнопке отправки формы.
    */
   showSubmitButtonPreloader() {
-    preloader.show({
+    preloaderInstance.show({
       element: this.submitButton.querySelector(
         `.${MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER}`,
       ),
@@ -567,7 +567,7 @@ export class Form {
    * @description Скрывает прелоадер на кнопке отправки формы.
    */
   hideSubmitButtonPreloader() {
-    preloader.hide({
+    preloaderInstance.hide({
       element: this.submitButton.querySelector(
         `.${MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER}`,
       ),

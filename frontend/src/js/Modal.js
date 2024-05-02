@@ -8,7 +8,7 @@ import { Form } from '@/js/Form.js';
 import { ModalContactControl } from '@/js/ModalContactControl.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import clientsApi from '@api/Clients-api.js';
-import { preloader } from '@/js/Preloader.js';
+import { preloaderInstance } from '@/js/Preloader.js';
 
 /**
  * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -604,7 +604,7 @@ class Modal {
       ],
     });
 
-    preloaderContainer.appendChild(preloader.create(true));
+    preloaderContainer.appendChild(preloaderInstance.create(true));
 
     actionButton.appendChild(preloaderContainer);
     return actionButton;

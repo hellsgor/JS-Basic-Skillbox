@@ -2,7 +2,7 @@ import { createElement } from '@/helpers/create-element.js';
 import { Contact } from '@/js/Contact.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
-import { preloader } from '@/js/Preloader.js';
+import { preloaderInstance } from '@/js/Preloader.js';
 
 /**
  * @description Класс, представляющий клиента.
@@ -226,10 +226,10 @@ export class Client {
    * @description Обрабатывает нажатие на кнопку "Изменить".
    */
   editClient() {
-    preloader.show(this.editButtonPreloader);
+    preloaderInstance.show(this.editButtonPreloader);
     clientsApi.getClient({ id: this.clientData.id }).then((response) => {
       this.modals[MODALS.TEMPLATES.EDIT_CLIENT].showModal(response);
-      preloader.hide(this.editButtonPreloader);
+      preloaderInstance.hide(this.editButtonPreloader);
     });
   }
 
@@ -305,6 +305,6 @@ export class Client {
     this.editButtonPreloader.element = clientButtonElement.querySelector(
       '.action-button__preloader',
     );
-    this.editButtonPreloader.element.appendChild(preloader.create());
+    this.editButtonPreloader.element.appendChild(preloaderInstance.create());
   }
 }

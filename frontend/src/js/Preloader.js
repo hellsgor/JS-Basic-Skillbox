@@ -53,4 +53,4 @@ export class Preloader {
   }
 }
 
-export const preloader = new Preloader();
+export const preloaderInstance = new Preloader();

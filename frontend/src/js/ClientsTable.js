@@ -1,7 +1,7 @@
 import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
 import { sortContactsTypes } from '@/helpers/sort-contacts-types.js';
-import { preloader } from '@/js/Preloader.js';
+import { preloaderInstance } from './Preloader.js';
 
 /**
  * @description Класс для управления таблицей клиентов.
@@ -51,7 +51,7 @@ class ClientsTable {
   async initClients(modals = null) {
     if (this.preloader.element) {
       this.tBody.style = 'display: none;';
-      preloader.show(this.preloader);
+      preloaderInstance.show(this.preloader);
     }
 
     if (modals && !this.modals) {
@@ -88,7 +88,7 @@ class ClientsTable {
     });
 
     if (this.preloader.element) {
-      preloader.hide(this.preloader);
+      preloaderInstance.hide(this.preloader);
       this.tBody.style = 'display: table-row-group';
     }
   }
@@ -148,7 +148,7 @@ class ClientsTable {
   createPreloader() {
     this.preloader.element
       .querySelector(`.${this.preloader.className}-inner`)
-      .appendChild(preloader.create());
+      .appendChild(preloaderInstance.create());
   }
 }
 
