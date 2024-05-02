@@ -1,4 +1,4 @@
-import { MODALS } from '@/constants/modals.js';
+import { MODALS } from './modals.js';
 
 export const FORMS = {
   ATTRS: {

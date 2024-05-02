@@ -1,5 +1,5 @@
-import { SELECTS } from '@/constants/selects.js';
-import { MODALS } from '@/constants/modals.js';
+import { SELECTS } from './selects.js';
+import { MODALS } from './modals.js';
 
 export const CONTACTS = {
   TYPES: {
