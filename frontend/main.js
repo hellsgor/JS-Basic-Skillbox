@@ -5,19 +5,19 @@ import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
 import { callModalFromModal } from '@/helpers/call-modal-from-modal.js';
 
-const addClientButton = document.getElementById('add-client-button');
-const backdrop = document.getElementById('backdrop');
 const modals = initModals();
+
+hideLoader();
 
 await clientsTable.initClients(modals).then(() => clientsTable.renderClients());
 
-addClientButton.addEventListener('click', () => {
+document.getElementById('add-client-button').addEventListener('click', () => {
   modals[MODALS.TEMPLATES.NEW_CLIENT].showModal();
 });
 
 addModalsSwitchListeners();
 
-backdrop.addEventListener('click', () => {
+document.getElementById('backdrop').addEventListener('click', () => {
   Object.keys(modals).forEach((modalName) => {
     if (
       modals[modalName].modal.classList.contains(
@@ -66,4 +66,13 @@ function addModalSwitchListener(fromTemplate, toTemplate, eventType) {
       client: event.detail,
     });
   });
+}
+
+/**
+ * @description Скрывает прелоадер для страницы и показывает header и main
+ * */
+function hideLoader() {
+  document.querySelector('.loader').style = 'display: none;';
+  document.querySelector('header.header').removeAttribute('style');
+  document.querySelector('main').removeAttribute('style');
 }
