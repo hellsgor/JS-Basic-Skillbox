@@ -371,9 +371,12 @@ export class Form {
    * */
   processingResponse(response) {
     // console.log('Ответ', response);
-    // console.log('Статус ответа сервера:', response.response.status);
+    // console.log(
+    //   'Статус ответа сервера:',
+    //   response.status || response.response.status,
+    // );
 
-    if (response.response.data.errors.length) {
+    if (response.response && response.response.data.errors.length) {
       this.processingResponseErrors(response);
     }
 
