@@ -1,0 +1,25 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  display: flex;
+  width: 100dvw;
+  height: 100dvh;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader__image {
+  width: 200px;
+  height: 200px;
+  animation: spin .8s linear infinite;
+}
+
+.loader svg {
+  width: 100%;
+  height: 100%;
+  stroke: #9873ff;
+}

@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+  <link href="./src/styles/components/loader.css" rel="stylesheet">
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>CRM</title>
   <script defer src="./main.js" type="module"></script>
 </head>
 <body>
 {{> header}}
-<main>
+<main style="display: none">
   {{> clients this }}
   {{> modal template='new-client'}}
   {{> modal template='edit-client'}}
   {{> modal template='delete-client'}}
   {{> elements/backdrop }}
 </main>
+{{> loader}}
 {{> modal-templates this}}
 {{> elements/icon}}
 </body>
