@@ -16,6 +16,8 @@ import { preloaderInstance } from './Preloader.js';
  * @param {string} preloader.className CSS-класс контейнера для прелоадера.
  * @param {Object} classNames CSS-классы элементов таблицы.
  * @param {string} defaultSortedCellId - ID ячейки, по которой будут отсортированы клиенты при загрузке страницы.
+ * @param {Object} attrs - атрибуты.
+ * @param {string} attrs.dataSortName - data-атрибут определяющий способ сортировки клиентов.
  */
 class ClientsTable {
   clients = null;
@@ -31,11 +33,17 @@ class ClientsTable {
   };
 
   classNames = {
-    sortableHeadCells: 'head-cell_sortable',
+    headCell: 'head-cell',
+    sortableHeadCell: 'head-cell_sortable',
     activeSortableHeadCell: 'head-cell_active',
+    reverseSort: 'head-cell_reverse',
   };
 
   defaultSortedCellId = 'head-col-id';
+
+  attrs = {
+    dataSortName: 'data-sort-name',
+  };
 
   /**
    * @description Создает экземпляр таблицы клиентов.
@@ -46,6 +54,7 @@ class ClientsTable {
     this.getElements();
     this.setDefaultSortedCell();
     this.createPreloader();
+    this.addListeners();
   }
 
   /**
@@ -56,7 +65,7 @@ class ClientsTable {
     this.sortingCells = Array.from(
       this.table
         .querySelector('thead')
-        .querySelectorAll(`.${this.classNames.sortableHeadCells}`),
+        .querySelectorAll(`.${this.classNames.sortableHeadCell}`),
     );
     this.preloader.element = document.querySelector(
       `.${this.preloader.className}`,
@@ -91,8 +100,6 @@ class ClientsTable {
       console.error('Ошибка при загрузке клиентов:', error);
       this.clients = [];
     }
-
-    console.log(this.getActiveSortingCell());
   }
 
   /**
@@ -105,6 +112,8 @@ class ClientsTable {
     }
 
     this.clearTable();
+    this.sortClients(this.getSortingSigns());
+
     this.clients.forEach((client) => {
       this.renderClient(client);
     });
@@ -150,20 +159,28 @@ class ClientsTable {
   }
 
   /**
-   * @description Находит ячейку с активной сортировкой.
-   * @return {HTMLTableCellElement} Ячейка с активной сортировкой.
-   * */
-  getActiveSortingCell() {
-    return this.sortingCells.find((cell) =>
+   * @description Получает информацию о текущем состоянии сортировки таблицы.
+   * @returns {Object} Объект с информацией о сортировке.
+   * @property {string} activeSortingCellAttribute - Атрибут сортировки активной ячейки.
+   * @property {boolean} reverse - Флаг обратной сортировки.
+   */
+  getSortingSigns() {
+    const activeHeadCell = this.sortingCells.find((cell) =>
       cell.classList.contains(this.classNames.activeSortableHeadCell),
     );
+
+    return {
+      activeSortingCellAttribute:
+        activeHeadCell.getAttribute(this.attrs.dataSortName) || null,
+      reverse: activeHeadCell.classList.contains(this.classNames.reverseSort),
+    };
   }
 
   /**
    * @description Устанавливает класс активной сортировки на ячейку, по которой должна выполняться сортировка при загрузке страницы.
    * */
   setDefaultSortedCell() {
-    for (let i = 0; i <= this.sortingCells.length; i++) {
+    for (let i = 0; i < this.sortingCells.length; i++) {
       if (this.sortingCells[i].id === this.defaultSortedCellId) {
         this.sortingCells[i].classList.add(
           this.classNames.activeSortableHeadCell,
@@ -171,6 +188,92 @@ class ClientsTable {
         break;
       }
     }
+  }
+
+  /**
+   * @description Устанавливает класс активной сортировки на ячейку таблицы при клике на неё.
+   * Если ячейка уже была активной, изменяет направление сортировки.
+   * @param {HTMLElement} target - Целевой элемент события клика на ячейку таблицы.
+   */
+  setSortedCell({ target }) {
+    const targetHeadCell = target.closest(`.${this.classNames.headCell}`);
+
+    this.sortingCells.forEach((cell) => {
+      if (targetHeadCell === cell) return;
+
+      cell.classList.remove(
+        this.classNames.activeSortableHeadCell,
+        this.classNames.reverseSort,
+      );
+    });
+
+    if (
+      targetHeadCell.classList.contains(this.classNames.activeSortableHeadCell)
+    ) {
+      targetHeadCell.classList.toggle(this.classNames.reverseSort);
+    } else {
+      targetHeadCell.classList.add(this.classNames.activeSortableHeadCell);
+    }
+
+    this.renderClients();
+  }
+
+  /**
+   * @description Сортирует массив клиентов в соответствии с выбранным атрибутом сортировки и направлением сортировки.
+   * @param {Object} options - Параметры сортировки.
+   * @param {string} options.activeSortingCellAttribute - Атрибут сортировки активной ячейки.
+   * @param {boolean} options.reverse - Флаг обратной сортировки.
+   */
+  sortClients({ activeSortingCellAttribute, reverse }) {
+    if (!activeSortingCellAttribute) {
+      this.setDefaultSortedCell();
+    }
+
+    /**
+     * @description Извлекает соответствующее свойство из объекта clientData.
+     * @param {Client} client - Объект клиента.
+     * @param {string} property - Атрибут для извлечения из clientData.
+     * @returns {string|number} - Значение свойства.
+     */
+    const getClientDataProperty = (client, property) => {
+      switch (property) {
+        case 'name':
+          return `${client.clientData.surname} ${client.clientData.name} ${client.clientData.lastName}`;
+
+        case 'create':
+          return Date.parse(client.clientData.createdAt);
+
+        case 'change':
+          return Date.parse(client.clientData.updatedAt);
+
+        default:
+          return Number(client.clientData.id);
+      }
+    };
+
+    this.clients.sort((a, b) => {
+      const propA = getClientDataProperty(a, activeSortingCellAttribute);
+      const propB = getClientDataProperty(b, activeSortingCellAttribute);
+
+      if (propB === propA) {
+        return 0;
+      }
+      if (reverse) {
+        return propB > propA ? 1 : -1;
+      } else {
+        return propA > propB ? 1 : -1;
+      }
+    });
+  }
+
+  /**
+   * @description Добавляет слушатели событий клика на сортируемые ячейки таблицы.
+   * При клике на ячейку вызывает метод setSortedCell для установки класса активной сортировки и изменения направления сортировки.
+   */
+  addListeners() {
+    this.sortingCells.forEach((cell) => {
+      cell.addEventListener('click', this.setSortedCell.bind(this));
+    });
   }
 }
 
