@@ -198,6 +198,10 @@ class Modal {
   showModal(client = null) {
     this.fillModal(client);
 
+    if (client) {
+      this.setHash(client.id);
+    }
+
     this.modal.classList.remove(
       `${this.classNames.modal}${this.modifiers.hidden}`,
     );
@@ -252,6 +256,7 @@ class Modal {
           `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
         );
 
+        this.removeHash();
         this.clearModal();
         this.destroyForm();
       },
@@ -608,6 +613,21 @@ class Modal {
 
     actionButton.appendChild(preloaderContainer);
     return actionButton;
+  }
+
+  /**
+   * @description Устанавливает хэш в адресной строке браузера.
+   * @param {string} clientId - Идентификатор клиента, который будет установлен в качестве хэша.
+   */
+  setHash(clientId) {
+    window.location.hash = clientId;
+  }
+
+  /**
+   * @description Удаляет хэш из адресной строки браузера.
+   */
+  removeHash() {
+    history.replaceState(null, null, ' ');
   }
 }
 
