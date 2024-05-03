@@ -4,7 +4,9 @@ import { autoInitForms } from '@/js/Form.js';
 import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
 import { callModalFromModal } from '@/helpers/call-modal-from-modal.js';
+import { addBackdropClickListener } from '@/helpers/add-backdrop-click-listener.js';
 import { openClientEditModalIfHashExists } from '@/helpers/open-client-edit-modal-if-hash-exists.js';
+import { handleAddClientButtonClick } from '@/helpers/handle-add-client-button-click.js';
 
 const modals = initModals();
 
@@ -12,25 +14,9 @@ hideLoader();
 
 await clientsTable.initClients(modals).then(() => clientsTable.renderClients());
 
-document.getElementById('add-client-button').addEventListener('click', () => {
-  modals[MODALS.TEMPLATES.NEW_CLIENT].showModal();
-});
-
+handleAddClientButtonClick(modals);
 addModalsSwitchListeners();
-
-document.getElementById('backdrop').addEventListener('click', () => {
-  Object.keys(modals).forEach((modalName) => {
-    if (
-      modals[modalName].modal.classList.contains(
-        `${MODALS.CLASS_NAMES.MODAL_CLASS_NAME}${MODALS.MODIFIERS.HIDDEN}`,
-      )
-    ) {
-      return;
-    }
-    modals[modalName].closeModal();
-  });
-});
-
+addBackdropClickListener(modals);
 autoInitForms();
 openClientEditModalIfHashExists(modals);
 
