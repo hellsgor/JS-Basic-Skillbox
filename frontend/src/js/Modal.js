@@ -198,7 +198,7 @@ class Modal {
   showModal(client = null) {
     this.fillModal(client);
 
-    if (client) {
+    if (client && this.modalTemplate === this.modalTemplatesList.editClient) {
       this.setHash(client.id);
     }
 
