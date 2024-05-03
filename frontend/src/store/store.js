@@ -10,7 +10,7 @@ export const store = {
     },
     {
       name: 'Фамилия Имя Отчество',
-      idLastPart: 'full-name',
+      idLastPart: 'name',
       isSortable: true,
       isString: true,
     },
