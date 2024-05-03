@@ -4,6 +4,7 @@ import { autoInitForms } from '@/js/Form.js';
 import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
 import { callModalFromModal } from '@/helpers/call-modal-from-modal.js';
+import { openClientEditModalIfHashExists } from '@/helpers/open-client-edit-modal-if-hash-exists.js';
 
 const modals = initModals();
 
@@ -31,6 +32,7 @@ document.getElementById('backdrop').addEventListener('click', () => {
 });
 
 autoInitForms();
+openClientEditModalIfHashExists(modals);
 
 // --------------------------- конец основного кода ---------------------------
 
