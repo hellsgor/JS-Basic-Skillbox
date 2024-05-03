@@ -7,11 +7,10 @@ export const store = {
       name: 'ID',
       idLastPart: 'id',
       isSortable: true,
-      isSortActive: true,
     },
     {
       name: 'Фамилия Имя Отчество',
-      idLastPart: 'full-name',
+      idLastPart: 'name',
       isSortable: true,
       isString: true,
     },

@@ -8,23 +8,23 @@
     border-collapse: collapse;
     
     th {
-      &[id="head-row-id"] {
+      &[id="head-col-id"] {
         width: 62px;
       }
       
-      &[id="head-row-create"] {
+      &[id="head-col-create"] {
         width: 175px;
       }
       
-      &[id="head-row-change"] {
+      &[id="head-col-change"] {
         width: 173px;
       }
       
-      &[id="head-row-contacts"] {
+      &[id="head-col-contacts"] {
         width: 148px;
       }
       
-      &[id="head-row-actions"] {
+      &[id="head-col-actions"] {
         width: 207px;
       }
     }
