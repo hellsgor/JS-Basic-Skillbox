@@ -196,6 +196,7 @@ class Modal {
    * @param {Object} client - Объект с информацией о клиенте
    * */
   showModal(client = null) {
+    this.togglePointerEventValue('none');
     this.fillModal(client);
 
     if (client && this.modalTemplate === this.modalTemplatesList.editClient) {
@@ -223,10 +224,11 @@ class Modal {
         this.backdrop.classList.remove(
           `${this.classNames.backdrop}${this.modifiers.fadeIn}`,
         );
+        this.togglePointerEventValue('auto');
       },
       convertTimeStringToMilliseconds(
         window.getComputedStyle(this.modal).animationDuration,
-      ),
+      ) + 1,
     );
   }
 
@@ -246,14 +248,8 @@ class Modal {
         this.modal.classList.add(
           `${this.classNames.modal}${this.modifiers.hidden}`,
         );
-        this.modal.classList.remove(
-          `${this.classNames.modal}${this.modifiers.fadeOut}`,
-        );
         this.backdrop.classList.add(
           `${this.classNames.backdrop}${this.modifiers.hidden}`,
-        );
-        this.backdrop.classList.remove(
-          `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
         );
 
         this.removeHash();
@@ -263,6 +259,19 @@ class Modal {
       convertTimeStringToMilliseconds(
         window.getComputedStyle(this.modal).animationDuration,
       ),
+    );
+    setTimeout(
+      () => {
+        this.modal.classList.remove(
+          `${this.classNames.modal}${this.modifiers.fadeOut}`,
+        );
+        this.backdrop.classList.remove(
+          `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
+        );
+      },
+      convertTimeStringToMilliseconds(
+        window.getComputedStyle(this.modal).animationDuration,
+      ) + 5,
     );
   }
 
@@ -628,6 +637,15 @@ class Modal {
    */
   removeHash() {
     history.replaceState(null, null, ' ');
+  }
+
+  /**
+   * @description Устанавливает значение свойства pointer-events для модального окна и его подложки.
+   * @param {string} value Значение свойства pointer-events, например, "none" или "auto".
+   */
+  togglePointerEventValue(value) {
+    this.modal.style = `pointer-events: ${value};`;
+    this.backdrop.style = `pointer-events: ${value};`;
   }
 }
 
