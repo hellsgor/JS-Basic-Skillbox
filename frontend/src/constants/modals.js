@@ -39,7 +39,7 @@ export const MODALS = {
 
   CLASS_NAMES: {
     MODAL_CLASS_NAME: MODAL_CLASS_NAME,
-    CLOSE_BTN: `${MODAL_CLASS_NAME}__close-btn`,
+    CLOSE_BTN: `${MODAL_CLASS_NAME}__close-button`,
     TITLE: `${MODAL_CLASS_NAME}__title`,
     ID: `${MODAL_CLASS_NAME}__id`,
     ID_ITEM: `${MODAL_CLASS_NAME}__id-item`,

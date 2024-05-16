@@ -64,34 +64,12 @@
     }
   }
   
-  &__close-btn {
+  &__close-button {
     position: absolute;
     top: 15px;
     right: 15px;
-    display: flex;
     width: 29px;
     height: 29px;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    
-    svg {
-      width: 20.5px;
-      height: 20.5px;
-      
-      path {
-        transition: fill .3s ease-in-out;
-        fill: $txt-gray;
-      }
-    }
-    
-    @media(hover: hover) {
-      &:hover {
-        svg path {
-          fill: $black;
-        }
-      }
-    }
   }
   
   &__form-controls {
