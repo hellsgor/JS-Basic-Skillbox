@@ -1,3 +1,5 @@
+import { debouncer } from '@/js/Debouncer.js';
+
 class Search {
   searchComponent = null;
   control = null;
@@ -5,6 +7,7 @@ class Search {
   classNames = {
     control: 'liner-control__input',
   };
+  controlInputHandler = debouncer.debounce(this.getSearchResult, 300);
 
   constructor(searchComponent) {
     this.searchComponent = searchComponent || null;
@@ -22,9 +25,11 @@ class Search {
   }
 
   addListeners() {
-    this.control.addEventListener('input', (event) => {
-      console.log(event.target.value);
-    });
+    this.control.addEventListener('input', this.controlInputHandler);
+  }
+
+  getSearchResult({ target }) {
+    console.log(target.value);
   }
 }
 
