@@ -1,6 +1,5 @@
 import clientsApi from '@api/clients-api.js';
 import { Client } from '@/js/Client.js';
-import { sortContactsTypes } from '@/helpers/sort-contacts-types.js';
 import { preloaderInstance } from './Preloader.js';
 
 /**
@@ -25,7 +24,6 @@ class ClientsTable {
   sortingCells = null;
   tBody = null;
   modals = null;
-  sortedContactsTypes = sortContactsTypes();
 
   preloader = {
     element: null,
@@ -96,7 +94,7 @@ class ClientsTable {
         ? await getClientsCallback.call(clientsApi, ...callbackArgs)
         : await clientsApi.getClients();
       this.clients = response.map((clientData) => {
-        return new Client(clientData, this.modals, this.sortedContactsTypes);
+        return new Client(clientData, this.modals);
       });
     } catch (error) {
       console.error('Ошибка при загрузке клиентов:', error);
