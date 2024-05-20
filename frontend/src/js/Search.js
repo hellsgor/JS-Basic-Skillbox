@@ -18,6 +18,7 @@ class Search {
     this.controlInputHandlerMethod.bind(this),
     this.timeout,
   );
+  searchNoResultButtonClickHandler = this.resetSearchValue.bind(this);
 
   constructor(searchComponent) {
     this.$searchComponent = searchComponent || null;
@@ -37,6 +38,10 @@ class Search {
 
   addListeners() {
     this.$control.addEventListener('input', this.controlInputHandler);
+    this.searchNoResult.$button.addEventListener(
+      'click',
+      this.searchNoResultButtonClickHandler,
+    );
   }
 
   controlInputHandlerMethod({ target }) {
@@ -72,6 +77,11 @@ class Search {
       `Клиенты по запросу "${query}" не найдены. Попробуйте другой запрос`,
       'Сбросить поиск',
     );
+  }
+
+  resetSearchValue() {
+    this.$control.value = '';
+    this.$control.dispatchEvent(new Event('input'));
   }
 }
 
