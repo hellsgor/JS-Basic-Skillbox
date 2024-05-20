@@ -1,11 +1,7 @@
 <section class="modal modal_hidden"
   data-modal-template="{{template}}"
 >
-  <div class="modal__close-btn">
-    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M16.2333 1.73333L15.2666 0.766664L8.49991 7.53336L1.73324 0.766696L0.766576 1.73336L7.53324 8.50003L0.766603 15.2667L1.73327 16.2333L8.49991 9.46669L15.2666 16.2334L16.2332 15.2667L9.46657 8.50003L16.2333 1.73333Z" />
-    </svg>
-  </div>
+  {{> elements/close-button classes='modal__close-button'}}
   <div class="modal__title-row">
     <h3 class="modal__title"></h3>
     <div class="modal__id modal__id_hidden">

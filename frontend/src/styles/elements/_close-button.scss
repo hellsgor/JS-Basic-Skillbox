@@ -1,0 +1,16 @@
+.close-button {
+  display: flex;
+  opacity: .6;
+  align-items: center;
+  justify-content: center;
+  background: url('/icons/cross.svg') no-repeat center;
+  background-size: 21px;
+  cursor: pointer;
+  transition: opacity .2s ease-in-out;
+  
+  @media(hover: hover) {
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

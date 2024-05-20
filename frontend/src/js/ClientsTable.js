@@ -77,10 +77,10 @@ class ClientsTable {
    * @param {Object} [modals=null] - Модальные окна, используемые для клиентов.
    * @returns {Promise<void>} - Промис, который разрешается после загрузки клиентов.
    */
-  async initClients(modals = null) {
+  async initClients(modals = null, getClientsCallback = null, ...callbackArgs) {
     if (this.preloader.element) {
-      this.tBody.style = 'display: none;';
-      preloaderInstance.show(this.preloader);
+      this.hideTbody();
+      this.showPreloader();
     }
 
     if (modals && !this.modals) {
@@ -92,7 +92,9 @@ class ClientsTable {
     }
 
     try {
-      const response = await clientsApi.getClients();
+      const response = getClientsCallback
+        ? await getClientsCallback.call(clientsApi, ...callbackArgs)
+        : await clientsApi.getClients();
       this.clients = response.map((clientData) => {
         return new Client(clientData, this.modals, this.sortedContactsTypes);
       });
@@ -119,8 +121,8 @@ class ClientsTable {
     });
 
     if (this.preloader.element) {
-      preloaderInstance.hide(this.preloader);
-      this.tBody.style = 'display: table-row-group';
+      this.hidePreloader();
+      this.showTbody();
     }
   }
 
@@ -274,6 +276,22 @@ class ClientsTable {
     this.sortingCells.forEach((cell) => {
       cell.addEventListener('click', this.setSortedCell.bind(this));
     });
+  }
+
+  hideTbody() {
+    this.tBody.style = 'display: none;';
+  }
+
+  showPreloader() {
+    preloaderInstance.show(this.preloader);
+  }
+
+  hidePreloader() {
+    preloaderInstance.hide(this.preloader);
+  }
+
+  showTbody() {
+    this.tBody.style = 'display: table-row-group';
   }
 }
 

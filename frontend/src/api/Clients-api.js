@@ -60,6 +60,18 @@ class ClientsApi {
     }
   }
 
+  async searchClients({ searchString }) {
+    try {
+      const response = await this.api.get(this.resource, {
+        params: { search: searchString },
+      });
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+      return error;
+    }
+  }
+
   handleError(error) {
     console.error(`Невозможно выполнить операцию из-за ошибки: ${error}`);
   }

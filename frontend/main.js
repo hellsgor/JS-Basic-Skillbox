@@ -7,6 +7,7 @@ import { callModalFromModal } from '@/helpers/call-modal-from-modal.js';
 import { addBackdropClickListener } from '@/helpers/add-backdrop-click-listener.js';
 import { openClientEditModalIfHashExists } from '@/helpers/open-client-edit-modal-if-hash-exists.js';
 import { handleAddClientButtonClick } from '@/helpers/handle-add-client-button-click.js';
+import { search } from '@/js/Search.js';
 
 const modals = initModals();
 
@@ -19,6 +20,8 @@ addModalsSwitchListeners();
 addBackdropClickListener(modals);
 autoInitForms();
 openClientEditModalIfHashExists(modals);
+
+search.init();
 
 // --------------------------- конец основного кода ---------------------------
 
