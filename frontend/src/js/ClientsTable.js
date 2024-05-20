@@ -4,19 +4,22 @@ import { preloaderInstance } from './Preloader.js';
 
 /**
  * @description Класс для управления таблицей клиентов.
- * @param {Array || null} clients Список клиентов.
- * @param {HTMLTableElement | null} table Элемент таблицы клиентов.
- * @param {HTMLTableCellElement[] | null} sortingCells Сортируемые ячейки.
- * @param {HTMLTableSectionElement || null} tBody Элемент tbody таблицы, в который будут добавляться клиенты.
- * @param {Object || null} modals Модальные окна, используемые для клиентов.
- * @param {Array || null} sortedContactsTypes Отсортированные типы контактов.
- * @param {Object} preloader Прелоадер для ClientsTable.
- * @param {HTMLElement | null} preloader.element Элемент прелоадера.
- * @param {string} preloader.className CSS-класс контейнера для прелоадера.
- * @param {Object} classNames CSS-классы элементов таблицы.
- * @param {string} defaultSortedCellId - ID ячейки, по которой будут отсортированы клиенты при загрузке страницы.
- * @param {Object} attrs - атрибуты.
- * @param {string} attrs.dataSortName - data-атрибут определяющий способ сортировки клиентов.
+ * @property {Array<Client> | null} clients Список клиентов.
+ * @property {HTMLTableElement | null} table Элемент таблицы клиентов.
+ * @property {HTMLTableCellElement[] | null} sortingCells Сортируемые ячейки.
+ * @property {HTMLTableSectionElement | null} tBody Элемент tbody таблицы, в который будут добавляться клиенты.
+ * @property {Object | null} modals Модальные окна, используемые для клиентов.
+ * @property {Object} preloader Прелоадер для ClientsTable.
+ * @property {HTMLElement | null} preloader.element Элемент прелоадера.
+ * @property {string} preloader.className CSS-класс контейнера для прелоадера.
+ * @property {Object} classNames CSS-классы элементов таблицы.
+ * @property {string} classNames.headCell CSS-класс ячейки заголовка.
+ * @property {string} classNames.sortableHeadCell CSS-класс сортируемой ячейки заголовка.
+ * @property {string} classNames.activeSortableHeadCell CSS-класс активной сортируемой ячейки заголовка.
+ * @property {string} classNames.reverseSort CSS-класс для обратной сортировки.
+ * @property {string} defaultSortedCellId ID ячейки, по которой будут отсортированы клиенты при загрузке страницы.
+ * @property {Object} attrs Атрибуты.
+ * @property {string} attrs.dataSortName data-атрибут, определяющий способ сортировки клиентов.
  */
 class ClientsTable {
   clients = null;
@@ -45,7 +48,7 @@ class ClientsTable {
 
   /**
    * @description Создает экземпляр таблицы клиентов.
-   * @param {HTMLTableSectionElement} table - Элемент таблицы.
+   * @param {HTMLTableElement} table - Элемент таблицы.
    */
   constructor(table) {
     this.table = table || null;
@@ -56,8 +59,8 @@ class ClientsTable {
   }
 
   /**
-   * @description Определяет элементы необходимые классу
-   * */
+   * @description Определяет элементы, необходимые классу.
+   */
   getElements() {
     this.tBody = this.table.querySelector('#table-body');
     this.sortingCells = Array.from(
@@ -73,6 +76,8 @@ class ClientsTable {
   /**
    * @description Инициализирует список клиентов.
    * @param {Object} [modals=null] - Модальные окна, используемые для клиентов.
+   * @param {Function} [getClientsCallback=null] - Функция для получения списка клиентов. Если не указана, используется clientsApi.getClients().
+   * @param {...any} callbackArgs - Аргументы для функции getClientsCallback.
    * @returns {Promise<void>} - Промис, который разрешается после загрузки клиентов.
    */
   async initClients(modals = null, getClientsCallback = null, ...callbackArgs) {
@@ -93,9 +98,9 @@ class ClientsTable {
       const response = getClientsCallback
         ? await getClientsCallback.call(clientsApi, ...callbackArgs)
         : await clientsApi.getClients();
-      this.clients = response.map((clientData) => {
-        return new Client(clientData, this.modals);
-      });
+      this.clients = response.map(
+        (clientData) => new Client(clientData, this.modals),
+      );
     } catch (error) {
       console.error('Ошибка при загрузке клиентов:', error);
       this.clients = [];
@@ -141,17 +146,15 @@ class ClientsTable {
 
   /**
    * @description Удаляет всех клиентов.
-   * */
+   */
   removeAllClients() {
-    this.clients.forEach((client) => {
-      client.destroy();
-    });
+    this.clients.forEach((client) => client.destroy());
     this.clients = null;
   }
 
   /**
    * @description Создает прелоадер и добавляет его внутрь элемента прелоадера.
-   * */
+   */
   createPreloader() {
     this.preloader.element
       .querySelector(`.${this.preloader.className}-inner`)
@@ -171,14 +174,16 @@ class ClientsTable {
 
     return {
       activeSortingCellAttribute:
-        activeHeadCell.getAttribute(this.attrs.dataSortName) || null,
-      reverse: activeHeadCell.classList.contains(this.classNames.reverseSort),
+        activeHeadCell?.getAttribute(this.attrs.dataSortName) || null,
+      reverse:
+        activeHeadCell?.classList.contains(this.classNames.reverseSort) ||
+        false,
     };
   }
 
   /**
    * @description Устанавливает класс активной сортировки на ячейку, по которой должна выполняться сортировка при загрузке страницы.
-   * */
+   */
   setDefaultSortedCell() {
     for (let i = 0; i < this.sortingCells.length; i++) {
       if (this.sortingCells[i].id === this.defaultSortedCellId) {
@@ -193,18 +198,18 @@ class ClientsTable {
   /**
    * @description Устанавливает класс активной сортировки на ячейку таблицы при клике на неё.
    * Если ячейка уже была активной, изменяет направление сортировки.
-   * @param {HTMLElement} target - Целевой элемент события клика на ячейку таблицы.
+   * @param {Event} event - Событие клика на ячейку таблицы.
    */
-  setSortedCell({ target }) {
-    const targetHeadCell = target.closest(`.${this.classNames.headCell}`);
+  setSortedCell(event) {
+    const targetHeadCell = event.target.closest(`.${this.classNames.headCell}`);
 
     this.sortingCells.forEach((cell) => {
-      if (targetHeadCell === cell) return;
-
-      cell.classList.remove(
-        this.classNames.activeSortableHeadCell,
-        this.classNames.reverseSort,
-      );
+      if (targetHeadCell !== cell) {
+        cell.classList.remove(
+          this.classNames.activeSortableHeadCell,
+          this.classNames.reverseSort,
+        );
+      }
     });
 
     if (
@@ -239,13 +244,10 @@ class ClientsTable {
       switch (property) {
         case 'name':
           return `${client.clientData.surname} ${client.clientData.name} ${client.clientData.lastName}`;
-
         case 'create':
           return Date.parse(client.clientData.createdAt);
-
         case 'change':
           return Date.parse(client.clientData.updatedAt);
-
         default:
           return Number(client.clientData.id);
       }
@@ -258,11 +260,7 @@ class ClientsTable {
       if (propB === propA) {
         return 0;
       }
-      if (reverse) {
-        return propB > propA ? 1 : -1;
-      } else {
-        return propA > propB ? 1 : -1;
-      }
+      return reverse ? (propB > propA ? 1 : -1) : propA > propB ? 1 : -1;
     });
   }
 
@@ -276,20 +274,32 @@ class ClientsTable {
     });
   }
 
+  /**
+   * @description Скрывает элемент tbody.
+   */
   hideTbody() {
-    this.tBody.style = 'display: none;';
+    this.tBody.style.display = 'none';
   }
 
+  /**
+   * @description Отображает прелоадер.
+   */
   showPreloader() {
     preloaderInstance.show(this.preloader);
   }
 
+  /**
+   * @description Скрывает прелоадер.
+   */
   hidePreloader() {
     preloaderInstance.hide(this.preloader);
   }
 
+  /**
+   * @description Отображает элемент tbody.
+   */
   showTbody() {
-    this.tBody.style = 'display: table-row-group';
+    this.tBody.style.display = 'table-row-group';
   }
 }
 
