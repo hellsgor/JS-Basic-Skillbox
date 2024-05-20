@@ -79,8 +79,8 @@ class ClientsTable {
    */
   async initClients(modals = null, getClientsCallback = null, ...callbackArgs) {
     if (this.preloader.element) {
-      this.tBody.style = 'display: none;';
-      preloaderInstance.show(this.preloader);
+      this.hideTbody();
+      this.showPreloader();
     }
 
     if (modals && !this.modals) {
@@ -121,8 +121,8 @@ class ClientsTable {
     });
 
     if (this.preloader.element) {
-      preloaderInstance.hide(this.preloader);
-      this.tBody.style = 'display: table-row-group';
+      this.hidePreloader();
+      this.showTbody();
     }
   }
 
@@ -276,6 +276,22 @@ class ClientsTable {
     this.sortingCells.forEach((cell) => {
       cell.addEventListener('click', this.setSortedCell.bind(this));
     });
+  }
+
+  hideTbody() {
+    this.tBody.style = 'display: none;';
+  }
+
+  showPreloader() {
+    preloaderInstance.show(this.preloader);
+  }
+
+  hidePreloader() {
+    preloaderInstance.hide(this.preloader);
+  }
+
+  showTbody() {
+    this.tBody.style = 'display: table-row-group';
   }
 }
 
