@@ -1,22 +1,24 @@
 import { API } from '@/constants/api.js';
-import { ERRORS } from '@/constants/errors.js';
 import { FORMS } from '@/constants/forms';
 import { MODALS } from '@/constants/modals.js';
-import { regexps } from '@/constants/regexps.js';
-import { clearPhoneNumber } from '@/helpers/clearPhoneNumber.js';
-import { createElement } from '@/helpers/create-element.js';
 import { clientsTable } from '@/js/ClientsTable.js';
 import clientsApi from '@api/Clients-api.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import { SELECTS } from '@/constants/selects.js';
 import { preloaderInstance } from '@/js/Preloader.js';
+import { Validation } from '@/js/Validation.js';
+import { convertControlValue } from '@/helpers/convert-control-value.js';
+import { FormResponseErrorsHandler } from '@/js/FormResponseErrorsHandler.js';
+import { ValidationErrorHandler } from '@/js/ValidationErrorHandler.js';
 
+/**
+ * Класс для работы с формами.
+ */
 export class Form {
   form = null;
   submitButton = null;
   controls = [];
   errorsWrapper = null;
-  errorsCounter = 0;
   clientID = null;
   modalTemplate = null;
   callback = null;
@@ -30,35 +32,16 @@ export class Form {
     modalError: FORMS.CLASS_NAMES.MODAL_ERROR,
   };
 
-  validatedFormControlsTypes = [
-    {
-      type: 'email',
-      regexp: regexps.EMAIL,
-    },
-    {
-      type: 'tel',
-      regexp: regexps.PHONE_NUMBER,
-    },
-    {
-      type: 'text',
-      regexp: null,
-    },
-    {
-      type: 'url',
-      regexp: null,
-    },
-  ];
-
   /**
-   * @description - Создаёт экземпляр класса Form
-   * @param {Object} props - Объект передаваемых в конструктор свойств.
+   * Создает экземпляр класса Form.
+   * @param {Object} props - Объект свойств для конструктора.
    * @param {HTMLFormElement} props.form - Элемент формы.
-   * @param {HTMLElement} props.submitButton - Элемент, отправляющий форму.
-   * @param {HTMLElement} [props.cancelButton] - Элемент, отменяющий отправку формы (опционально).
-   * @param {HTMLDivElement} props.errorsWrapper - Элемент, в котором будут выведены ошибки при валидации.
-   * @param {Object} props.client - Объект с информацией о клиенте.
+   * @param {HTMLElement} props.submitButton - Кнопка отправки формы.
+   * @param {HTMLElement} [props.cancelButton] - Кнопка отмены отправки формы (опционально).
+   * @param {HTMLDivElement} props.errorsWrapper - Обертка для отображения ошибок валидации.
+   * @param {Object} props.client - Информация о клиенте.
    * @param {string} props.clientID - ID клиента.
-   * @param {string} props.modalTemplate - Шаблон модального окна для идентификации метода API.
+   * @param {string} props.modalTemplate - Шаблон модального окна.
    * @param {Function} [props.callback] - Функция обратного вызова (опционально).
    */
   constructor(props) {
@@ -70,20 +53,34 @@ export class Form {
     this.modalTemplate = props?.modalTemplate || null;
     this.callback = props?.callback || null;
 
+    this.validationErrorHandler = new ValidationErrorHandler(
+      this.classNames,
+      this.errorsWrapper,
+    );
+
+    this.validation = new Validation(this.validationErrorHandler);
+
+    this.formResponseErrorsHandlerInstance = new FormResponseErrorsHandler(
+      this.controls,
+      this.validationErrorHandler,
+      this.classNames,
+      this.errorsWrapper,
+    );
+
     this.doFormJob();
   }
 
   /**
-   * @description - Метод-обёртка для повторного вызова методов формы в случае её изменения, например, валидация не пройдена и после было добавлено еще одно поле контакта, чтобы оно попало в массив контролов
+   * Выполняет работу с формой.
    */
   doFormJob() {
-    this.resetErrors();
-    this.getControls();
+    this.validationErrorHandler.resetErrors(this.controls);
+    this.getElements();
 
     this.showSubmitButtonPreloader();
     this.setControlsAvailability(true);
 
-    if (this.validation()) {
+    if (this.validation.validation(this.controls)) {
       this.submitForm();
     } else {
       this.setControlsAvailability(false);
@@ -92,175 +89,15 @@ export class Form {
   }
 
   /**
-   * @description - Создаёт массив контролов формы
+   * Создает массив контролов формы.
    */
-  getControls() {
+  getElements() {
     this.controls = this.form.querySelectorAll('input');
   }
 
   /**
-   * @description - Валидирует поля формы
-   * @return {boolean} - флаг успешной валидации
+   * Отправляет данные формы.
    */
-  validation() {
-    let validationFlag = true;
-
-    this.controls.forEach((control) => {
-      if (control.required && !control.value.trim()) {
-        validationFlag = false;
-        this.invalidate(control, { code: 'EF001', text: null });
-      }
-
-      if (control.value) {
-        const actualRegexp = control.hasAttribute(
-          FORMS.ATTRS.VALIDATION_REGEXP_NAME,
-        )
-          ? regexps[
-              `${control.getAttribute(FORMS.ATTRS.VALIDATION_REGEXP_NAME).toUpperCase()}`
-            ]
-          : this.validatedFormControlsTypes.find(
-              (validatedType) => validatedType.type === control.type,
-            ).regexp;
-
-        if (
-          actualRegexp &&
-          !this.convertControlValue(control).match(actualRegexp)
-        ) {
-          validationFlag = false;
-          this.invalidate(control, { code: 'EF002', text: null });
-        }
-      }
-    });
-
-    return validationFlag;
-  }
-
-  /**
-   * @description - Добавляет стиль контрола с ошибкой и data-атрибут с "индексом" ошибки контролу (input'у или его обёртке)
-   * @param {HTMLInputElement} control - контрол, которому следует добавить стиль контрола с ошибкой
-   * @param {boolean} isNeededErrorIndex - необязательный параметр для проверки необходимости присвоения индекса ошибки контролу
-   */
-  addErrorStyle = (control, isNeededErrorIndex = true) => {
-    let elementFlaggedWithError = null;
-    let input = null;
-
-    const addErrorClass = (control) => {
-      // Для контролов контактов формы
-      if (control.closest(`.${this.classNames.modalContact}`)) {
-        input = control;
-        elementFlaggedWithError = control.closest(
-          `.${this.classNames.modalContact}`,
-        );
-        elementFlaggedWithError.classList.add(
-          this.classNames.modalContactWithError,
-        );
-      }
-
-      // Для контролов формы
-      if (control.classList.contains(this.classNames.formControlInput)) {
-        elementFlaggedWithError = control;
-        elementFlaggedWithError.classList.add(
-          this.classNames.formControlInputInvalid,
-        );
-      }
-    };
-
-    addErrorClass(control);
-
-    if (isNeededErrorIndex) {
-      // добавление "индекса" ошибки контролу
-      (input ? input : elementFlaggedWithError).setAttribute(
-        FORMS.ATTRS.ERROR_INDEX,
-        this.errorsCounter,
-      );
-      (input ? input : elementFlaggedWithError).addEventListener(
-        'input',
-        this.removeError,
-      );
-    }
-  };
-
-  /**
-   * @description - Метод-обёртка для удаления стилей ошибки с контрола и удаления элемента с текстом ошибки
-   * @param {InputEvent} event - событие ввода на контроле
-   * @param {boolean} isNeedRemoveElement - необязательный параметр для вызова метода удаления элемента с текстом ошибки
-   * */
-  removeError = (event, isNeedRemoveElement = true) => {
-    isNeedRemoveElement && this.removeErrorTextElement(event.target);
-    this.removeErrorStyle(event.target);
-    event.target.removeEventListener('input', this.removeError);
-  };
-
-  /**
-   * @description - Удаляет стиль с контрола с ошибкой у контрола
-   * @param {HTMLInputElement} controlInput - контрол текст ошибки которого нужно удалить из this. errorsWrapper
-   */
-  removeErrorStyle(controlInput) {
-    if (controlInput.hasAttribute(FORMS.ATTRS.ERROR_INDEX)) {
-      controlInput.removeAttribute(FORMS.ATTRS.ERROR_INDEX);
-    }
-
-    (controlInput.closest(`.${this.classNames.modalContact}`)
-      ? controlInput.closest(`.${this.classNames.modalContact}`)
-      : controlInput
-    ).classList.remove(
-      `${this.classNames.modalContactWithError}`,
-      this.classNames.formControlInputInvalid,
-    );
-  }
-
-  /**
-   * @description - Удаляет элемент с текстом ошибки
-   * @param controlInput {HTMLInputElement} - контрол текст ошибки которого нужно удалить из this.errorsWrapper
-   * */
-  removeErrorTextElement(controlInput) {
-    this.errorsWrapper
-      .querySelector(
-        `[
-      ${FORMS.ATTRS.ERROR_INDEX}="${controlInput.getAttribute(FORMS.ATTRS.ERROR_INDEX)}"
-    ]`,
-      )
-      .remove();
-  }
-
-  /**
-   * @description - Добавляет элемент с текстом ошибки в this.errorsWrapper
-   * @param {string | null} errorText - текст ошибки
-   * */
-  showError(errorText) {
-    if (!errorText) {
-      return;
-    }
-
-    this.errorsWrapper.appendChild(
-      createElement({
-        tag: 'span',
-        classes: this.classNames.modalError,
-        text: errorText,
-        attributes: [
-          {
-            name: FORMS.ATTRS.ERROR_INDEX,
-            value: this.errorsCounter,
-          },
-        ],
-      }),
-    );
-  }
-
-  /**
-   * @description - Сбрасывает ошибки и индексы ошибок
-   * */
-  resetErrors() {
-    this.errorsCounter = 0;
-    this.errorsWrapper.innerHTML = '';
-    this.controls.forEach((control) => {
-      this.removeErrorStyle(control);
-    });
-  }
-
-  /**
-   * @description - Отправляет данные формы
-   * */
   submitForm() {
     let method = '';
 
@@ -302,47 +139,17 @@ export class Form {
   }
 
   /**
-   * @description - Метод-обёртка, который вызывается в случае, если контрол не прошел валидацию
-   * @param {HTMLInputElement} control - обрабатываемый контрол
-   * @param {Object || null} errorProps - объект с кодом или текстом ошибки
-   * @param {string || null} errorProps.code - код ошибки
-   * @param {string || null} errorProps.text - текст ошибки
-   * */
-  invalidate(control, errorProps) {
-    this.errorsCounter += 1;
-    this.addErrorStyle(control);
-    if (errorProps) {
-      this.showError(
-        errorProps.code ? ERRORS[errorProps.code](control) : errorProps.text,
-      );
-    }
-  }
-
-  /**
-   * @description - Преобразует значение контрола контакта
-   * @param {HTMLInputElement} control - инпут контрола значение которого следует преобразовать
-   * @return {string} - преобразованное значение
-   * */
-  convertControlValue(control) {
-    switch (control.type) {
-      case 'tel':
-        return clearPhoneNumber(control.value);
-      default:
-        return control.value.trim();
-    }
-  }
-
-  /**
-   * @description - Освобождает ресурсы, связанные с экземпляром класса Form и удаляет обработчики событий.
-   * @memberof Form
+   * Уничтожает экземпляр класса и освобождает ресурсы.
    */
   destroy() {
     this.controls.forEach((control) => {
-      control.removeEventListener('input', this.removeError);
-      this.removeErrorStyle(control);
+      control.removeEventListener(
+        'input',
+        this.validation.errorsHandler.removeError,
+      );
+      this.validation.errorsHandler.removeErrorStyle(control);
     });
 
-    this.errorsCounter = null;
     this.errorsWrapper = null;
     this.controls = null;
     this.form = null;
@@ -350,8 +157,8 @@ export class Form {
   }
 
   /**
-   * @description - Собирает значения полей в объект для отправки.
-   * @returns {Object} Объект со следующими свойствами:
+   * Собирает значения полей формы для отправки.
+   * @returns {Object} Объект со значениями полей формы
    * - name {string}: Имя.
    * - surname {string}: Фамилия.
    * - lastname {string}: Отчество.
@@ -363,13 +170,13 @@ export class Form {
     return Array.from(this.controls).reduce(
       (data, control) => {
         if (control.name) {
-          data[control.name] = this.convertControlValue(control);
+          data[control.name] = convertControlValue(control);
         } else {
           data.contacts.push({
             type: control
               .closest(`.${this.classNames.modalContact}`)
               .querySelector('button span').textContent,
-            value: this.convertControlValue(control),
+            value: convertControlValue(control),
           });
         }
         return data;
@@ -379,9 +186,9 @@ export class Form {
   }
 
   /**
-   * @description - Обрабатывает ответ сервера
-   * @param response - объект ответа сервера (Axios)
-   * */
+   * Обрабатывает ответ сервера.
+   * @param {Object} response - Ответ сервера.
+   */
   processingResponse(response) {
     // console.log('Ответ', response);
     // console.log(
@@ -392,7 +199,7 @@ export class Form {
     if (response.response && response.response.data.errors.length) {
       this.setControlsAvailability(false);
       this.hideSubmitButtonPreloader();
-      this.processingResponseErrors(response);
+      this.formResponseErrorsHandlerInstance.processingResponseErrors(response);
     }
 
     if (response.status === 200 || response.status === 201) {
@@ -404,120 +211,8 @@ export class Form {
   }
 
   /**
-   * @description Обрабатывает ошибки из ответа сервера.
-   * @param {Object} response - Объект ответа сервера (Axios).
-   */
-  processingResponseErrors(response) {
-    if (this.handleNetworkError(response)) {
-      return;
-    }
-
-    if (this.handleValidationErrors(response)) {
-      return;
-    }
-  }
-
-  /**
-   * @description Обрабатывает ошибки сети и статус 404.
-   * @param {Object} response - Объект ответа сервера (Axios).
-   * @returns {boolean} Возвращает true, если ошибка сети или статус 404, иначе false.
-   */
-  handleNetworkError(response) {
-    if (
-      response.code === 'ERR_NETWORK' ||
-      response.response.status === 404 ||
-      response.response.status >= 500
-    ) {
-      this.showError(ERRORS.EF003());
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * @description Обрабатывает ошибки валидации.
-   * @param {Object} response - Объект ответа сервера (Axios).
-   * @returns {boolean} Возвращает true, если есть ошибки валидации, иначе false.
-   */
-  handleValidationErrors(response) {
-    if (response.response.status === 422) {
-      response.response.data.errors.forEach((error) => {
-        if (error.field !== FORMS.CLIENT_OBJECT_CONTACTS_PROPERTY_NAME) {
-          this.handleControlError(error);
-        } else {
-          this.handleContactError(error);
-        }
-      });
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * @description Обрабатывает ошибки контролов формы.
-   * @param {Object} error - Объект с информацией об ошибке.
-   */
-  handleControlError(error) {
-    const control = Array.from(this.controls).find(
-      (control) => control.name === error.field,
-    );
-    if (control) {
-      this.invalidate(control, { text: error.message });
-    }
-  }
-
-  /**
-   * @description Обрабатывает ошибки контактов формы.
-   * @param {Object} error - Объект с информацией об ошибке.
-   */
-  handleContactError(error) {
-    this.controls.forEach((control) => {
-      if (
-        control.closest(`.${this.classNames.modalContact}`) &&
-        !control.value.trim()
-      ) {
-        this.handleEmptyContact(control, error.message);
-      }
-    });
-  }
-
-  /**
-   * @description Обрабатывает ошибки пустых контактов формы.
-   * @param {HTMLInputElement} control - Контрол контакта, у которого значение пустое.
-   * @param {string} errorMessage - Текст ошибки.
-   */
-  handleEmptyContact(control, errorMessage) {
-    ++this.errorsCounter;
-    this.addErrorStyle(control, false);
-    control.addEventListener('input', () =>
-      this.removeEmptyContactError(errorMessage),
-    );
-    this.showError(errorMessage);
-  }
-
-  /**
-   * @description Удаляет ошибки пустых контактов формы.
-   * @param {string} errorMessage - Текст ошибки.
-   */
-  removeEmptyContactError(errorMessage) {
-    const isSomeContactsWithError = Array.from(this.controls).some(
-      (control) =>
-        control.closest(`.${this.classNames.modalContact}`) &&
-        control
-          .closest(`.${this.classNames.modalContact}`)
-          .classList.contains(`${this.classNames.modalContactWithError}`),
-    );
-    if (!isSomeContactsWithError) {
-      const contactsErrorElement = Array.from(
-        this.errorsWrapper.querySelectorAll(`.${this.classNames.modalError}`),
-      ).find((errorElement) => errorElement.textContent === errorMessage);
-      contactsErrorElement && contactsErrorElement.remove();
-    }
-  }
-
-  /**
-   * @description Устанавливает доступность элементов управления формой.
-   * @param {boolean} isMakeDisabled - Флаг, указывающий на необходимость сделать элементы управления неактивными.
+   * Устанавливает доступность элементов управления формой.
+   * @param {boolean} isMakeDisabled - Флаг, указывающий на необходимость установки элементов управления в неактивное состояние.
    */
   setControlsAvailability(isMakeDisabled) {
     const method = isMakeDisabled ? 'setAttribute' : 'removeAttribute';
@@ -549,7 +244,7 @@ export class Form {
   }
 
   /**
-   * @description Показывает прелоадер на кнопке отправки формы.
+   * Показывает прелоадер на кнопке отправки формы.
    */
   showSubmitButtonPreloader() {
     preloaderInstance.show({
@@ -564,7 +259,7 @@ export class Form {
   }
 
   /**
-   * @description Скрывает прелоадер на кнопке отправки формы.
+   * Скрывает прелоадер на кнопке отправки формы.
    */
   hideSubmitButtonPreloader() {
     preloaderInstance.hide({
@@ -580,7 +275,7 @@ export class Form {
 }
 
 /**
- * @description Автоматически инициализирует формы на странице, помеченные data-атрибутом.
+ * Автоматически инициализирует формы на странице, помеченные атрибутом данных.
  */
 export function autoInitForms() {
   document
