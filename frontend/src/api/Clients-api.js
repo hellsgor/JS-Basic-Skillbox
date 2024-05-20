@@ -65,7 +65,7 @@ class ClientsApi {
       const response = await this.api.get(this.resource, {
         params: { search: searchString },
       });
-      return response;
+      return response.data;
     } catch (error) {
       this.handleError(error);
       return error;

@@ -1,4 +1,6 @@
 import { debouncer } from '@/js/Debouncer.js';
+import { clientsTable } from '@/js/ClientsTable.js';
+import clientsApi from '@api/Clients-api.js';
 
 class Search {
   searchComponent = null;
@@ -28,8 +30,12 @@ class Search {
     this.control.addEventListener('input', this.controlInputHandler);
   }
 
-  getSearchResult({ target }) {
-    console.log(target.value);
+  async getSearchResult({ target }) {
+    await clientsTable
+      .initClients(null, clientsApi.searchClients, {
+        searchString: target.value,
+      })
+      .then(() => clientsTable.renderClients());
   }
 }
 
