@@ -14,22 +14,18 @@
   &__text {
     font-size: 12px;
     font-weight: 400;
-    line-height: normal;
+    line-height: 1;
     color: $txt-gray;
-    
-  }
-  
-  &__arrow,
-  &__letters {
-    opacity: .7;
   }
   
   &__letters {
     display: flex;
+    opacity: .7;
     align-items: baseline;
     font-size: 10px;
     font-weight: 600;
     color: $firm;
+    transition: opacity .2s ease-in-out;
     
     &::before {
       content: 'А';
@@ -47,6 +43,7 @@
     
     .head-cell__text::after {
       display: inline-flex;
+      opacity: .7;
       width: 12px;
       height: 12px;
       margin-bottom: 1px;
@@ -56,6 +53,7 @@
       background: url("/icons/sort-arrow.svg") no-repeat center;
       background-size: 12px;
       content: '';
+      transition: transform .2s ease-in-out, opacity .2s ease-in-out;
     }
   }
   
@@ -72,9 +70,12 @@
   &_active {
     .head-cell__text {
       color: $firm;
+      
+      &::after {
+        opacity: 1;
+      }
     }
     
-    .head-cell__arrow,
     .head-cell__letters {
       opacity: 1;
     }

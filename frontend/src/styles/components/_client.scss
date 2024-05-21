@@ -2,7 +2,7 @@
   height: 60px;
   border-bottom: 1px solid $table-row-border;
   font-size: 14px;
-  line-height: 1;
+  line-height: normal;
   background-color: $white;
   color: $black;
   
@@ -74,6 +74,26 @@
         z-index: 10;
         visibility: visible;
         opacity: 1;
+      }
+    }
+  }
+  
+  &__buttons-cell {
+    button:first-child {
+      margin-right: 28px;
+    }
+  }
+  
+  @include vertical-tablet-media {
+    &__contacts-cell {
+      padding-right: 0;
+    }
+    &__buttons-cell {
+      padding-top: 5px;
+      
+      button:first-child {
+        margin-right: 0;
+        margin-bottom: 8px;
       }
     }
   }

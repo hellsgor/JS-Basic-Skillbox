@@ -37,6 +37,14 @@
     }
   }
   
+  @include vertical-tablet-media {
+    padding: 0 20px;
+    
+    &__container {
+      max-width: 728px;
+    }
+  }
+  
   @include xs-media {
     margin-bottom: 30px;
     

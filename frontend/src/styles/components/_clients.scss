@@ -77,6 +77,40 @@
         padding-right: 36px;
       }
     }
-    
+  }
+  
+  @include vertical-tablet-media {
+    &__table th {
+      &[id="head-col-id"] {
+        width: 80px;
+        padding-right: 0;
+      }
+      
+      &[id="head-col-name"] {
+        width: 218px;
+        padding-right: 0;
+      }
+      
+      &[id="head-col-create"] {
+        width: 98px;
+        padding-right: 0;
+      }
+      
+      &[id="head-col-change"] {
+        width: 98px;
+        padding-right: 0;
+      }
+      
+      &[id="head-col-contacts"] {
+        width: 129px;
+        padding-right: 0;
+      }
+      
+      &[id="head-col-actions"] {
+        //width: 148px;
+        width: 105px;
+        padding-right: 0;
+      }
+    }
   }
 }

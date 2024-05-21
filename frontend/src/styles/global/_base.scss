@@ -25,4 +25,10 @@ body {
       margin-bottom: 4px;
     }
   }
+  
+  @include vertical-tablet-media {
+    &__container {
+      max-width: 728px;
+    }
+  }
 }
