@@ -6,6 +6,7 @@ import { MODALS } from '@/constants/modals.js';
  */
 class Backdrop {
   $backdrop = null;
+  $pageBody = null;
 
   backdropClassName = 'backdrop';
   modifiers = {
@@ -20,12 +21,14 @@ class Backdrop {
    */
   constructor(backdrop) {
     this.$backdrop = backdrop;
+    this.$pageBody = document.querySelector('body');
   }
 
   /**
    * Показывает бекдроп с анимацией.
    */
   show() {
+    this.$pageBody.style = 'overflow-y: hidden;';
     this.$backdrop.style = 'pointer-events: none;';
     this.$backdrop.classList.remove(
       `${this.backdropClassName}_${this.modifiers.hidden}`,
@@ -54,6 +57,7 @@ class Backdrop {
       this.$backdrop.classList.add(
         `${this.backdropClassName}_${this.modifiers.hidden}`,
       );
+      this.$pageBody.style = 'overflow-y: auto;';
     }, this.getTimeout());
 
     setTimeout(() => {
