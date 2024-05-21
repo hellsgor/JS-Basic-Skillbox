@@ -15,4 +15,10 @@ body {
   &__title {
     margin-bottom: 18px;
   }
+  
+  @include horizontal-tablet-media {
+    &__container {
+      max-width: 984px;
+    }
+  }
 }
