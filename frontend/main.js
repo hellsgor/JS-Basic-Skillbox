@@ -4,10 +4,10 @@ import { autoInitForms } from '@/js/Form.js';
 import { clientsTable } from '@/js/ClientsTable.js';
 import { MODALS } from '@/constants/modals.js';
 import { callModalFromModal } from '@/helpers/call-modal-from-modal.js';
-import { addBackdropClickListener } from '@/helpers/add-backdrop-click-listener.js';
 import { openClientEditModalIfHashExists } from '@/helpers/open-client-edit-modal-if-hash-exists.js';
 import { handleAddClientButtonClick } from '@/helpers/handle-add-client-button-click.js';
 import { search } from '@/js/Search.js';
+import { backdrop } from '@/js/Backdrop.js';
 
 const modals = initModals();
 
@@ -17,7 +17,7 @@ await clientsTable.initClients(modals).then(() => clientsTable.renderClients());
 
 handleAddClientButtonClick(modals);
 addModalsSwitchListeners();
-addBackdropClickListener(modals);
+backdrop.addBackdropClickListener(modals);
 autoInitForms();
 openClientEditModalIfHashExists(modals);
 
