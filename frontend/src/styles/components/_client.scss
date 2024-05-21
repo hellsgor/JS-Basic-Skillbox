@@ -9,8 +9,8 @@
   th,
   td {
     width: fit-content;
-    padding: 20px 40px 20px 0;
-    vertical-align: center;
+    //padding: 0;
+    vertical-align: middle;
     
     &:first-child {
       padding-left: 20px;
@@ -37,7 +37,8 @@
   
   &__contacts-cell {
     display: flex;
-    height: 60px;
+    height: 59px;
+    padding-right: 38px;
     flex-wrap: wrap;
     align-items: center;
     gap: 7px;
