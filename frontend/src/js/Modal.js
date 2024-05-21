@@ -9,6 +9,7 @@ import { ModalContactControl } from '@/js/ModalContactControl.js';
 import { CONTACTS } from '@/constants/contacts.js';
 import clientsApi from '@api/Clients-api.js';
 import { preloaderInstance } from '@/js/Preloader.js';
+import { backdrop } from '@/js/Backdrop.js';
 
 /**
  * @description - Класс модальных окон. Описывает наполнение в соответствии с одним из шаблонов наполнения и поведение модальных окон.
@@ -202,6 +203,7 @@ class Modal {
     if (client && this.modalTemplate === this.modalTemplatesList.editClient) {
       this.setHash(client.id);
     }
+    backdrop.show();
 
     this.modal.classList.remove(
       `${this.classNames.modal}${this.modifiers.hidden}`,
@@ -209,20 +211,11 @@ class Modal {
     this.modal.classList.add(
       `${this.classNames.modal}${this.modifiers.fadeIn}`,
     );
-    this.backdrop.classList.remove(
-      `${this.classNames.backdrop}${this.modifiers.hidden}`,
-    );
-    this.backdrop.classList.add(
-      `${this.classNames.backdrop}${this.modifiers.fadeIn}`,
-    );
 
     setTimeout(
       () => {
         this.modal.classList.remove(
           `${this.classNames.modal}${this.modifiers.fadeIn}`,
-        );
-        this.backdrop.classList.remove(
-          `${this.classNames.backdrop}${this.modifiers.fadeIn}`,
         );
         this.togglePointerEventValue('auto');
       },
@@ -239,17 +232,12 @@ class Modal {
     this.modal.classList.add(
       `${this.classNames.modal}${this.modifiers.fadeOut}`,
     );
-    this.backdrop.classList.add(
-      `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
-    );
+    backdrop.hide();
 
     setTimeout(
       () => {
         this.modal.classList.add(
           `${this.classNames.modal}${this.modifiers.hidden}`,
-        );
-        this.backdrop.classList.add(
-          `${this.classNames.backdrop}${this.modifiers.hidden}`,
         );
 
         this.removeHash();
@@ -260,13 +248,11 @@ class Modal {
         window.getComputedStyle(this.modal).animationDuration,
       ),
     );
+
     setTimeout(
       () => {
         this.modal.classList.remove(
           `${this.classNames.modal}${this.modifiers.fadeOut}`,
-        );
-        this.backdrop.classList.remove(
-          `${this.classNames.backdrop}${this.modifiers.fadeOut}`,
         );
       },
       convertTimeStringToMilliseconds(
@@ -645,7 +631,6 @@ class Modal {
    */
   togglePointerEventValue(value) {
     this.modal.style = `pointer-events: ${value};`;
-    this.backdrop.style = `pointer-events: ${value};`;
   }
 }
 

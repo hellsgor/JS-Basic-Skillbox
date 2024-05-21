@@ -3,6 +3,7 @@ import { Contact } from '@/js/Contact.js';
 import { MODALS } from '@/constants/modals.js';
 import clientsApi from '@api/Clients-api.js';
 import { preloaderInstance } from '@/js/Preloader.js';
+import { sort } from '@/js/Sort.js';
 
 /**
  * @description Класс, представляющий клиента.
@@ -64,14 +65,11 @@ export class Client {
    * @description Создает экземпляр клиента.
    * @param {object} data - Данные клиента.
    * @param modals {Object} - Модальные окна.
-   * @param sortedContactsTypes {Array} - Отсортированные типы контактов
    * */
-  constructor(data, modals, sortedContactsTypes) {
+  constructor(data, modals) {
     this.clientData = data;
     this.modals = modals || null;
-    this.sortedContactsTypes = sortedContactsTypes || null;
-
-    this.sortContacts();
+    this.clientData.contacts = sort.sortContacts(this.clientData);
     this.initClient();
   }
 
@@ -238,17 +236,6 @@ export class Client {
    */
   deleteClient() {
     this.modals[MODALS.TEMPLATES.DELETE_CLIENT].showModal(this.clientData);
-  }
-
-  /**
-   * @description Сортирует контакты клиента
-   * */
-  sortContacts() {
-    this.clientData.contacts = this.sortedContactsTypes.flatMap((type) => {
-      return this.clientData.contacts.filter((contact) => {
-        return contact.type === type.text;
-      });
-    });
   }
 
   /**
