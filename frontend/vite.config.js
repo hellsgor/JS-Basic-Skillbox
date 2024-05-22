@@ -13,16 +13,19 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
   },
+  build: {
+    target: 'esnext',
+  },
   css: {
     devSourcemap: true,
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@api': resolve(__dirname, './src/api'),
-      '@styles': resolve(__dirname, './src/styles'),
-      '@fonts': resolve(__dirname, './fonts'),
-      '@components': resolve(__dirname, './src/components'),
+      '@': resolve(__dirname, '/src'),
+      '@api': resolve(__dirname, '/src/api'),
+      '@styles': resolve(__dirname, '/src/styles'),
+      '@fonts': resolve(__dirname, '/fonts'),
+      '@components': resolve(__dirname, '/src/components'),
     },
   },
   plugins: [
