@@ -21,6 +21,30 @@
     margin-left: 53px;
   }
   
+  @include media(1440px) {
+    &__container {
+      max-width: 1186px;
+    }
+    
+    &__wrapper {
+      padding: 20px 0;
+    }
+  }
+  
+  @include horizontal-tablet-media {
+    &__container {
+      max-width: 984px;
+    }
+  }
+  
+  @include vertical-tablet-media {
+    padding: 0 20px;
+    
+    &__container {
+      max-width: 728px;
+    }
+  }
+  
   @include xs-media {
     margin-bottom: 30px;
     

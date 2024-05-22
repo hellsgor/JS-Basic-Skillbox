@@ -12,8 +12,14 @@
   }
 }
 
-@mixin tablet-media {
-  @include media($mediaTablet) {
+@mixin horizontal-tablet-media {
+  @include media($mediaHorizontalTablet) {
+    @content;
+  }
+}
+
+@mixin vertical-tablet-media {
+  @include media($mediaVerticalTablet) {
     @content;
   }
 }

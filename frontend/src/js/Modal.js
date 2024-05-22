@@ -356,7 +356,7 @@ class Modal {
       return;
     }
 
-    this.idItem.innerText = client.id;
+    this.idItem.innerText = client.id.slice(-6);
     this.id.classList.remove(`${this.classNames.id}${this.modifiers.hidden}`);
   }
 
@@ -606,7 +606,13 @@ class Modal {
 
     preloaderContainer.appendChild(preloaderInstance.create(true));
 
-    actionButton.appendChild(preloaderContainer);
+    actionButton
+      .querySelector('.button__wrapper')
+      .insertBefore(
+        preloaderContainer,
+        actionButton.querySelector('.button__text'),
+      );
+
     return actionButton;
   }
 

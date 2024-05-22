@@ -2,15 +2,15 @@
   height: 60px;
   border-bottom: 1px solid $table-row-border;
   font-size: 14px;
-  line-height: 1;
+  line-height: normal;
   background-color: $white;
   color: $black;
   
   th,
   td {
     width: fit-content;
-    padding: 20px 40px 20px 0;
-    vertical-align: center;
+    //padding: 0;
+    vertical-align: middle;
     
     &:first-child {
       padding-left: 20px;
@@ -37,7 +37,8 @@
   
   &__contacts-cell {
     display: flex;
-    height: 60px;
+    height: 59px;
+    padding-right: 38px;
     flex-wrap: wrap;
     align-items: center;
     gap: 7px;
@@ -73,6 +74,26 @@
         z-index: 10;
         visibility: visible;
         opacity: 1;
+      }
+    }
+  }
+  
+  &__buttons-cell {
+    button:first-child {
+      margin-right: 28px;
+    }
+  }
+  
+  @include vertical-tablet-media {
+    &__contacts-cell {
+      padding-right: 0;
+    }
+    &__buttons-cell {
+      padding-top: 5px;
+      
+      button:first-child {
+        margin-right: 0;
+        margin-bottom: 8px;
       }
     }
   }

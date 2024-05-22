@@ -7,6 +7,10 @@
   justify-content: center;
   row-gap: 24px;
   
+  &__message {
+    text-align: center;
+  }
+  
   &_hidden {
     display: none;
   }

@@ -13,6 +13,29 @@ body {
   }
   
   &__title {
-    margin-bottom: 18px;
+    margin-bottom: 23px;
+  }
+  
+  @include horizontal-tablet-media {
+    &__container {
+      max-width: 984px;
+    }
+    
+    &__title {
+      margin-bottom: 4px;
+    }
+  }
+  
+  @include vertical-tablet-media {
+    &__container {
+      max-width: 728px;
+    }
+  }
+  
+  @include mobile-media {
+    &__container {
+      max-width: unset;
+      padding: 0 10px;
+    }
   }
 }

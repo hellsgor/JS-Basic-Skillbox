@@ -253,9 +253,6 @@ export class Form {
       ),
       className: MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER,
     });
-    this.submitButton.querySelector(
-      `.${MODALS.CLASS_NAMES.ACTION_BUTTON_TEXT}`,
-    ).style = 'display: none';
   }
 
   /**
@@ -268,9 +265,6 @@ export class Form {
       ),
       className: MODALS.CLASS_NAMES.ACTION_BUTTON_PRELOADER,
     });
-    this.submitButton
-      .querySelector(`.${MODALS.CLASS_NAMES.ACTION_BUTTON_TEXT}`)
-      .removeAttribute('style');
   }
 }
 
