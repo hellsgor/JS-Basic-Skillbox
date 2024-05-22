@@ -1,0 +1,15 @@
+<th
+  class="head-cell{{#if this.isSortable}} head-cell_sortable{{/if}}"
+  id="head-col-{{this.idLastPart}}"
+  scope="col"
+  {{#if this.isSortable}} data-sort-name="{{this.idLastPart}}"{{/if}}
+>
+  <div class="head-cell__wrapper">
+    <span class="head-cell__text">{{this.name}}</span>
+    {{#if this.isString}}
+      <span class="head-cell__letters">
+        <span>-</span>
+      </span>
+    {{/if}}
+  </div>
+</th>

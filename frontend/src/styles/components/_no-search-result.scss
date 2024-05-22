@@ -1,0 +1,17 @@
+.no-search-result {
+  display: flex;
+  width: 100%;
+  padding: 100px 0 60px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 24px;
+  
+  &__message {
+    text-align: center;
+  }
+  
+  &_hidden {
+    display: none;
+  }
+}

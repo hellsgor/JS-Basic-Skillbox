@@ -1,0 +1,104 @@
+@import "@styles/global/_colors.scss";
+
+.select {
+  position: relative;
+  
+  &__item {
+    position: relative;
+    display: flex;
+    width: 100%;
+    padding: 10px 8px 10px 12px;
+    border-width: 0 1px 0 0;
+    border-style: solid;
+    border-color: $gray;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    background-color: $select-bg;
+    color: $black;
+    cursor: pointer;
+    
+    &-arrow {
+      display: flex;
+      width: 12px;
+      height: 12px;
+      align-items: center;
+      justify-content: center;
+      transition: transform .2s ease-in-out;
+      pointer-events: none;
+      
+      svg {
+        width: 100%;
+        height: 100%;
+        fill: $firm;
+      }
+    }
+    
+    &:disabled {
+      color: $txt-gray;
+      cursor: default;
+      
+      .select__item-arrow {
+        svg {
+          fill: $txt-gray;
+        }
+      }
+    }
+  }
+  
+  &_opened {
+    .select__dropdown {
+      display: flex;
+    }
+    
+    .select__item-arrow {
+      transform: rotate(180deg);
+    }
+  }
+  
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 100;
+    display: none;
+    overflow: hidden;
+    padding: 4px 0;
+    border: 1px solid $gray;
+    margin: 0;
+    flex-direction: column;
+    list-style: none;
+    background-color: $select-list-bg;
+  }
+  
+  &__option {
+    display: block;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    background-color: transparent;
+    color: $black;
+    cursor: pointer;
+    
+    &_selected {
+      display: none;
+    }
+    
+    @media(hover: hover) {
+      &:hover {
+        background-color: $select-bg;
+      }
+    }
+  }
+  
+  @include xs-media {
+    &__item {
+      padding-right: 6px;
+      padding-left: 8px;
+    }
+  }
+}

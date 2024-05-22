@@ -1,0 +1,23 @@
+body {
+  font-family: OpenSans, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: normal;
+  color: $black;
+}
+
+h2,
+h3 {
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 33px;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 25px;
+}

@@ -1,0 +1,31 @@
+<section class="clients section">
+  <div class="clients__wrapper section__container">
+    <h2 class="clients__title section__title">Клиенты</h2>
+    <div class="clients__inner">
+      <div class="clients__table-overflow">
+        <table class="clients__table">
+          <thead>
+          <tr>
+            {{#each this.tableHeadRowItems}}
+              {{> elements/head-cell this}}
+            {{/each}}
+          </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+      <div class="clients__preloader" id='clients-preloader'>
+        <div class="clients__preloader-inner"></div>
+      </div>
+      {{> no-search-result classes='clients__no-search-result'}}
+    </div>
+    {{> elements/button
+      text='Добавить клиента'
+      modifier='secondary'
+      iconMod='big'
+      iconID='add-client'
+      class="clients__add-button"
+      id="add-client-button"
+    }}
+  </div>
+</section>

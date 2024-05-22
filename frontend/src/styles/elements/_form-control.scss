@@ -1,0 +1,55 @@
+.form-control {
+  position: relative;
+  padding-top: 16px;
+  
+  &__placeholder {
+    position: absolute;
+    top: 20px;
+    left: 1px;
+    font-size: 14px;
+    line-height: 1;
+    color: $txt-gray;
+    transition: top .2s ease-in-out, font-size .2s ease-in-out;
+    
+    &_filled {
+      top: 0;
+      font-size: 10px;
+    }
+  }
+  
+  &__input {
+    width: 100%;
+    padding-bottom: 4px;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid $control-border;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
+    color: $black;
+    transition: border-bottom-color .1s ease-in-out;
+    
+    &:required {
+      ~ span::after {
+        color: $firm;
+        content: '*';
+      }
+    }
+    
+    &:focus {
+      ~ span {
+        top: 0;
+        font-size: 10px;
+      }
+    }
+    
+    &:disabled {
+      background-color: transparent;
+      color: $txt-gray;
+    }
+    
+    &_invalid {
+      border-bottom-color: $invalid-control-border;
+    }
+  }
+}

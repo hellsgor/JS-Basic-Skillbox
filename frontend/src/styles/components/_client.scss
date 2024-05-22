@@ -1,0 +1,100 @@
+.client {
+  height: 60px;
+  border-bottom: 1px solid $table-row-border;
+  font-size: 14px;
+  line-height: normal;
+  background-color: $white;
+  color: $black;
+  
+  th,
+  td {
+    width: fit-content;
+    //padding: 0;
+    vertical-align: middle;
+    
+    &:first-child {
+      padding-left: 20px;
+    }
+    
+    &:last-child {
+      padding-right: 20px;
+    }
+  }
+  
+  th {
+    text-align: left;
+  }
+  
+  &__id {
+    font-size: 12px;
+    font-weight: 400;
+    color: $txt-gray;
+  }
+  
+  &__time {
+    color: $txt-gray;
+  }
+  
+  &__contacts-cell {
+    display: flex;
+    height: 59px;
+    padding-right: 38px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    
+    &_full {
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+    }
+  }
+  
+  &__contact {
+    position: relative;
+    
+    &_hidden {
+      display: none;
+    }
+    
+    &_white {
+      .tooltip a {
+        color: $white;
+      }
+    }
+    
+    &_firm {
+      .tooltip a {
+        text-decoration: underline;
+        color: $firm;
+      }
+    }
+    
+    &:hover {
+      .tooltip {
+        z-index: 10;
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+  
+  &__buttons-cell {
+    button:first-child {
+      margin-right: 28px;
+    }
+  }
+  
+  @include vertical-tablet-media {
+    &__contacts-cell {
+      padding-right: 0;
+    }
+    &__buttons-cell {
+      padding-top: 5px;
+      
+      button:first-child {
+        margin-right: 0;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}

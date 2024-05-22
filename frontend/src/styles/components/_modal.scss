@@ -1,0 +1,213 @@
+@import "@styles/global/_colors.scss";
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+  overflow-y: scroll;
+  width: 100%;
+  max-width: 450px;
+  max-height: 85dvh;
+  padding: 24px 0;
+  border: none;
+  background-color: $white;
+  transform: translate(-50%, -50%);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  &_hidden {
+    z-index: -10000;
+    visibility: hidden;
+    opacity: 0;
+  }
+  
+  &_fade-in {
+    animation: .3s ease-in-out fade;
+  }
+  
+  &_fade-out {
+    animation: .3s ease-in-out reverse fade;
+  }
+  
+  &__title-row {
+    display: flex;
+    padding: 0 30px;
+    margin-bottom: 16px;
+    align-items: baseline;
+    column-gap: 9px;
+  }
+  
+  &__title {
+    width: fit-content;
+    
+    &_centered {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  
+  &__id {
+    display: inline-flex;
+    align-items: baseline;
+    column-gap: 4px;
+    font-size: 12px;
+    color: $txt-gray;
+    
+    &_hidden {
+      display: none;
+    }
+  }
+  
+  &__description {
+    padding: 0 30px;
+    margin-bottom: 8px;
+    text-align: center;
+    
+    &_hidden {
+      display: none;
+    }
+  }
+  
+  &__close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 29px;
+    height: 29px;
+  }
+  
+  &__form-controls {
+    display: flex;
+    padding: 0 30px;
+    margin-bottom: 25px;
+    flex-direction: column;
+    row-gap: 16px;
+  }
+  
+  &__contacts {
+    display: flex;
+    padding: 10px 30px 8px;
+    flex-direction: column;
+    align-items: center;
+    background-color: $modal-contacts-background;
+  }
+  
+  &__contact {
+    position: relative;
+    display: flex;
+    width: 100%;
+    border: 1px solid $gray;
+    transition: border-color .1s ease-in-out;
+    
+    &:first-child {
+      margin-top: 15px;
+    }
+    
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+    
+    &:nth-last-child(2) {
+      margin-bottom: 25px;
+    }
+    
+    &_with-error {
+      border-color: $invalid-control-border;
+    }
+  }
+  
+  &__contact-type {
+    min-width: 123px;
+  }
+  
+  &__delete-contact-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  &__contact-control {
+    padding-right: calc(27px + 12px);
+  }
+  
+  &__add-contact-button {
+    
+    &:not(:first-child) {
+      margin-bottom: 17px;
+    }
+  }
+  
+  &__errors {
+    display: flex;
+    padding: 8px 30px 9px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 2px;
+    
+    span {
+      max-width: 255px;
+      font-size: 10px;
+      font-weight: 400;
+      text-align: center;
+      line-height: normal;
+      color: $red;
+    }
+  }
+  
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 5px;
+  }
+  
+  &__action-button-preloader {
+    width: 16px;
+    height: 16px;
+    margin-right: -6px;
+    
+    &_hidden {
+      display: none;
+    }
+  }
+  
+  @include media(470px) {
+    max-width: calc(100% - 20px);
+  }
+  
+  @include xs-media {
+    &__close-button {
+      top: 3px;
+      right: 3px;
+    }
+    
+    &__title-row {
+      padding: 0 15px;
+    }
+    
+    &__form-controls {
+      padding: 0 15px;
+    }
+    
+    &__contacts {
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+    
+    &__contact-type {
+      min-width: 110px;
+    }
+    
+    &__contact-control {
+      padding-right: 29px;
+    }
+  }
+}

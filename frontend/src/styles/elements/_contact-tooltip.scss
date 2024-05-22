@@ -1,0 +1,64 @@
+.tooltip {
+  position: absolute;
+  top: -41px;
+  left: 50%;
+  z-index: -10000;
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  width: fit-content;
+  flex-direction: column;
+  transform: translateX(-50%);
+  transition: opacity .2s ease-in-out;
+  
+  &::after {
+    display: block;
+    width: 100%;
+    height: 16px;
+    content: '';
+  }
+  
+  &__wrapper {
+    position: relative;
+    display: inline-flex;
+    width: fit-content;
+    padding: 8px 18px;
+    background-color: $black;
+    color: $white;
+    
+    &::before {
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      z-index: -1;
+      width: 0;
+      height: 0;
+      border: 0 solid transparent;
+      border-right-width: 12px;
+      border-left-width: 12px;
+      border-top: 21px solid $black;
+      content: '';
+      transform: translateX(-50%);
+    }
+  }
+  
+  span {
+    white-space: nowrap;
+  }
+  
+  &__text {
+    &::after {
+      padding-right: 4px;
+      content: ':';
+    }
+    
+    &-only {
+      font-weight: 700;
+    }
+  }
+  
+  &__link {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
