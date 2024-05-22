@@ -5,12 +5,20 @@
   top: 50%;
   left: 50%;
   z-index: 100;
+  overflow-y: scroll;
   width: 100%;
   max-width: 450px;
+  max-height: 85dvh;
   padding: 24px 0;
   border: none;
   background-color: $white;
   transform: translate(-50%, -50%);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
   
   &_hidden {
     z-index: -10000;
@@ -74,13 +82,16 @@
   }
   
   &__form-controls {
+    display: flex;
     padding: 0 30px;
     margin-bottom: 25px;
+    flex-direction: column;
+    row-gap: 16px;
   }
   
   &__contacts {
     display: flex;
-    padding: 8px 30px;
+    padding: 10px 30px 8px;
     flex-direction: column;
     align-items: center;
     background-color: $modal-contacts-background;
@@ -108,6 +119,10 @@
     &_with-error {
       border-color: $invalid-control-border;
     }
+  }
+  
+  &__contact-type {
+    min-width: 123px;
   }
   
   &__delete-contact-btn {
@@ -155,11 +170,44 @@
   }
   
   &__action-button-preloader {
-    width: 19px;
-    height: 19px;
+    width: 16px;
+    height: 16px;
+    margin-right: -6px;
     
     &_hidden {
       display: none;
+    }
+  }
+  
+  @include media(470px) {
+    max-width: calc(100% - 20px);
+  }
+  
+  @include xs-media {
+    &__close-button {
+      top: 3px;
+      right: 3px;
+    }
+    
+    &__title-row {
+      padding: 0 15px;
+    }
+    
+    &__form-controls {
+      padding: 0 15px;
+    }
+    
+    &__contacts {
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+    
+    &__contact-type {
+      min-width: 110px;
+    }
+    
+    &__contact-control {
+      padding-right: 29px;
     }
   }
 }

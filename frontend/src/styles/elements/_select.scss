@@ -2,7 +2,6 @@
 
 .select {
   position: relative;
-  min-width: 123px;
   
   &__item {
     position: relative;
@@ -93,6 +92,13 @@
       &:hover {
         background-color: $select-bg;
       }
+    }
+  }
+  
+  @include xs-media {
+    &__item {
+      padding-right: 6px;
+      padding-left: 8px;
     }
   }
 }

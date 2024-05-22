@@ -113,4 +113,24 @@
       }
     }
   }
+  
+  @include mobile-media {
+    &__table-overflow {
+      overflow-x: scroll;
+      width: calc(100% + 20px);
+      padding-right: 10px;
+      padding-left: 10px;
+      margin-left: -10px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    
+    &__table {
+      width: 728px;
+    }
+  }
 }
