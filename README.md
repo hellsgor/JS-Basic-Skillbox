@@ -1,53 +1,48 @@
-# Дипломная работа по курсу Javascript «Базовый уровень»
+# Diploma Project for "JavaScript. Basic Level" Course
 
-Этот проект представляет собой небольшую CRM-систему со следующими
-возможностями:
+This project is a small CRM system with the following features:
 
-- просмотр списка клиентов в виде таблицы;
-- добавление нового клиента;
-- изменение информации о существующем клиенте.
+- Viewing the client list in a table format;
+- Adding new clients;
+- Editing existing client information.
 
-Backend-часть уже была разработана.
+The backend part was already developed.
 
-Макет в
-Firma - [https://www.figma.com/file/rcta5K2ySOhnskjG1D82jL/CRM](https://www.figma.com/file/rcta5K2ySOhnskjG1D82jL/CRM)
+Design in Figma - [https://www.figma.com/file/rcta5K2ySOhnskjG1D82jL/CRM](https://www.figma.com/file/rcta5K2ySOhnskjG1D82jL/CRM)
 
-## Функциональность
+## Functionality
 
-### Реализовано из основных требований:
+### Implemented from the main requirements:
 
-- Индикация загрузки страницы (прелоадер);
-- Таблица клиентов;
-- Сортировка таблицы (API передаёт данные в неотсортированном виде). По
-  умолчанию должна быть установлена сортировка по возрастанию по ID;
-- Отображение контактов и тултип контакта;
-- Вызов модальных окон по нажатию на соответствующие кнопки;
-- Модальные окна создания, редактирования и подтверждения удаления клиента;
-- Переключение между модальными окнами (с окна редактирования на окно удаления и
-  обратно);
-- Валидация количества контактов клиента;
-- Удаление контакта клиента;
-- Отправка данных форм;
-- Обработка ответа на отправку данных форм, вывод ошибок.
+- Page load indicator (preloader);
+- Client table;
+- Table sorting (the API provides unsorted data). By default, sorting should be in ascending order by ID;
+- Displaying contacts and contact tooltips;
+- Modal windows for adding, editing, and deleting clients, triggered by corresponding buttons;
+- Modal windows for creating, editing, and confirming client deletion;
+- Switching between modal windows (from the editing window to the deletion window and back);
+- Validation of the number of client contacts;
+- Deleting client contacts;
+- Form data submission;
+- Handling form submission responses and displaying errors.
 
-### Реализовано из дополнительных требований:
+### Implemented from additional requirements:
 
-- Валидация полей форм перед отправкой;
-- Ссылка на модальное окно редактирования клиента (hash-часть пути страницы);
-- Индикация загрузки данных таблицы (прелоадер);
-- Индикация загрузки данных для модальных окон и при отправке данных форм (
-  прелоадер).
+- Form field validation before submission;
+- Link to the client editing modal window (hash part of the page URL);
+- Data loading indicator for the client table (preloader);
+- Data loading indicator for modal windows and form submission (preloader).
 
-## Стэк
+## Stack
 
-### Технологии:
+### Technologies:
 
 - Vite;
 - HTML / Handlebars;
 - SCSS;
-- Javascript.
+- JavaScript.
 
-### Библиотеки:
+### Libraries:
 
 - prettier;
 - eslint;
@@ -56,25 +51,16 @@ Firma - [https://www.figma.com/file/rcta5K2ySOhnskjG1D82jL/CRM](https://www.figm
 - axios;
 - jsdoc.
 
-## Требования
+## Requirements
 
-- JS-код должен иметь определенный кодстайл.
-- Вёрстка должна быть адаптивной.
+- JS code must follow a specific code style.
+- The layout must be responsive.
 
-## Запуск проекта
+## Running the Project
 
-1. Убедитесь, что у вас установлен Node.js (версия при разработке 20.11.0).
-2. Установите зависимости, запустив команду: `npm install` из
-   директории `/frontend`.
-3. Запустите сервер с данными с помощью команды `node index.js` из
-   директории `/backend`.
-4. Запустите проект в режиме разработки с помощью команды: `npm run dev` из
-   директории `/frontend`. Это запустит локальный сервер разработки. Откройте
-   браузер и перейдите по адресу http://localhost:5173/, чтобы увидеть
-   результат.
-5. Чтобы собрать проект для продакшена, выполните: `npm run build` из
-   директории `/frontend`. Собранные файлы будут находиться в
-   директории `/frontend/dist`.
-6. Для предварительного просмотра собранного проекта используйте
-   команду `npm run preview` из директории `/frontend`. Это запустит локальный
-   сервер для предварительного просмотра собранного проекта.
+1. Ensure you have Node.js installed (version used during development: 20.11.0).
+2. Install the dependencies by running: `npm install` from the `/frontend` directory.
+3. Start the data server by running: `node index.js` from the `/backend` directory.
+4. Run the project in development mode with: `npm run dev` from the `/frontend` directory. This will start a local development server. Open your browser and go to http://localhost:5173/ to see the result.
+5. To build the project for production, run: `npm run build` from the `/frontend` directory. The built files will be located in the `/frontend/dist` directory.
+6. To preview the built project, use: `npm run preview` from the `/frontend` directory. This will start a local server for previewing the built project.
